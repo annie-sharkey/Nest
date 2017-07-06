@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import AgentNavBar from "./AgentNavBar";
+import AgentHome from "./AgentHome";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
+import AdminHome from "./AdminHome";
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      // <AdminHome />
+      <Router>
+        <div>
+          <Route exact path="/" component={AgentHome} />
+          <Route path="/navbar" component={AgentNavBar} />
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      </Router>
     );
   }
 }
