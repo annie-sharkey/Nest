@@ -4,12 +4,15 @@ import AgentNavBar from "./AgentNavBar";
 import AgentHome from "./AgentHome";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import AdminHome from "./AdminHome";
-import Excel from './Excel';
+import JSONtoExcel from "./JSONtoExcel";
+// import ExceltoJSON from "./ExceltoJSON";
+import CampaignTable from "./CampaignTable";
+import MasterTable from "./MasterTable";
 
 class App extends Component {
   render() {
     return (
-      <Excel />
+      <MasterTable />
       // <Router>
       //   <div>
       //     <Route exact path="/" component={AgentHome} />
