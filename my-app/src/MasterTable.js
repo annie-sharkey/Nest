@@ -3,23 +3,26 @@ import "antd/dist/antd.css";
 import { Table, Input, Icon, Button, Popconfirm } from "antd";
 
 class EditableCell extends React.Component {
-  state = {
-    value: this.props.value,
-    editable: false
-  };
-  handleChange = e => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: this.props.value,
+      editable: false
+    };
+  }
+  handleChange(e) {
     const value = e.target.value;
     this.setState({ value });
-  };
-  check = () => {
+  }
+  check() {
     this.setState({ editable: false });
     if (this.props.onChange) {
       this.props.onChange(this.state.value);
     }
-  };
-  edit = () => {
+  }
+  edit() {
     this.setState({ editable: true });
-  };
+  }
   render() {
     const { value, editable } = this.state;
     return (
@@ -28,13 +31,13 @@ class EditableCell extends React.Component {
           ? <div className="editable-cell-input-wrapper">
               <Input
                 value={value}
-                onChange={this.handleChange}
-                onPressEnter={this.check}
+                onChange={e => this.handleChange(e)}
+                onPressEnter={() => this.check()}
               />
               <Icon
                 type="check"
                 className="editable-cell-icon-check"
-                onClick={this.check}
+                onClick={() => this.check()}
               />
             </div>
           : <div className="editable-cell-text-wrapper">
@@ -42,7 +45,7 @@ class EditableCell extends React.Component {
               <Icon
                 type="edit"
                 className="editable-cell-icon"
-                onClick={this.edit}
+                onClick={() => this.edit()}
               />
             </div>}
       </div>
@@ -106,19 +109,19 @@ export default class MasterTable extends React.Component {
       count: 2
     };
   }
-  onCellChange = (index, key) => {
+  onCellChange(index, key) {
     return value => {
       const dataSource = [...this.state.dataSource];
       dataSource[index][key] = value;
       this.setState({ dataSource });
     };
-  };
-  onDelete = index => {
+  }
+  onDelete(index) {
     const dataSource = [...this.state.dataSource];
     dataSource.splice(index, 1);
     this.setState({ dataSource });
-  };
-  handleAdd = () => {
+  }
+  handleAdd() {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
@@ -130,7 +133,7 @@ export default class MasterTable extends React.Component {
       dataSource: [...dataSource, newData],
       count: count + 1
     });
-  };
+  }
   render() {
     const { dataSource } = this.state;
     const columns = this.columns;
