@@ -7,19 +7,22 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 export default class AgentNavBar extends Component {
-  state = {
-    current: "mail"
-  };
-  handleClick = e => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      current: "mail"
+    };
+  }
+  handleClick(e) {
     console.log("click ", e);
     this.setState({
       current: e.key
     });
-  };
+  }
   render() {
     return (
       <Menu
-        onClick={this.handleClick}
+        onClick={e => this.handleClick(e)}
         selectedKeys={[this.state.current]}
         mode="horizontal"
         theme="dark"
