@@ -139,7 +139,7 @@ export default class MasterTable extends React.Component {
     const columns = this.columns;
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd}>
+        <Button className="editable-add-btn" onClick={() => this.handleAdd()}>
           Add
         </Button>
         <Table bordered dataSource={dataSource} columns={columns} />
