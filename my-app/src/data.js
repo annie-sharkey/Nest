@@ -1,4 +1,4 @@
-[
+var data = [
   {
     "AGENT CODE": "ADH",
     "AGENT FIRST AND LAST NAME": "Danielle Hoffmann",

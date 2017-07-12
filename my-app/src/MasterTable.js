@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Table, Input, Icon, Button, Popconfirm } from "antd";
-import data from './data.json';
+import axios from 'axios';
+// import data from './data';
 
 class EditableCell extends React.Component {
   constructor(props) {
@@ -60,7 +61,7 @@ export default class MasterTable extends React.Component {
     this.columns = [
       {
         title: "Client Name",
-        dataIndex: "CLIENT NAME",
+        dataIndex: "clientName",
         width: "30%",
         render: (text, record, index) =>
           <EditableCell
@@ -70,11 +71,11 @@ export default class MasterTable extends React.Component {
       },
       {
         title: "Client Address",
-        dataIndex: "CLIENT ADDRESS"
+        dataIndex: "clientAddress"
       },
       {
         title: "Client City",
-        dataIndex: "CLIENT CITY"
+        dataIndex: "clientCity"
       },
       {
         title: "operation",
@@ -93,10 +94,11 @@ export default class MasterTable extends React.Component {
     ];
 
     this.state = {
-      dataSource: data,
+      dataSource: this.props.dataSource,
       count: 2
     };
   }
+
   onCellChange(index, key) {
     return value => {
       const dataSource = [...this.state.dataSource];
@@ -125,6 +127,7 @@ export default class MasterTable extends React.Component {
   // }
 
   render() {
+    console.log("data source:", this.props.dataSource)
     const { dataSource } = this.state;
     const columns = this.columns;
     return (
@@ -132,7 +135,7 @@ export default class MasterTable extends React.Component {
         {/*<Button className="editable-add-btn" onClick={() => this.handleAdd()}>
           Add
         </Button>*/}
-        <Table bordered dataSource={dataSource} columns={columns} />
+        <Table bordered dataSource={this.props.dataSource} columns={columns} />
       </div>
     );
   }
