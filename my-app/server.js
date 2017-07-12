@@ -38,11 +38,16 @@ app.use(function(req, res, next) {
 
 //config
 mongoose.connect(
-  "mongodb://localhost/27017",
+  "mongodb://Annie:Ann1esharkey@nest-shard-00-00-icudb.mongodb.net:27017,nest-shard-00-01-icudb.mongodb.net:27017,nest-shard-00-02-icudb.mongodb.net:27017/Nest?ssl=true&replicaSet=Nest-shard-0&authSource=admin",
   {
     useMongoClient: true
+  },
+  function(err, result) {
+    if (err) {
+      console.log("Error");
+    }
+    console.log("Successful");
   }
-  //   "mongodb://sharkeyconwaya@gmail.com:Ann1esharkey@ds153352.mlab.com:53352/nest"
 );
 mongoose.Promise = global.Promise;
 
