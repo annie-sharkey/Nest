@@ -31,7 +31,6 @@ export default class MasterTable extends React.Component {
         render: () => <Icon type="edit" />
       }
     ];
-
     this.state = {
       dataSource: this.props.dataSource,
       count: 2,
@@ -99,16 +98,15 @@ export default class MasterTable extends React.Component {
           onClick={() => this.handleOpenModal()}
         >
           Add
+
         </Button>
         {modal}
-        <Table
-          bordered
-          dataSource={this.props.dataSource}
-          columns={columns}
-          pagination={false}
-          scroll={{ y: 240 }}
-        />
+        <div>
+        <Table bordered dataSource={this.props.dataSource} columns={columns} pagination={false}/>
+        </div>
       </div>
     );
   }
 }
+
+//fix the scroll
