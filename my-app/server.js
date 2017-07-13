@@ -42,7 +42,8 @@ var data = [
     "EMAIL 1 (IF DESIRED)": "susanannstagg@gmail.com",
     "EMAIL 2 (IF DESIRED)": "davidastagg@gmail.com",
     "MAP CUSTOMIZATION": "Sue and Dave's"
-  }]
+  }
+];
 
 //set our port to either a predetermined port number if you have set it up, or 3001
 var port = process.env.API_PORT || 4000;
@@ -79,24 +80,6 @@ mongoose.connect(
     if (err) {
       throw err;
     }
-    // console.log(data);
-    // data.forEach(function(x){
-    //   var client = new Client({
-    //     clientName: x['CLIENT NAME'],
-    //     clientAddress: x['CLIENT ADDRESS'],
-    //     clientCity: x['CLIENT CITY']
-    //   });
-    //   client.save(function(err){
-    //     if (err){
-    //       throw err;
-    //     }
-    //   })
-    //   // client.save(function(err) {
-    //   //   if (err) {
-    //   //     res.send(err);
-    //   //   }
-    //   //   res.json({ message: "Yay" });
-    // })
   }
 );
 mongoose.Promise = global.Promise;
@@ -114,15 +97,3 @@ app.use(bodyParser.json());
 app.listen(port, function() {
   console.log(`api running on port ${port}`);
 });
-
-// db.clientCollection.insertOne({
-//   clientName: "Fay Broadbent",
-//   clientAddress: "6088 Little River Court",
-//   clientCity: "Granite Falls"
-// });
-
-// db.clientCollection.insertOne({
-//   clientName: "Susan and David Stagg",
-//   clientAddress: "300 Pinnacle Peak Lane",
-//   clientCity: "Flat Rock"
-// });
