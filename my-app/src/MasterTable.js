@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Table, Input, Icon, Button, Popconfirm } from "antd";
+import axios from 'axios';
+// import data from './data';
 
 class EditableCell extends React.Component {
   constructor(props) {
@@ -58,8 +60,8 @@ export default class MasterTable extends React.Component {
     super(props);
     this.columns = [
       {
-        title: "name",
-        dataIndex: "name",
+        title: "Client Name",
+        dataIndex: "clientName",
         width: "30%",
         render: (text, record, index) =>
           <EditableCell
@@ -68,12 +70,12 @@ export default class MasterTable extends React.Component {
           />
       },
       {
-        title: "age",
-        dataIndex: "age"
+        title: "Client Address",
+        dataIndex: "clientAddress"
       },
       {
-        title: "address",
-        dataIndex: "address"
+        title: "Client City",
+        dataIndex: "clientCity"
       },
       {
         title: "operation",
@@ -90,25 +92,12 @@ export default class MasterTable extends React.Component {
         }
       }
     ];
-
     this.state = {
-      dataSource: [
-        {
-          key: "0",
-          name: "Edward King 0",
-          age: "32",
-          address: "London, Park Lane no. 0"
-        },
-        {
-          key: "1",
-          name: "Edward King 1",
-          age: "32",
-          address: "London, Park Lane no. 1"
-        }
-      ],
+      dataSource: this.props.dataSource,
       count: 2
     };
   }
+
   onCellChange(index, key) {
     return value => {
       const dataSource = [...this.state.dataSource];
@@ -121,29 +110,36 @@ export default class MasterTable extends React.Component {
     dataSource.splice(index, 1);
     this.setState({ dataSource });
   }
-  handleAdd() {
-    const { count, dataSource } = this.state;
-    const newData = {
-      key: count,
-      name: `Edward King ${count}`,
-      age: 32,
-      address: `London, Park Lane no. ${count}`
-    };
-    this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1
-    });
-  }
+
+  // handleAdd() {
+  //   const { count, dataSource } = this.state;
+  //   const newData = {
+  //     key: count,
+  //     name: `Edward King ${count}`,
+  //     age: 32,
+  //     address: `London, Park Lane no. ${count}`
+  //   };
+  //   this.setState({
+  //     dataSource: [...dataSource, newData],
+  //     count: count + 1
+  //   });
+  // }
+
   render() {
+    console.log("data source:", this.props.dataSource)
     const { dataSource } = this.state;
     const columns = this.columns;
     return (
       <div>
-        <Button className="editable-add-btn" onClick={() => this.handleAdd()}>
+        {/*<Button className="editable-add-btn" onClick={() => this.handleAdd()}>
           Add
-        </Button>
-        <Table bordered dataSource={dataSource} columns={columns} />
+        </Button>*/}
+        <div>
+        <Table bordered dataSource={this.props.dataSource} columns={columns} pagination={false}/>
+        </div>
       </div>
     );
   }
 }
+
+//fix the scroll
