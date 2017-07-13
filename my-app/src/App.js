@@ -8,35 +8,32 @@ import JSONtoExcel from "./JSONtoExcel";
 // import ExceltoJSON from "./ExceltoJSON";
 import CampaignTable from "./CampaignTable";
 import MasterTable from "./MasterTable";
+import ClientForm from "./Form";
 import axios from "axios";
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       dataSource: []
-    }
+    };
   }
-
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(response => {
       // console.log("entered");
       // console.log(response)
-      this.setState ({
+      this.setState({
         dataSource: response.data
-      })
+      });
     });
-    
-    
   }
 
   render() {
-    console.log("datasource:", this.state.dataSource)
+    console.log("datasource:", this.state.dataSource);
     return (
-      <div >
-      <MasterTable dataSource={this.state.dataSource}/>
-
+      <div>
+        <MasterTable dataSource={this.state.dataSource} />
       </div>
     );
   }
@@ -44,10 +41,9 @@ class App extends Component {
 
 export default App;
 
-
-      // <Router>
-      //   <div>
-      //     <Route exact path="/" component={AgentHome} />
-      //     <Route path="/navbar" component={AgentNavBar} />
-      //   </div>
-      // </Router>
+// <Router>
+//   <div>
+//     <Route exact path="/" component={AgentHome} />
+//     <Route path="/navbar" component={AgentNavBar} />
+//   </div>
+// </Router>

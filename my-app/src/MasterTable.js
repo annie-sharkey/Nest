@@ -1,59 +1,9 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Table, Input, Icon, Button, Popconfirm } from "antd";
-import axios from 'axios';
+import axios from "axios";
 // import data from './data';
-
-class EditableCell extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: this.props.value,
-      editable: false
-    };
-  }
-  handleChange(e) {
-    const value = e.target.value;
-    this.setState({ value });
-  }
-  check() {
-    this.setState({ editable: false });
-    if (this.props.onChange) {
-      this.props.onChange(this.state.value);
-    }
-  }
-  edit() {
-    this.setState({ editable: true });
-  }
-  render() {
-    const { value, editable } = this.state;
-    return (
-      <div className="editable-cell">
-        {editable
-          ? <div className="editable-cell-input-wrapper">
-              <Input
-                value={value}
-                onChange={e => this.handleChange(e)}
-                onPressEnter={() => this.check()}
-              />
-              <Icon
-                type="check"
-                className="editable-cell-icon-check"
-                onClick={() => this.check()}
-              />
-            </div>
-          : <div className="editable-cell-text-wrapper">
-              {value || " "}
-              <Icon
-                type="edit"
-                className="editable-cell-icon"
-                onClick={() => this.edit()}
-              />
-            </div>}
-      </div>
-    );
-  }
-}
+import ClientForm from "./Form";
 
 export default class MasterTable extends React.Component {
   constructor(props) {
@@ -62,40 +12,30 @@ export default class MasterTable extends React.Component {
       {
         title: "Client Name",
         dataIndex: "clientName",
-        width: "30%",
-        render: (text, record, index) =>
-          <EditableCell
-            value={text}
-            onChange={this.onCellChange(index, "name")}
-          />
+        width: "25%"
       },
       {
         title: "Client Address",
-        dataIndex: "clientAddress"
+        dataIndex: "clientAddress",
+        width: "25%"
       },
       {
         title: "Client City",
-        dataIndex: "clientCity"
+        dataIndex: "clientCity",
+        width: "25%"
       },
       {
-        title: "operation",
-        dataIndex: "operation",
-        render: (text, record, index) => {
-          return this.state.dataSource.length > 1
-            ? <Popconfirm
-                title="Sure to delete?"
-                onConfirm={() => this.onDelete(index)}
-              >
-                <a href="#">Delete</a>
-              </Popconfirm>
-            : null;
-        }
+        title: "Edit",
+        dataIndex: "_id",
+        key: "_id",
+        render: () => <Icon type="edit" />
       }
     ];
 
     this.state = {
       dataSource: this.props.dataSource,
-      count: 2
+      count: 2,
+      modal: false
     };
   }
 
@@ -112,30 +52,62 @@ export default class MasterTable extends React.Component {
     this.setState({ dataSource });
   }
 
-  // handleAdd() {
-  //   const { count, dataSource } = this.state;
-  //   const newData = {
-  //     key: count,
-  //     name: `Edward King ${count}`,
-  //     age: 32,
-  //     address: `London, Park Lane no. ${count}`
-  //   };
-  //   this.setState({
-  //     dataSource: [...dataSource, newData],
-  //     count: count + 1
-  //   });
-  // }
+  handleOpenModal() {
+    this.setState({
+      modal: true
+    });
+  }
+
+  handleCloseModal() {
+    this.setState({
+      modal: false
+    });
+  }
+
+  handleAdd(clientName, clientAddress, clientCity) {
+    axios.post("http://localhost:4000/api/clients", {
+      clientName: clientName,
+      clientAddress: clientAddress,
+      clientCity: clientCity
+    });
+    this.setState({
+      modal: false
+    });
+  }
 
   render() {
-    console.log("data source:", this.props.dataSource)
+    var modal;
+    if (this.state.modal) {
+      modal = (
+        <ClientForm
+          modal={this.state.modal}
+          onCancel={() => {
+            this.handleCloseModal();
+          }}
+          onOk={(clientName, clientAddress, clientCity) =>
+            this.handleAdd(clientName, clientAddress, clientCity)}
+        />
+      );
+    }
+    console.log("data source:", this.props.dataSource);
     const { dataSource } = this.state;
     const columns = this.columns;
     return (
       <div>
-        {/*<Button className="editable-add-btn" onClick={() => this.handleAdd()}>
+        <Button
+          className="editable-add-btn"
+          onClick={() => this.handleOpenModal()}
+        >
           Add
-        </Button>*/}
-        <Table bordered dataSource={this.props.dataSource} columns={columns} />
+        </Button>
+        {modal}
+        <Table
+          bordered
+          dataSource={this.props.dataSource}
+          columns={columns}
+          pagination={false}
+          scroll={{ y: 240 }}
+        />
       </div>
     );
   }
