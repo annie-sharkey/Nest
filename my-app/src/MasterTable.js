@@ -92,7 +92,6 @@ export default class MasterTable extends React.Component {
         }
       }
     ];
-
     this.state = {
       dataSource: this.props.dataSource,
       count: 2
@@ -135,8 +134,12 @@ export default class MasterTable extends React.Component {
         {/*<Button className="editable-add-btn" onClick={() => this.handleAdd()}>
           Add
         </Button>*/}
-        <Table bordered dataSource={this.props.dataSource} columns={columns} />
+        <div>
+        <Table bordered dataSource={this.props.dataSource} columns={columns} pagination={false}/>
+        </div>
       </div>
     );
   }
 }
+
+//fix the scroll
