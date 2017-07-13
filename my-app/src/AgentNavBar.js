@@ -20,8 +20,6 @@ export default class AgentNavBar extends Component {
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(response => {
-      // console.log("entered");
-      // console.log(response)
       this.setState({
         dataSource: response.data
       });
@@ -29,7 +27,6 @@ export default class AgentNavBar extends Component {
   }
 
   handleClick(e) {
-    console.log("click ", e);
     this.setState({
       current: e.key
     });
