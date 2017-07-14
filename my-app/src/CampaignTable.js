@@ -6,28 +6,20 @@ import "antd/dist/antd.css";
 //expandedRowRender is called inside the table in class NestedTable
 const expandedRowRender = () => {
   const columns = [
-    { title: "Date", dataIndex: "date", key: "date" },
-    { title: "Name", dataIndex: "name", key: "name" },
-    {
-      title: "Status",
-      key: "state",
-      render: () =>
-        <span>
-          <Badge status="success" />Finished
-        </span>
-    },
-    { title: "Upgrade Status", dataIndex: "upgradeNum", key: "upgradeNum" }
+    { title: "Client Email", dataIndex: "Client Email", key: "Client Email" },
+    { title: "Client Birthday", dataIndex: "Client Birthday", key: "Client Birthday" },
+    { title: "Home Anniversary", dataIndex: "Home Anniversary", key: "Home Anniversary" }
   ];
 
   const data = [];
-  for (let i = 0; i < 3; ++i) {
-    data.push({
-      key: i,
-      date: "2014-12-24 23:12:00",
-      name: "This is production name",
-      upgradeNum: "Upgraded: 56"
-    });
-  }
+  // for (let i = 0; i < 3; ++i) {
+  //   data.push({
+  //     key: i,
+  //     date: "2014-12-24 23:12:00",
+  //     name: "This is production name",
+  //     upgradeNum: "Upgraded: 56"
+  //   });
+  // }
 
   return <Table columns={columns} dataSource={data} pagination={false} />;
 };
@@ -56,31 +48,23 @@ export default class CampaignTable extends Component {
   };
 
   render() {
-      //columns and data for overall table
-    const columns = [
-      { title: "Name", dataIndex: "name", key: "name" },
-      { title: "Platform", dataIndex: "platform", key: "platform" },
-      { title: "Version", dataIndex: "version", key: "version" },
-      { title: "Upgraded", dataIndex: "upgradeNum", key: "upgradeNum" },
-      { title: "Creator", dataIndex: "creator", key: "creator" },
-      { title: "Date", dataIndex: "createdAt", key: "createdAt" },
-      { title: "Testing", dataIndex: "testing", key: "testing"},
-      { title: "Testing2", dataIndex: "testing2", key: "testing2"},
-      { title: "Testing3", dataIndex: "testing3", key: "testing3"}
-    ];
+    //columns and data for overall table
 
-    const data = [];
-    for (let i = 0; i < 46; ++i) {
-      data.push({
-        key: i,
-        name: "Screem",
-        platform: "iOS",
-        version: "10.3.4.5654",
-        upgradeNum: 500,
-        creator: "Jack",
-        createdAt: "2014-12-24 23:12:00"
-      });
-    }
+    //read data in
+    const data = [
+      {
+        key: "1",
+        "First Name": "Mike",
+        age: 32,
+        address: "10 Downing Street"
+      },
+      {
+        key: "2",
+        name: "John",
+        age: 42,
+        address: "10 Downing Street"
+      }
+    ];
 
     //select feature
     //fix select menu
@@ -121,7 +105,7 @@ export default class CampaignTable extends Component {
         </div>
         <Table
           rowSelection={rowSelection}
-          columns={columns}
+          columns={this.props.columns}
           //call to nested table
           expandedRowRender={expandedRowRender}
           dataSource={data}

@@ -25,6 +25,8 @@ export default class AgentHome extends Component {
               <button className="btn">Manage Lists</button>
             </div>
           </Link>
+
+
           <div className="secondbutton">
             <button className="btn">Media Center</button>
           </div>
