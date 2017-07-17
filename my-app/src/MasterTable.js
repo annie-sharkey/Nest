@@ -212,7 +212,7 @@ export default class MasterTable extends React.Component {
       );
     }
     //console.log("data source:", this.state.dataSource);
-    console.log(this.state.selectedClient);
+    //console.log(this.state.selectedClient);
     //const { dataSource } = this.state;
     const columns = this.columns;
     return (

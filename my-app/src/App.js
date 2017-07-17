@@ -22,7 +22,8 @@ class App extends Component {
     super(props);
     this.state = {
       field: "",
-      agent: false
+      agent: {},
+      logged: false
     };
   }
 
@@ -36,14 +37,49 @@ class App extends Component {
     axios
       .get("http://localhost:4000/" + this.state.field.toLocaleUpperCase())
       .then(response => {
-        this.setState({
-          agent: response.data
-        });
+        if (response != false) {
+          this.setState({
+            agent: response.data,
+            logged: true
+          });
+          sessionStorage.setItem("logged", "true");
+          sessionStorage.setItem("agent", response.data.agentCode);
+        }
       });
   }
 
+  logOut() {
+    sessionStorage.setItem("logged", "false");
+    this.setState({
+      logged: false
+    });
+  }
+
+  componentWillMount() {
+    if (sessionStorage.getItem("logged") == "true") {
+      var agentCode = sessionStorage.getItem("agent");
+      var agent;
+      axios.get("http://localhost:4000/" + agentCode).then(response => {
+        this.setState({
+          logged: true,
+          agent: response.data
+        });
+      });
+    } else if (
+      sessionStorage.getItem("logged") == null ||
+      sessionStorage.getItem("logged") == "false"
+    ) {
+      {
+        this.setState({
+          logged: false
+        });
+      }
+    }
+  }
+
   render() {
-    if (!this.state.agent) {
+    if (!this.state.logged) {
+      console.log("session storage is false");
       return (
         <div>
           <Input
@@ -57,7 +93,8 @@ class App extends Component {
         </div>
       );
     }
-    if (this.state.agent) {
+    if (this.state.logged) {
+      console.log("session storage is true");
       return (
         <div>
           <Router>
@@ -65,7 +102,11 @@ class App extends Component {
               <Route
                 exact
                 path="/"
-                component={() => <AgentHome agent={this.state.agent} />}
+                component={() =>
+                  <AgentHome
+                    agent={this.state.agent}
+                    logOut={() => this.logOut()}
+                  />}
               />
               <Route
                 path="/managelists"

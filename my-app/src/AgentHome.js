@@ -12,6 +12,10 @@ export default class AgentHome extends Component {
   constructor(props) {
     super(props);
   }
+
+  logOut() {
+    sessionStorage.setItem("logged", false);
+  }
   render() {
     return (
       <Router>
@@ -27,6 +31,7 @@ export default class AgentHome extends Component {
                   {this.props.agent.agentName}{" "}
                 </Icon>
               </Link>
+              <Button onClick={() => this.props.logOut()}>Log Out</Button>
             </div>
 
             <div className="buttons">
