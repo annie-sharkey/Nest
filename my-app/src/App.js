@@ -13,27 +13,37 @@ import ClientForm from "./Form";
 import axios from "axios";
 import AgentForm from "./AgentProfile";
 
-import TestTable from "./TestTable";
-import TestCreateCampaign from "./TestCreateCampaign";
+import CreateCampaignParent from "./CreateCampaignParent";
 
+import AgentUpload from "./AgentUpload";
+import { LocaleProvider } from "antd";
+
+import enUS from "antd/lib/locale-provider/en_US";
 
 class App extends Component {
   render() {
-
     return (
-      <TestCreateCampaign />
+      <div>
+        <LocaleProvider locale={enUS}>
+          
+          <CreateCampaignParent />
+        </LocaleProvider>
+      </div>
       // <div>
       //   <Router>
       //     <div>
       //       <Route exact path="/" component={AgentHome} />
       //       <Route path="/profile" component={AgentForm} />
       //       <Route path="/managelists" component={AgentNavBar} />
+
       //     </div>
       //   </Router>
       // </div>
+      // <div>
+
+      //   </div>
     );
   }
 }
 
 export default App;
-
