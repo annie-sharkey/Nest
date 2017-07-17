@@ -4,6 +4,7 @@ import { Table, Input, Icon, Button, Popconfirm } from "antd";
 import axios from "axios";
 // import data from './data';
 import ClientForm from "./Form";
+import EditForm from "./EditForm";
 
 export default class MasterTable extends React.Component {
   constructor(props) {
@@ -12,29 +13,35 @@ export default class MasterTable extends React.Component {
       {
         title: "Client Name",
         dataIndex: "clientName",
+        key: "clientName",
         width: "25%"
       },
       {
         title: "Client Address",
         dataIndex: "clientAddress",
+        key: "clientAddress",
         width: "25%"
       },
       {
         title: "Client City",
         dataIndex: "clientCity",
+        key: "clientCity",
         width: "25%"
       },
       {
         title: "Edit",
         dataIndex: "_id",
         key: "_id",
-        render: () => <Icon type="edit" />
+        render: (record, text, index) =>
+          <Icon type="edit" onClick={text => this.openEditModal(text)} />
       }
     ];
     this.state = {
       dataSource: this.props.dataSource,
       count: 2,
-      modal: false
+      modal: false,
+      editModal: false,
+      selectedClient: {}
     };
   }
 
@@ -63,18 +70,89 @@ export default class MasterTable extends React.Component {
     });
   }
 
-  handleAdd(clientName, clientAddress, clientCity) {
+  openEditModal(record, index) {
+    // console.log(record.clientName);
+    this.setState({
+      editModal: true,
+      selectedClient: record
+    });
+  }
+
+  closeEditModal() {
+    this.setState({
+      editModal: false
+    });
+  }
+
+  updateClient(
+    clientName,
+    clientAddress,
+    clientCity,
+    clientEmail,
+    clientBirthday,
+    clientAnniversary
+  ) {
+    var clientId = this.state.selectedClient._id;
+    axios.put("http://localhost:4000/api/clients/" + clientId, {
+      clientName: clientName,
+      clientAddress: clientAddress,
+      clientCity: clientCity,
+      clientEmail: clientEmail,
+      clientBirthday: clientBirthday,
+      homeAnniversary: clientAnniversary
+    });
+    this.closeEditModal();
+    //this.props.handleTableUpdate();
+  }
+
+  handleAdd(
+    clientName,
+    clientAddress,
+    clientCity,
+    clientEmail,
+    clientBirthday,
+    clientAnniversary
+  ) {
     axios.post("http://localhost:4000/api/clients", {
       clientName: clientName,
       clientAddress: clientAddress,
-      clientCity: clientCity
+      clientCity: clientCity,
+      clientEmail: clientEmail,
+      clientBirthday: clientBirthday,
+      homeAnniversary: clientAnniversary,
+      agentCode: this.props.agentCode
     });
     this.setState({
       modal: false
     });
+    //this.props.handleTableUpdate();
+  }
+
+  deleteClient() {
+    axios.delete(
+      "http://localhost:4000/api/clients/" + this.state.selectedClient._id
+    );
+    this.setState({
+      editModal: false
+    });
+    this.props.handleTableUpdate();
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      dataSource: this.props.dataSource
+    });
   }
 
   render() {
+    const rowSelection = {
+      onSelect: (record, selected, selectedRows) => {
+        console.log(record);
+      },
+      onSelectAll: selected => {
+        console.log(selected);
+      }
+    };
     var modal;
     if (this.state.modal) {
       modal = (
@@ -83,13 +161,59 @@ export default class MasterTable extends React.Component {
           onCancel={() => {
             this.handleCloseModal();
           }}
-          onOk={(clientName, clientAddress, clientCity) =>
-            this.handleAdd(clientName, clientAddress, clientCity)}
+          onOk={(
+            clientName,
+            clientAddress,
+            clientCity,
+            clientEmail,
+            clientBirthday,
+            clientAnniversary
+          ) =>
+            this.handleAdd(
+              clientName,
+              clientAddress,
+              clientCity,
+              clientEmail,
+              clientBirthday,
+              clientAnniversary
+            )}
         />
       );
     }
-    console.log("data source:", this.props.dataSource);
-    const { dataSource } = this.state;
+
+    var editModal;
+
+    if (this.state.editModal) {
+      editModal = (
+        <EditForm
+          editModal={this.state.editModal}
+          onCancel={() => this.closeEditModal()}
+          onOk={(
+            clientName,
+            clientAddress,
+            clientCity,
+            clientEmail,
+            clientBirthday,
+            clientAnniversary
+          ) =>
+            this.updateClient(
+              clientName,
+              clientAddress,
+              clientCity,
+              clientEmail,
+              clientBirthday,
+              clientAnniversary
+            )}
+          selectedClient={this.state.selectedClient}
+          deleteClient={() => {
+            this.deleteClient();
+          }}
+        />
+      );
+    }
+    //console.log("data source:", this.state.dataSource);
+    console.log(this.state.selectedClient);
+    //const { dataSource } = this.state;
     const columns = this.columns;
     return (
       <div>
@@ -98,11 +222,17 @@ export default class MasterTable extends React.Component {
           onClick={() => this.handleOpenModal()}
         >
           Add
-
         </Button>
         {modal}
+        {editModal}
         <div>
-        <Table bordered dataSource={this.props.dataSource} columns={columns} pagination={false}/>
+          <Table
+            bordered
+            dataSource={this.state.dataSource}
+            columns={columns}
+            pagination={false}
+            onRowClick={(record, index) => this.openEditModal(record, index)}
+          />
         </div>
       </div>
     );

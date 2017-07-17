@@ -7,6 +7,8 @@ var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 const routes = require("./routes/api");
 const Client = require("./models/client.js");
+const Agent = require("./models/agent.js");
+const Campaign = require("./models/campaign.js");
 // const data = require("./src/data.js");
 //and create our instances
 var app = express();
@@ -85,9 +87,18 @@ mongoose.connect(
 mongoose.Promise = global.Promise;
 
 //now  we can set the route path & initialize the API
-// app.get("/", function(req, res) {
-//   res.json({ message: "API Initialized!" });
-// });
+app.get("/:id", function(req, res) {
+  Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
+    if (err) {
+      throw err;
+    }
+    if (agent) {
+      res.send(agent);
+    } else {
+      res.send(false);
+    }
+  });
+});
 
 //Use our router configuration when we call /api
 app.use("/api", routes);

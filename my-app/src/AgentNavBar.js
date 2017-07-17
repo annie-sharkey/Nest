@@ -14,11 +14,24 @@ export default class AgentNavBar extends Component {
     super(props);
     this.state = {
       dataSource: [],
-      current: "mail"
+      current: "mail",
+      update: false
     };
   }
 
   componentWillMount() {
+    axios
+      .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
+      .then(response => {
+        this.setState({
+          dataSource: response.data
+        });
+        console.log(response.data);
+      });
+  }
+
+  handleTableUpdate() {
+    console.log("Agent Nav Bar State changing");
     axios.get("http://localhost:4000/api/clients").then(response => {
       this.setState({
         dataSource: response.data
@@ -33,7 +46,7 @@ export default class AgentNavBar extends Component {
   }
   render() {
     return (
-      <Router>
+      <Router ref="nav">
         <div>
           <Menu
             onClick={e => this.handleClick(e)}
@@ -65,7 +78,11 @@ export default class AgentNavBar extends Component {
           <Route
             exact
             path="/managelists"
-            component={() => <MasterTable dataSource={this.state.dataSource} />}
+            component={() =>
+              <MasterTable
+                dataSource={this.state.dataSource}
+                agentCode={this.props.agent.agentCode}
+              />}
           />
           <Route path="/managelists/campaigns" component={CampaignTable} />
         </div>
