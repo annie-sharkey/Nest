@@ -13,16 +13,21 @@ import ClientForm from "./Form";
 import axios from "axios";
 import AgentForm from "./AgentProfile";
 
-import CreateCampaign from "./CreateCampaign";
+import CreateCampaignParent from "./CreateCampaignParent";
 
 import AgentUpload from "./AgentUpload";
+import { LocaleProvider } from "antd";
+
+import enUS from "antd/lib/locale-provider/en_US";
 
 class App extends Component {
   render() {
     return (
       <div>
-        <CreateCampaign />
-        
+        <LocaleProvider locale={enUS}>
+          
+          <CreateCampaignParent />
+        </LocaleProvider>
       </div>
       // <div>
       //   <Router>
