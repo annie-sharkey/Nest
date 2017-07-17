@@ -8,7 +8,18 @@ var Schema = mongoose.Schema;
 var ClientSchema = new Schema({
   clientName: String,
   clientAddress: String,
-  clientCity: String
+  clientEmail: String,
+  clientCity: String,
+  category: {
+    type: String,
+    default: "buyer"
+  },
+  clientBirthday: String,
+  homeAnniversary: String,
+  campaigns: [String],
+  childrenNames: [String],
+  agentCode: String,
+  office: String
 });
 
 //export our module to use in server.js

@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { Table, Button, Badge, Menu, Dropdown, Icon } from "antd";
-import "antd/dist/antd.css";
+// import React, { Component } from "react";
+// import { Table, Button, Badge, Menu, Dropdown, Icon } from "antd";
+// import "antd/dist/antd.css";
+
 
 //nested table columns and data
 //expandedRowRender is called inside the table in class NestedTable
@@ -21,32 +22,32 @@ const expandedRowRender = () => {
   //   });
   // }
 
-  return <Table columns={columns} dataSource={data} pagination={false} />;
-};
-//end NestedTable
 
-export default class CampaignTable extends Component {
-  state = {
-    selectedRowKeys: [], // Check here to configure the default column
-    loading: false
-  };
+//   return <Table columns={columns} dataSource={data} pagination={false} />;
+// };
+// //end NestedTable
 
-  //select rows
-  start = () => {
-    this.setState({ loading: true });
-    // ajax request after empty completing
-    setTimeout(() => {
-      this.setState({
-        selectedRowKeys: [],
-        loading: false
-      });
-    }, 1000);
-  };
-  onSelectChange = selectedRowKeys => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
-    this.setState({ selectedRowKeys });
-  };
+// export default class CampaignTable extends Component {
+//   state = {
+//     selectedRowKeys: [], // Check here to configure the default column
+//     loading: false
+//   };
 
+//   //select rows
+//   start = () => {
+//     this.setState({ loading: true });
+//     // ajax request after empty completing
+//     setTimeout(() => {
+//       this.setState({
+//         selectedRowKeys: [],
+//         loading: false
+//       });
+//     }, 1000);
+//   };
+//   onSelectChange = selectedRowKeys => {
+//     console.log("selectedRowKeys changed: ", selectedRowKeys);
+//     this.setState({ selectedRowKeys });
+//   };
   render() {
     //columns and data for overall table
 
@@ -66,27 +67,29 @@ export default class CampaignTable extends Component {
       }
     ];
 
-    //select feature
-    //fix select menu
-    const { loading, selectedRowKeys } = this.state;
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-      selections: [
-        {
-          key: "all-data",
-          text: "Select All Data",
-          onSelect: () => {
-            this.setState({
-              //this is hard coded: adjust
-              selectedRowKeys: [...Array(46).keys()] // 0...45
-            });
-          }
-        }
-      ]
-    };
-    const hasSelected = selectedRowKeys.length > 0;
-    //end select feature
+
+//     //select feature
+//     //fix select menu
+//     const { loading, selectedRowKeys } = this.state;
+//     const rowSelection = {
+//       selectedRowKeys,
+//       onChange: this.onSelectChange,
+//       selections: [
+//         {
+//           key: "all-data",
+//           text: "Select All Data",
+//           onSelect: () => {
+//             this.setState({
+//               //this is hard coded: adjust
+//               selectedRowKeys: [...Array(46).keys()] // 0...45
+//             });
+//           }
+//         }
+//       ]
+//     };
+//     const hasSelected = selectedRowKeys.length > 0;
+//     //end select feature
+
 
     return (
       <div>
@@ -115,3 +118,4 @@ export default class CampaignTable extends Component {
     );
   }
 }
+

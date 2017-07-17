@@ -10,7 +10,10 @@ export default class ClientForm extends React.Component {
       visible: this.props.modal,
       name: "",
       address: "",
-      city: ""
+      city: "",
+      email: "",
+      birthday: "",
+      anniversary: ""
     };
   }
 
@@ -32,6 +35,24 @@ export default class ClientForm extends React.Component {
     });
   }
 
+  handleEmailChange(e) {
+    this.setState({
+      email: e.target.value
+    });
+  }
+
+  handleBirthdayChange(e) {
+    this.setState({
+      birthday: e.target.value
+    });
+  }
+
+  hanldeAnniversaryChange(e) {
+    this.setState({
+      anniversary: e.target.value
+    });
+  }
+
   handleCancel() {
     this.props.onCancel();
   }
@@ -40,7 +61,28 @@ export default class ClientForm extends React.Component {
     var name = this.state.name;
     var address = this.state.address;
     var city = this.state.city;
-    this.props.onOk(name, address, city);
+    var email = this.state.email;
+    var birthday = this.state.birthday;
+    var anniversary = this.state.anniversary;
+    this.props.onOk(name, address, city, email, birthday, anniversary);
+  }
+
+  handleEmailChange(e) {
+    this.setState({
+      email: e.target.value
+    });
+  }
+
+  handleBirthdayChange(e) {
+    this.setState({
+      birthday: e.target.value
+    });
+  }
+
+  handleAnniversaryChange(e) {
+    this.setState({
+      anniversary: e.target.value
+    });
   }
 
   render() {
@@ -62,6 +104,15 @@ export default class ClientForm extends React.Component {
           </FormItem>
           <FormItem label="Client City">
             <Input onChange={e => this.handleCityChange(e)} />
+          </FormItem>
+          <FormItem label="Client Email">
+            <Input onChange={e => this.handleEmailChange(e)} />
+          </FormItem>
+          <FormItem label="Client Birthday">
+            <Input onChange={e => this.handleBirthdayChange(e)} />
+          </FormItem>
+          <FormItem label="Client Anniversary">
+            <Input onChange={e => this.handleAnniversaryChange(e)} />
           </FormItem>
         </Form>
       </Modal>
