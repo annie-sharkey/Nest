@@ -16,6 +16,8 @@ export default class AdminHome extends Component {
         <div className="spaceAroundButton">
           <button className="btn">Agent Directory</button>
         </div>
+
+        
         <div className="footer">
           <img src={Nest} width={75} />
         </div>

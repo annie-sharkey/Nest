@@ -4,6 +4,12 @@ import AgentNavBar from "./AgentNavBar";
 import AgentHome from "./AgentHome";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios";
+import CreateCampaignParent from "./CreateCampaignParent";
+
+import AgentUpload from "./AgentUpload";
+import { LocaleProvider } from "antd";
+
+import enUS from "antd/lib/locale-provider/en_US";
 
 // import AdminHome from "./AdminHome";
 // import JSONtoExcel from "./JSONtoExcel";
@@ -118,6 +124,12 @@ class App extends Component {
               />
             </div>
           </Router>
+      <div>
+        <LocaleProvider locale={enUS}>
+          
+          <CreateCampaignParent />
+        </LocaleProvider>
+      </div>
         </div>
       );
     }
