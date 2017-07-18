@@ -19,6 +19,68 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10%;
+}
+
+.login-field {
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-button {
+  font-family: sans-serif;
+  color: #ffffff;
+  background: #46797b;
+  margin-top: 15%;
+  font-size: 15px;
+  padding: 5px 20px 5px 20px;
+  border-radius: 25%;
+}
+
+.login-button-container {
+  margin: auto;
+  text-align: center;
+}
+
+.master {
+  display: flex;
+  flex-direction: column;
+}
+
+.editable-add-btn {
+  margin: auto;
+  margin-top: 0.5%;
+  margin-left: 45%;
+}
+
+.master-table {
+  margin-top: 0.5%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.form-container {
+  margin-top: 3%;
+  margin-left: 35%;
+}
+
+.edit-button {
+  margin-top: 2%;
+  margin-left: 45%;
 }

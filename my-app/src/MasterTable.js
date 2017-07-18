@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import { Table, Input, Icon, Button, Popconfirm } from "antd";
+import { Table, Input, Icon, Popconfirm } from "antd";
+import { Button } from "semantic-ui-react";
 import axios from "axios";
 // import data from './data';
 import ClientForm from "./Form";
 import EditForm from "./EditForm";
+import "./App.css";
 
 export default class MasterTable extends React.Component {
   constructor(props) {
@@ -211,21 +213,17 @@ export default class MasterTable extends React.Component {
         />
       );
     }
-    //console.log("data source:", this.state.dataSource);
-    //console.log(this.state.selectedClient);
-    //const { dataSource } = this.state;
     const columns = this.columns;
     return (
-      <div>
-        <Button
-          className="editable-add-btn"
-          onClick={() => this.handleOpenModal()}
-        >
-          Add
-        </Button>
+      <div className="master">
+        <div className="editable-add-btn">
+          <Button onClick={() => this.handleOpenModal()} width="4" color="grey">
+            Add Client
+          </Button>
+        </div>
         {modal}
         {editModal}
-        <div>
+        <div className="master-table">
           <Table
             bordered
             dataSource={this.state.dataSource}

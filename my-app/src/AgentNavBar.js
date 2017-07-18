@@ -14,7 +14,7 @@ export default class AgentNavBar extends Component {
     super(props);
     this.state = {
       dataSource: [],
-      current: "mail",
+      current: "contacts",
       update: false
     };
   }
@@ -80,7 +80,7 @@ export default class AgentNavBar extends Component {
             path="/managelists"
             component={() =>
               <MasterTable
-                dataSource={this.state.dataSource}
+                dataSource={this.state.dataSource.reverse()}
                 agentCode={this.props.agent.agentCode}
               />}
           />

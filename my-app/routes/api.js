@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Client = require("../models/client.js");
+const Agent = require("../models/agent.js");
 
 // router.get("/clients", function(req, res, next) {
 //   Client.find({}).then(function(clients) {
@@ -60,6 +61,28 @@ router.delete("/clients/:id", function(req, res, next) {
     }
 
     res.json(client);
+  });
+});
+
+router.put("/agent/:id", function(req, res, next) {
+  Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
+    if (err) {
+      throw err;
+    }
+
+    agent.agentName = req.body.agentName || agent.agentName;
+    agent.agentEmail = req.body.agentEmail || agent.agentEmail;
+    agent.agentPhoneNumber =
+      req.body.agentPhoneNumber || agent.agentPhoneNumber;
+    agent.agentTitle = req.body.agentTitle || agent.agentTitle;
+    agent.agentOffice = req.body.agentOffice || agent.agentOffice;
+
+    agent.save(function(err, agent) {
+      if (err) {
+        throw err;
+      }
+      res.json(agent);
+    });
   });
 });
 
