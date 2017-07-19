@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Client = require("../models/client.js");
+const Campaign = require("../models/campaign.js");
 
 // router.get("/clients", function(req, res, next) {
 //   Client.find({}).then(function(clients) {
@@ -60,6 +61,32 @@ router.delete("/clients/:id", function(req, res, next) {
     }
 
     res.json(client);
+  });
+});
+
+router.post("/campaign/", function(req, res, next) {
+  var campaign = new Campaign({
+    campaignName: req.body.campaignName,
+    campaignColumns: req.body.campaignColumns,
+    clients: req.body.clients
+  });
+  campaign.save(function(err) {
+    if (err) {
+      throw err;
+    }
+    res.json(campaign);
+  });
+});
+
+router.post("/upload/", function(req, res, next) {
+  var upload = new Upload({
+    uploadedFiles: req.body.uploadedFiles
+  });
+  upload.save(function(err) {
+    if (err) {
+      throw err;
+    }
+    res.json(uploadedFiles);
   });
 });
 

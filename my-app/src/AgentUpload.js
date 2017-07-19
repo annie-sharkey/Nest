@@ -1,65 +1,110 @@
 import React, { Component } from "react";
 
-import { Upload, message, Button, Icon } from "antd";
-import { Modal, Form, Input, Radio } from "antd";
-const FormItem = Form.Item;
+// import { Upload, message, Button, Icon } from "antd";
+// import { Modal, Form, Input, Radio } from "antd";
 
-// const props = {
-//   name: "file",
-//   action: "//jsonplaceholder.typicode.com/posts/",
-//   headers: {
-//     authorization: "authorization-text"
-//   },
-// onChange(info) {
-//   if (info.file.status !== "uploading") {
-//     console.log(info.file, info.fileList);
-//   }
-//   if (info.file.status === "done") {
-//     message.success(`${info.file.name} file uploaded successfully`);
-//   } else if (info.file.status === "error") {
-//     message.error(`${info.file.name} file upload failed.`);
+// const FormItem = Form.Item;
+
+// export default class AgentUpload extends Component {
+//   render() {
+//     return (
+
+//     )
 //   }
 // }
 
-export default class AgentUpload extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      props: [
-        {
-          name: "file",
-          action: "//jsonplaceholder.typicode.com/posts/",
-          headers: {
-            authorization: "authorization-text"
-          }
-        }
-      ]
-    };
-  }
+import { Upload, Button, Icon, message } from "antd";
+// import reqwest from 'reqwest';
+import axios from "axios";
 
-  onChange(info) {
-    console.log("onchange entered");
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  }
+export default class AgentUpload extends React.Component {
+  state = {
+    fileList: [],
+    uploading: false
+  };
+
+  handleUpload = () => {
+    const { fileList } = this.state;
+    const formData = new FormData();
+    fileList.forEach(file => {
+      formData.append("files[]", file);
+    });
+
+    this.setState({
+      uploading: true
+    });
+
+    // You can use any AJAX library you like
+    //   axios({
+    //     url: "http://localhost:4000/api/upload/",
+    //     method: "post",
+    //     processData: false,
+    //     data: formData,
+    //     success: () => {
+    //       this.setState({
+    //         fileList: [],
+    //         uploading: false
+    //       });
+    //       message.success("upload successfully.");
+    //     },
+    //     error: () => {
+    //       this.setState({
+    //         uploading: false
+    //       });
+    //       message.error("upload failed.");
+    //     }
+    //   });
+    // };
+
+    axios
+      .post("http://localhost:4000/api/upload/", {
+        uploadedFiles: this.state.fileList
+      })
+      .then(res => {
+        console.log(res);
+      });
+  };
 
   render() {
+    const { uploading } = this.state;
+    const props = {
+      action: "http://localhost:4000/api/upload/",
+      onRemove: file => {
+        this.setState(({ fileList }) => {
+          const index = fileList.indexOf(file);
+          const newFileList = fileList.slice();
+          newFileList.splice(index, 1);
+          return {
+            fileList: newFileList
+          };
+        });
+      },
+      beforeUpload: file => {
+        this.setState(({ fileList }) => ({
+          fileList: [...fileList, file]
+        }));
+        return false;
+      },
+      fileList: this.state.fileList
+    };
+
     return (
-      <Upload {...this.state.props}>
-        <Form>
-          <FormItem label="PDF">
-            <Button onClick={info => this.onChange(info)}>
-              <Icon type="upload" /> Click to Upload
-            </Button>
-          </FormItem>
-        </Form>
-      </Upload>
+      <div>
+        <Upload {...props}>
+          <Button>
+            <Icon type="upload" /> Select File
+          </Button>
+        </Upload>
+        <Button
+          className="upload-demo-start"
+          type="primary"
+          onClick={this.handleUpload}
+          disabled={this.state.fileList.length === 0}
+          loading={uploading}
+        >
+          {uploading ? "Uploading" : "Start Upload"}
+        </Button>
+      </div>
     );
   }
 }
