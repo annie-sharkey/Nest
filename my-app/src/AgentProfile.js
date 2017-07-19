@@ -60,9 +60,7 @@ class AgentProfile extends Component {
     axios
       .put("http://localhost:4000/api/agent/" + agent.agentCode, agent)
       .then(response => {
-        this.setState({
-          agent: response.data
-        });
+        this.props.updateAgent(response.data);
       });
   }
 

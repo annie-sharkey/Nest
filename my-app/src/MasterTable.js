@@ -104,7 +104,6 @@ export default class MasterTable extends React.Component {
       homeAnniversary: clientAnniversary
     });
     this.closeEditModal();
-    //this.props.handleTableUpdate();
   }
 
   handleAdd(
@@ -115,6 +114,8 @@ export default class MasterTable extends React.Component {
     clientBirthday,
     clientAnniversary
   ) {
+    var self = this;
+    var data;
     axios.post("http://localhost:4000/api/clients", {
       clientName: clientName,
       clientAddress: clientAddress,
@@ -124,29 +125,21 @@ export default class MasterTable extends React.Component {
       homeAnniversary: clientAnniversary,
       agentCode: this.props.agentCode
     });
-    this.setState({
-      modal: false
-    });
-    //this.props.handleTableUpdate();
+    this.handleCloseModal();
   }
 
   deleteClient() {
     axios.delete(
       "http://localhost:4000/api/clients/" + this.state.selectedClient._id
     );
+
     this.setState({
       editModal: false
-    });
-    this.props.handleTableUpdate();
-  }
-
-  componentWillReceiveProps() {
-    this.setState({
-      dataSource: this.props.dataSource
     });
   }
 
   render() {
+    console.log(this.state.dataSource);
     const rowSelection = {
       onSelect: (record, selected, selectedRows) => {
         console.log(record);

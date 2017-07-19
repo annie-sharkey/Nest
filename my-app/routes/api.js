@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Client = require("../models/client.js");
 const Agent = require("../models/agent.js");
+const Campaign = require("../models/campaign.js");
 
 // router.get("/clients", function(req, res, next) {
 //   Client.find({}).then(function(clients) {
@@ -83,6 +84,15 @@ router.put("/agent/:id", function(req, res, next) {
       }
       res.json(agent);
     });
+  });
+});
+
+router.get("/campaigns", function(req, res, next) {
+  Campaign.find({}, function(err, campaigns) {
+    if (err) {
+      throw err;
+    }
+    res.json(campaigns);
   });
 });
 

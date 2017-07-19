@@ -20,7 +20,8 @@ class App extends Component {
     this.state = {
       field: "",
       agent: {},
-      logged: false
+      logged: false,
+      updated: false
     };
   }
 
@@ -74,6 +75,15 @@ class App extends Component {
     }
   }
 
+  updateClientInfo() {}
+
+  updateAgent(data) {
+    this.setState({
+      updated: true,
+      agent: data
+    });
+  }
+
   render() {
     if (!this.state.logged) {
       return (
@@ -118,7 +128,13 @@ class App extends Component {
               />
               <Route
                 path="/profile"
-                component={() => <AgentForm agent={this.state.agent} />}
+                component={() =>
+                  <AgentForm
+                    agent={this.state.agent}
+                    updateAgent={data => {
+                      this.updateAgent(data);
+                    }}
+                  />}
               />
             </div>
           </Router>
