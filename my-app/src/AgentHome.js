@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import "./AgentHome.css";
 import Nest from "./Nest.png";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
-import { Button, Modal, Form, Input, Radio } from "antd";
-import { Icon } from "antd";
+import { Modal, Form, Input, Radio } from "antd";
+import { Button } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import AgentForm from "./AgentProfile";
 import AgentNavBar from "./AgentNavBar";
 import axios from "axios";
@@ -16,24 +17,23 @@ export default class AgentHome extends Component {
   logOut() {
     sessionStorage.setItem("logged", false);
   }
+
   render() {
     return (
       <Router>
-        <div>
+        <div className="home-container">
+          <div className="profile">
+            <Link to="/profile">
+              <Icon name="edit" size="huge" />
+            </Link>
+            <text className="name">
+              <strong>
+                {this.props.agent.agentName}{" "}
+              </strong>
+            </text>
+          </div>
           <div className="center">
-            <div className="heading">
-              <img src={Nest} width={75} />
-            </div>
-
-            <div className="edit">
-              <Link to="/profile">
-                <Icon type="edit" style={{ fontSize: 25 }}>
-                  {this.props.agent.agentName}{" "}
-                </Icon>
-              </Link>
-              <Button onClick={() => this.props.logOut()}>Log Out</Button>
-            </div>
-
+            <img src={Nest} width={75} />
             <div className="buttons">
               <Link to="/managelists">
                 <div className="spaceAroundButton">
@@ -44,7 +44,11 @@ export default class AgentHome extends Component {
                 <button className="btn">Media Center</button>
               </div>
             </div>
-
+          </div>
+          <div className="logout">
+            <Button color="black" onClick={() => this.props.logOut()}>
+              Log Out
+            </Button>
           </div>
         </div>
       </Router>

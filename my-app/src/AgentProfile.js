@@ -1,258 +1,137 @@
-// import React, { Component } from "react";
-// import {
-//   Form,
-//   Input,
-//   Tooltip,
-//   Icon,
-//   Cascader,
-//   Select,
-//   Row,
-//   Col,
-//   Checkbox,
-//   Button,
-//   AutoComplete
-// } from "antd";
-// import { Link } from "react-router-dom";
+import React, { Component } from "react";
+import { Form, Input, Button } from "semantic-ui-react";
+import "./App.css";
+import axios from "axios";
+import { Icon } from "semantic-ui-react";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 
-// const FormItem = Form.Item;
-// const Option = Select.Option;
-// const AutoCompleteOption = AutoComplete.Option;
+class AgentProfile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      agent: this.props.agent,
+      name: "",
+      email: "",
+      title: "",
+      phone: "",
+      office: ""
+    };
+  }
 
-// class AgentProfile extends React.Component {
-//   state = {
-//     confirmDirty: false,
-//     autoCompleteResult: []
-//   };
-//   handleSubmit = e => {
-//     e.preventDefault();
-//     this.props.form.validateFieldsAndScroll((err, values) => {
-//       if (!err) {
-//         console.log("Received values of form: ", values);
-//       }
-//     });
-//   };
-//   handleConfirmBlur = e => {
-//     const value = e.target.value;
-//     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-//   };
-//   checkPassword = (rule, value, callback) => {
-//     const form = this.props.form;
-//     if (value && value !== form.getFieldValue("password")) {
-//       callback("Two passwords that you enter is inconsistent!");
-//     } else {
-//       callback();
-//     }
-//   };
-//   checkConfirm = (rule, value, callback) => {
-//     const form = this.props.form;
-//     if (value && this.state.confirmDirty) {
-//       form.validateFields(["confirm"], { force: true });
-//     }
-//     callback();
-//   };
+  handleNameChange(e) {
+    this.setState({
+      name: e.target.value
+    });
+  }
 
-//   handleWebsiteChange = value => {
-//     let autoCompleteResult;
-//     if (!value) {
-//       autoCompleteResult = [];
-//     } else {
-//       autoCompleteResult = [".com", ".org", ".net"].map(
-//         domain => `${value}${domain}`
-//       );
-//     }
-//     this.setState({ autoCompleteResult });
-//   };
+  handleEmailChange(e) {
+    this.setState({
+      email: e.target.value
+    });
+  }
 
-//   render() {
-//     const { getFieldDecorator } = this.props.form;
-//     const { autoCompleteResult } = this.state;
+  handleTitleChange(e) {
+    this.setState({
+      title: e.target.value
+    });
+  }
 
-//     const formItemLayout = {
-//       labelCol: {
-//         xs: { span: 24 },
-//         sm: { span: 6 }
-//       },
-//       wrapperCol: {
-//         xs: { span: 24 },
-//         sm: { span: 14 }
-//       }
-//     };
-//     const tailFormItemLayout = {
-//       wrapperCol: {
-//         xs: {
-//           span: 24,
-//           offset: 0
-//         },
-//         sm: {
-//           span: 14,
-//           offset: 6
-//         }
-//       }
-//     };
-//     const prefixSelector = getFieldDecorator("prefix", {
-//       initialValue: "86"
-//     })(
-//       <Select style={{ width: 60 }}>
-//         <Option value="86">+86</Option>
-//         <Option value="87">+87</Option>
-//       </Select>
-//     );
+  handlePhoneChange(e) {
+    this.setState({
+      phone: e.target.value
+    });
+  }
 
-//     const websiteOptions = autoCompleteResult.map(website =>
-//       <AutoCompleteOption key={website}>
-//         {website}
-//       </AutoCompleteOption>
-//     );
+  handleOfficeChange(e) {
+    this.setState({
+      office: e.target.value
+    });
+  }
 
-//     return (
-//       <div>
-//         <Link to="/">
-//           <Icon type="arrow-left" style={{ fontSize: 25 }} />
-//         </Link>
+  editInfo() {
+    var agent = this.state.agent;
+    console.log(agent);
+    agent.agentName = this.state.name;
+    agent.agentEmail = this.state.email;
+    agent.agentPhoneNumber = this.state.phone;
+    agent.agentTitle = this.state.title;
+    agent.agentOffice = this.state.office;
 
-//         <Form onSubmit={this.handleSubmit}>
-//           <FormItem {...formItemLayout} label="First Name" hasFeedback>
-//             {getFieldDecorator("name", {
-//               rules: [
-//                 {
-//                   type: "first name"
-//                 },
-//                 {
-//                   required: true,
-//                   message: "Please input your first name!"
-//                 }
-//               ]
-//             })(<Input />)}
-//           </FormItem>
+    axios
+      .put("http://localhost:4000/api/agent/" + agent.agentCode, agent)
+      .then(response => {
+        this.props.updateAgent(response.data);
+      });
+  }
 
-//           <FormItem {...formItemLayout} label="Last Name" hasFeedback>
-//             {getFieldDecorator("name", {
-//               rules: [
-//                 {
-//                   type: "last name"
-//                 },
-//                 {
-//                   required: true,
-//                   message: "Please input your last name!"
-//                 }
-//               ]
-//             })(<Input />)}
-//           </FormItem>
+  render() {
+    var agent = this.state.agent;
+    return (
+      <div>
+        <Link to="/">
+          <Icon name="home" color="positive" size="huge" />
+        </Link>
+        <div className="form-container">
+          <Form className="form" onSubmit={e => this.handleSubmit(e)}>
+            <Form.Input
+              className="form-field"
+              placeholder="Name"
+              label="Name"
+              onChange={e => this.handleNameChange(e)}
+              width="7"
+              defaultValue={agent.agentName}
+            />
+            <Form.Input
+              className="form-field"
+              placeholder="Email"
+              label="Email"
+              onChange={e => this.handleEmailChange(e)}
+              width="7"
+              defaultValue={agent.agentEmail}
+            />
+            <Form.Input
+              className="form-field"
+              placeholder="Title"
+              label="Title"
+              onChange={e => this.handleTitleChange(e)}
+              width="7"
+              defaultValue={agent.agentTitle}
+            />
+            <Form.Input
+              className="form-field"
+              label="FON Code"
+              disabled={true}
+              width="7"
+              defaultValue={agent.agentCode}
+            />
+            <Form.Input
+              className="form-field"
+              defaultValue="111-111-1111"
+              label="Phone"
+              width="7"
+              onChange={e => this.handlePhoneChange(e)}
+              defaultValue={agent.agentPhoneNumber}
+            />
+            <Form.Input
+              className="form-field"
+              placeholder="Charlottesville"
+              label="Office"
+              onChange={e => this.handleOfficeChange(e)}
+              width="7"
+              defaultValue={agent.agentOffice}
+            />
+          </Form>
+        </div>
+        <div className="edit-button">
+          <Button
+            content="Edit"
+            onClick={() => this.editInfo()}
+            color="black"
+          />
+        </div>
+      </div>
+    );
+  }
+}
 
-//           <FormItem {...formItemLayout} label="Title" hasFeedback>
-//             {getFieldDecorator("name", {
-//               rules: [
-//                 {
-//                   type: "title"
-//                 },
-//                 {
-//                   required: true
-//                 }
-//               ]
-//             })(<Input />)}
-//           </FormItem>
-
-//           <FormItem {...formItemLayout} label="E-mail" hasFeedback>
-//             {getFieldDecorator("email", {
-//               rules: [
-//                 {
-//                   type: "email",
-//                   message: "The input is not valid E-mail!"
-//                 },
-//                 {
-//                   required: true,
-//                   message: "Please input your E-mail!"
-//                 }
-//               ]
-//             })(<Input />)}
-//           </FormItem>
-
-//           <FormItem {...formItemLayout} label="E-mail 2" hasFeedback>
-//             {getFieldDecorator("email", {
-//               rules: [
-//                 {
-//                   type: "email",
-//                   message: "The input is not valid E-mail!"
-//                 },
-//                 {
-//                   required: true,
-//                   message: "Please input your E-mail!"
-//                 }
-//               ]
-//             })(<Input />)}
-//           </FormItem>
-
-//           <FormItem {...formItemLayout} label="Password" hasFeedback>
-//             {getFieldDecorator("password", {
-//               rules: [
-//                 {
-//                   required: true,
-//                   message: "Please input your password!"
-//                 },
-//                 {
-//                   validator: this.checkConfirm
-//                 }
-//               ]
-//             })(<Input type="password" />)}
-//           </FormItem>
-//           <FormItem {...formItemLayout} label="Confirm Password" hasFeedback>
-//             {getFieldDecorator("confirm", {
-//               rules: [
-//                 {
-//                   required: true,
-//                   message: "Please confirm your password!"
-//                 },
-//                 {
-//                   validator: this.checkPassword
-//                 }
-//               ]
-//             })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
-//           </FormItem>
-
-//           <FormItem {...formItemLayout} label="Phone Number">
-//             {getFieldDecorator("phone", {
-//               rules: [
-//                 { required: true, message: "Please input your phone number!" }
-//               ]
-//             })(<Input />)}
-//           </FormItem>
-
-//           <FormItem {...formItemLayout} label="Website">
-//             {getFieldDecorator("website", {
-//               rules: [{ required: true, message: "Please input website!" }]
-//             })(
-//               <AutoComplete
-//                 dataSource={websiteOptions}
-//                 onChange={this.handleWebsiteChange}
-//                 placeholder="website"
-//               >
-//                 <Input />
-//               </AutoComplete>
-//             )}
-//           </FormItem>
-
-//           <FormItem {...tailFormItemLayout}>
-//             <Button type="primary" htmlType="save" size="large">
-//               Save
-//             </Button>
-//           </FormItem>
-//         </Form>
-//       </div>
-//     );
-//   }
-// }
-
-// const AgentForm = Form.create()(AgentProfile);
-// export default AgentForm;
-
-// // import React, { Component } from 'react';
-
-// // export default class AgentProfile extends Component {
-// //     render() {
-// //         return (
-// //             <div>
-
-// //                 </div>
-// //         )
-// //     }
-// // }
+export default AgentProfile;
