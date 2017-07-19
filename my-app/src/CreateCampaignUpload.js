@@ -28,8 +28,8 @@ export default class CreateCampaignUpload extends Component {
       uploads: [],
       edit: false,
       // value: "",
-      editedTitle: "",
-      done: false
+      editedTitle: ""
+      // done: false
     };
   }
 
@@ -94,26 +94,26 @@ export default class CreateCampaignUpload extends Component {
     });
   }
 
-  handleAllUploadsComplete(event) {
-    this.setState({
-      ...this.state,
-      done: true
-    });
-  }
+  // handleAllUploadsComplete(event) {
+  //   this.setState({
+  //     ...this.state,
+  //     done: true
+  //   });
+  // }
 
-  handleAllUploadsEdit(event) {
-    this.setState({
-      ...this.state,
-      done: false
-    });
-  }
+  // handleAllUploadsEdit(event) {
+  //   this.setState({
+  //     ...this.state,
+  //     done: false
+  //   });
+  // }
 
   render() {
     return (
       <div>
         <Form>
           <h3>Uploads</h3>
-          
+
           {!this.state.done &&
             <FormItem label="Create a new upload:" style={{ width: 150 }}>
               <Input
@@ -135,32 +135,29 @@ export default class CreateCampaignUpload extends Component {
                   </Button>}
               </div>
             </FormItem>}
-          {this.state.done &&
-            this.state.uploads.length < 1 &&
-            <div>No Uploads</div>}
-          
+          {/*{this.state.done &&*/}
+          {this.state.uploads.length < 1 && <div>No Uploads</div>}
+
           {this.state.uploads.map(upload => {
             return (
               <div>
-                {!this.state.done &&
-                  <div className="columnName">
-                    <Icon
-                      type="close"
-                      onClick={event => this.handleDeleteUpload(upload.title)}
-                    />
-                    <Icon
-                      type={"edit"}
-                      onClick={event =>
-                        this.handleEditUpload(event, upload.title)}
-                    />
-                  </div>}
-
                 {" " + upload.title}
+                <div className="columnName">
+                  <Icon
+                    type="close"
+                    onClick={event => this.handleDeleteUpload(upload.title)}
+                  />
+                  <Icon
+                    type={"edit"}
+                    onClick={event =>
+                      this.handleEditUpload(event, upload.title)}
+                  />
+                </div>
               </div>
             );
           })}
           <br />
-          {!this.state.done &&
+          {/*{!this.state.done &&
             <Button
               type="dashed"
               onClick={event => {
@@ -169,8 +166,8 @@ export default class CreateCampaignUpload extends Component {
               }}
             >
               Submit Upload List
-            </Button>}
-          {this.state.done &&
+            </Button>}*/}
+          {/*{this.state.done &&
             <Button
               type="dashed"
               onClick={event => {
@@ -178,7 +175,7 @@ export default class CreateCampaignUpload extends Component {
               }}
             >
               Edit Upload List
-            </Button>}
+            </Button>}*/}
         </Form>
       </div>
     );

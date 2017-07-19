@@ -46,7 +46,9 @@ export default class AgentHome extends Component {
             </div>
           </div>
           <div className="logout">
-            <Button color="black" onClick={() => this.props.logOut()}>
+            <Button color="black" 
+            //onClick={() => this.props.logOut()}
+            >
               Log Out
             </Button>
           </div>

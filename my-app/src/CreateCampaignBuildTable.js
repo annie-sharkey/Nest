@@ -35,7 +35,7 @@ export default class CreateCampaignBuildTable extends Component {
       edit: false,
       // value: "",
       editedTitle: "",
-      done: false
+      // done: false
     };
   }
 
@@ -94,19 +94,19 @@ export default class CreateCampaignBuildTable extends Component {
     });
   }
 
-  handleAllColumnsComplete(event) {
-    this.setState({
-      ...this.state,
-      done: true
-    });
-  }
+  // handleAllColumnsComplete(event) {
+  //   this.setState({
+  //     ...this.state,
+  //     done: true
+  //   });
+  // }
 
-  handleAllColumnsEdit(event) {
-    this.setState({
-      ...this.state,
-      done: false
-    });
-  }
+  // handleAllColumnsEdit(event) {
+  //   this.setState({
+  //     ...this.state,
+  //     done: false
+  //   });
+  // }
 
   render() {
     console.log(this.props.updateState);
@@ -114,11 +114,11 @@ export default class CreateCampaignBuildTable extends Component {
       <div>
         <Form>
           <h3>Columns</h3>
-        
+
           {!this.state.done &&
-            <FormItem label="Create a new column:" style={{ width: 150 }}>
+            <FormItem label="Create a column:" style={{ width: 150 }}>
               <Input
-              placeholder="Column Title"
+                placeholder="Column Title"
                 value={this.state.columnName}
                 onChange={event => this.handleInput(event)}
                 onPressEnter={event =>
@@ -140,7 +140,7 @@ export default class CreateCampaignBuildTable extends Component {
           {this.state.columns.map(column => {
             return (
               <div>
-                {!this.state.done &&
+                {" " + column}
                   <div className="columnName">
                     <Icon
                       type="close"
@@ -150,13 +150,12 @@ export default class CreateCampaignBuildTable extends Component {
                       type={"edit"}
                       onClick={event => this.handleEditColumn(event, column)}
                     />
-                  </div>}
-                {" " + column}
+                  </div>
               </div>
             );
           })}
           <br />
-          {!this.state.done &&
+          {/*{!this.state.done &&
             <Button
               type="dashed"
               onClick={event => {
@@ -165,8 +164,8 @@ export default class CreateCampaignBuildTable extends Component {
               }}
             >
               Complete Column List
-            </Button>}
-          {this.state.done &&
+            </Button>}*/}
+          {/*{this.state.done &&
             <Button
               type="dashed"
               onClick={event => {
@@ -174,7 +173,7 @@ export default class CreateCampaignBuildTable extends Component {
               }}
             >
               Submit Column List
-            </Button>}
+            </Button>}*/}
         </Form>
       </div>
     );

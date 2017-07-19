@@ -2,18 +2,12 @@ import React, { Component } from "react";
 import {
   Form,
   Input,
-  Tooltip,
   Icon,
-  Cascader,
-  Select,
   Row,
   Col,
   Checkbox,
   Button,
-  AutoComplete,
   Card,
-  Table,
-  Popconfirm,
   DatePicker
 } from "antd";
 import "antd/dist/antd.css";
@@ -21,8 +15,9 @@ import "antd/dist/antd.css";
 import CampaignTable from "./CampaignTable";
 import CreateCampaignUpload from "./CreateCampaignUpload";
 import CreateCampaignBuildTable from "./CreateCampaignBuildTable";
-import './CreateCampaignParent.css'
+import "./CreateCampaignParent.css";
 import axios from "axios";
+import { Grid } from "semantic-ui-react";
 
 const FormItem = Form.Item;
 const { MonthPicker, RangePicker } = DatePicker;
@@ -35,7 +30,7 @@ export default class CreateCampaignParent extends Component {
       endDate: "",
       writeColumns: [],
       writeUploads: [],
-      title: ""
+      campaignTitle: ""
     };
   }
 
@@ -45,11 +40,6 @@ export default class CreateCampaignParent extends Component {
     });
   }
 
-  handleSubmitTitle(event) {
-    this.setState({
-      title: this.state.campaignTitle
-    })
-  }
   handleStartDate(date) {
     this.setState({
       ...this.state,
@@ -101,39 +91,41 @@ export default class CreateCampaignParent extends Component {
   render() {
     return (
       <div>
-        <h1>Create A Campaign</h1>
-        <br />
-        <Card className="form">
-          <Form>
-            <h3>Set Campaign Title</h3>
-            <br />
-            <FormItem style={{ width: 150 }} >
-              <Input
-                placeholder="Title"
-                onChange={event => this.handleCampaignTitle(event)}
-                
-              />
-              <Button onClick={event => this.handleSubmitTitle(event)} type="dashed">Enter</Button>
-            </FormItem>
-            
-            <br />
-            <br />
-            <h3>Campaign Timeline</h3>
-            <br />
-            <FormItem>
-              <DatePicker
-                placeholder="Start date"
-                format="MM/DD/YYYY"
-                onChange={event => this.handleStartDate(event)}
-                
-              />
+        <Card width={100}>
+          <h1>Create A Campaign</h1>
+          <br />
+          <Grid divided="vertically">
+            <Grid.Row columns={2}>
+              <Grid.Column>
+                <h3>Campaign</h3>
+                <br />
+                <FormItem style={{ width: 150 }}>
+                  <Input
+                    placeholder="Title"
+                    onChange={event => this.handleCampaignTitle(event)}
+                  />
+                </FormItem>
+              </Grid.Column>
+              <Grid.Column>
+                <h3>Campaign Timeline</h3>
+                <br />
+                <FormItem>
+                  <DatePicker
+                    placeholder="Start date"
+                    format="MM/DD/YYYY"
+                    onChange={event => this.handleStartDate(event)}
+                  />
+                  <DatePicker
+                    placeholder="End date"
+                    format="MM/DD/YYYY"
+                    onChange={event => this.handleEndDate(event)}
+                  />
+                </FormItem>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
 
-              <DatePicker
-                placeholder="End date"
-                format="MM/DD/YYYY"
-                onChange={event => this.handleEndDate(event)}
-              />
-            </FormItem>
+          <Form>
             <CreateCampaignBuildTable
               updateColumnState={this.updateColumnState}
             />
@@ -141,13 +133,14 @@ export default class CreateCampaignParent extends Component {
             <br />
             <CreateCampaignUpload updateUploadState={this.updateUploadState} />
           </Form>
-        </Card>
-        <br />
-        <br />
 
-        <Button type="danger" onClick={event => this.WritetoDatabase()}>
-          Finish Creating Campaign
-        </Button>
+          <br />
+          <br />
+
+          <Button type="danger" onClick={event => this.WritetoDatabase()}>
+            Finish Creating Campaign
+          </Button>
+        </Card>
       </div>
     );
   }
