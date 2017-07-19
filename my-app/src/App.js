@@ -8,11 +8,13 @@ import axios from "axios";
 import AgentUpload from "./AgentUpload";
 import { LocaleProvider } from "antd";
 import enUS from "antd/lib/locale-provider/en_US";
+
 import AgentForm from "./AgentProfile";
 import { Modal, Form, Input, Radio } from "antd";
 import { Button } from "semantic-ui-react";
 //import TestTable from "./TestTable";
 //import TestCreateCampaign from "./TestCreateCampaign";
+
 
 class App extends Component {
   constructor(props) {
@@ -144,6 +146,7 @@ class App extends Component {
             </LocaleProvider>
           </div>*/}
         </div>
+
       );
     }
   }

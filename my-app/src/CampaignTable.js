@@ -26,6 +26,7 @@ const expandedRowRender = () => {
       upgradeNum: "Upgraded: 56"
     });
   }
+
   return <Table columns={columns} dataSource={data} pagination={false} />;
 };
 // //end NestedTable
@@ -39,6 +40,7 @@ export default class CampaignTable extends Component {
   }
   //   //select rows
   start() {
+
     this.setState({ loading: true });
     // ajax request after empty completing
     setTimeout(() => {
@@ -47,11 +49,13 @@ export default class CampaignTable extends Component {
         loading: false
       });
     }, 1000);
+
   }
   onSelectChange(selectedRowKeys) {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
     this.setState({ selectedRowKeys });
   }
+
   render() {
     const columns = [
       { title: "Client Email", dataIndex: "Client Email", key: "Client Email" },
@@ -66,6 +70,7 @@ export default class CampaignTable extends Component {
         key: "Home Anniversary"
       }
     ];
+
     const data = [];
     for (let i = 0; i < 3; ++i) {
       data.push({
@@ -78,10 +83,12 @@ export default class CampaignTable extends Component {
     //columns and data for overall table
     //read data in
     //     //select feature
+
     //fix select menu
     const { loading, selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
+
       onChange: this.onSelectChange(),
       selections: [
         {
@@ -97,7 +104,10 @@ export default class CampaignTable extends Component {
       ]
     };
     const hasSelected = selectedRowKeys.length > 0;
-    //     //end select feature
+
+
+
+
     return (
       <div>
         <div style={{ marginBottom: 16 }}>

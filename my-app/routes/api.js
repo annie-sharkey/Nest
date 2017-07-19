@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Client = require("../models/client.js");
+
 const Agent = require("../models/agent.js");
+
 const Campaign = require("../models/campaign.js");
 
 // router.get("/clients", function(req, res, next) {
@@ -65,6 +67,7 @@ router.delete("/clients/:id", function(req, res, next) {
   });
 });
 
+
 router.put("/agent/:id", function(req, res, next) {
   Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
     if (err) {
@@ -93,6 +96,30 @@ router.get("/campaigns", function(req, res, next) {
       throw err;
     }
     res.json(campaigns);
+
+router.post("/campaign/", function(req, res, next) {
+  var campaign = new Campaign({
+    campaignName: req.body.campaignName,
+    campaignColumns: req.body.campaignColumns,
+    clients: req.body.clients
+  });
+  campaign.save(function(err) {
+    if (err) {
+      throw err;
+    }
+    res.json(campaign);
+  });
+});
+
+router.post("/upload/", function(req, res, next) {
+  var upload = new Upload({
+    uploadedFiles: req.body.uploadedFiles
+  });
+  upload.save(function(err) {
+    if (err) {
+      throw err;
+    }
+    res.json(uploadedFiles);
   });
 });
 

@@ -16,6 +16,7 @@ import {
   Popconfirm
 } from "antd";
 import "antd/dist/antd.css";
+import "./CreateCampaignBuildTable.css";
 // import TestTable from "./TestTable";
 import CampaignTable from "./CampaignTable";
 const FormItem = Form.Item;
@@ -27,7 +28,8 @@ export default class CreateCampaignUpload extends Component {
       uploads: [],
       edit: false,
       // value: "",
-      editedTitle: ""
+      editedTitle: "",
+      done: false
     };
   }
 
@@ -92,13 +94,30 @@ export default class CreateCampaignUpload extends Component {
     });
   }
 
+  handleAllUploadsComplete(event) {
+    this.setState({
+      ...this.state,
+      done: true
+    });
+  }
+
+  handleAllUploadsEdit(event) {
+    this.setState({
+      ...this.state,
+      done: false
+    });
+  }
+
   render() {
     return (
       <div>
-      
-          <Form>
+        <Form>
+          <h3>Uploads</h3>
+          
+          {!this.state.done &&
             <FormItem label="Create a new upload:" style={{ width: 150 }}>
               <Input
+                placeholder="Upload Title"
                 value={this.state.uploadName}
                 onChange={event => this.handleInput(event)}
                 onPressEnter={event =>
@@ -115,24 +134,52 @@ export default class CreateCampaignUpload extends Component {
                     Resubmit
                   </Button>}
               </div>
-            </FormItem>
-            {this.state.uploads.map(upload => {
-              return (
-                <div>
-                  <Icon
-                    type="close"
-                    onClick={event => this.handleDeleteUpload(upload.title)}
-                  />
-                  <Icon
-                    type={"edit"}
-                    onClick={event =>
-                      this.handleEditUpload(event, upload.title)}
-                  />
-                  {" " + upload.title}
-                </div>
-              );
-            })}
-          </Form>
+            </FormItem>}
+          {this.state.done &&
+            this.state.uploads.length < 1 &&
+            <div>No Uploads</div>}
+          
+          {this.state.uploads.map(upload => {
+            return (
+              <div>
+                {!this.state.done &&
+                  <div className="columnName">
+                    <Icon
+                      type="close"
+                      onClick={event => this.handleDeleteUpload(upload.title)}
+                    />
+                    <Icon
+                      type={"edit"}
+                      onClick={event =>
+                        this.handleEditUpload(event, upload.title)}
+                    />
+                  </div>}
+
+                {" " + upload.title}
+              </div>
+            );
+          })}
+          <br />
+          {!this.state.done &&
+            <Button
+              type="dashed"
+              onClick={event => {
+                this.handleAllUploadsComplete(event);
+                this.props.updateUploadState(this.state.uploads);
+              }}
+            >
+              Submit Upload List
+            </Button>}
+          {this.state.done &&
+            <Button
+              type="dashed"
+              onClick={event => {
+                this.handleAllUploadsEdit(event);
+              }}
+            >
+              Edit Upload List
+            </Button>}
+        </Form>
       </div>
     );
   }
