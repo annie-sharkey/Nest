@@ -132,3 +132,9 @@
 /* .background-gradient {
   background: linear-gradient(to bottom, #46797b 0%, #5c6670 100%);
 } */
+
+.campaignPage {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}

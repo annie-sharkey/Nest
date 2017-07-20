@@ -45,6 +45,18 @@ export default class AgentNavBar extends Component {
       current: e.key
     });
   }
+
+  handleMasterHighlight() {
+    this.setState({
+      current: "contacts"
+    });
+  }
+
+  handleCampaignHighlight() {
+    this.setState({
+      current: "database"
+    });
+  }
   render() {
     console.log(this.state.dataSource);
     return (
@@ -64,14 +76,20 @@ export default class AgentNavBar extends Component {
 
             <Menu.Item key="contacts">
               <Link to="/managelists">
-                <Icon type="contacts" />
+                <Icon
+                  type="contacts"
+                  onClick={() => this.handleMasterHighlight()}
+                />
                 Master List
               </Link>
             </Menu.Item>
 
             <Menu.Item key="database">
               <Link to="/managelists/campaigns">
-                <Icon type="database" />
+                <Icon
+                  type="database"
+                  onClick={() => this.handleCampaignHighlight()}
+                />
                 Build a Campaign
               </Link>
             </Menu.Item>

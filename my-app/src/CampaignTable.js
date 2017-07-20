@@ -1,7 +1,7 @@
 import React from "react";
 import { Table } from "semantic-ui-react";
 import "./App.css";
-import { Dropdown, Menu } from "semantic-ui-react";
+import { Dropdown, Menu, Icon } from "semantic-ui-react";
 import axios from "axios";
 
 export default class CampaignTable extends React.Component {
@@ -11,30 +11,37 @@ export default class CampaignTable extends React.Component {
       leftData: [],
       rightData: [],
       campaigns: [],
-      selectedCampaign: "Not Included",
+      currentCampaign: "Not Included",
       columns: []
     };
   }
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/campaigns").then(res => {
-      console.log(res.data[3].campaignColumns);
+      var last = res.data.length - 1;
       this.setState({
         campaigns: res.data,
-        columns: res.data[3].campaignColumns,
-        leftData: this.props.dataSource
+        columns: res.data[last].campaignColumns,
+        leftData: this.props.dataSource,
+        currentCampaign: res.data[last].campaignName
       });
     });
   }
 
-  changeCampaign(e) {
+  handleClick(client, columns) {
+    var included = this.state.rightData;
+    included.push(client);
+    console.log(included);
     this.setState({
-      selectedCampaign: e.target.value
+      ...this.state,
+      rightData: included,
+      columns: columns
     });
   }
 
   render() {
-    var columns = this.state.columns.splice(0, 4);
+    var columns = this.state.columns.splice(0, 3);
+    columns.push("Select");
     var cols = columns.map(col => {
       return (
         <Table.HeaderCell>
@@ -44,14 +51,12 @@ export default class CampaignTable extends React.Component {
     });
 
     var notIncluded = this.state.leftData;
+    var self = this;
     var data = notIncluded.map(client => {
       return (
         <Table.Row>
           <Table.Cell>
-            {client.clientName.split(" ")[0]}
-          </Table.Cell>
-          <Table.Cell>
-            {client.clientName.split(" ")[1]}
+            {client.clientName}
           </Table.Cell>
           <Table.Cell>
             {client.clientCity}
@@ -59,48 +64,78 @@ export default class CampaignTable extends React.Component {
           <Table.Cell>
             {client.clientAddress}
           </Table.Cell>
+          <Table.Cell>
+            <a onClick={() => self.handleClick(client, columns)}>
+              <Icon name="check" />
+            </a>
+          </Table.Cell>
         </Table.Row>
       );
     });
 
-    console.log(this.state.leftData);
+    var included = this.state.rightData;
+    console.log(included);
+    var rightData;
+    if (included.length != 0) {
+      rightData = included.map(client => {
+        return (
+          <Table.Row>
+            <Table.Cell>
+              {client.clientName}
+            </Table.Cell>
+            <Table.Cell>
+              {client.clientCity}
+            </Table.Cell>
+            <Table.Cell>
+              {client.clientAddress}
+            </Table.Cell>
+            <Table.Cell>
+              <Icon name="erase" />
+            </Table.Cell>
+          </Table.Row>
+        );
+      });
+    }
 
     return (
-      <div className="buildCampaign">
-        <div className="leftTable">
-          <br />
-          <div className="left-table-title">
-            <h3 className="left-title">
-              {" "}{this.state.selectedCampaign}{" "}
-            </h3>
+      <div className="campaignPage">
+        <h2>
+          {" "}{this.state.currentCampaign}{" "}
+        </h2>
+        <div className="buildCampaign">
+          <div className="leftTable">
+            <br />
+            <div className="left-table-title">
+              <h3 className="left-title">Not Included</h3>
+            </div>
+            <Table selectable>
+              <Table.Header>
+                <Table.Row>
+                  {cols}
+                </Table.Row>
+              </Table.Header>
+
+              <Table.Body>
+                {data}
+              </Table.Body>
+            </Table>
           </div>
-          <Table basic>
-            <Table.Header>
-              <Table.Row>
-                {cols}
-              </Table.Row>
-            </Table.Header>
+          <div className="middle" />
+          <div className="rightTable">
+            <br />
+            <h3> Included </h3>
+            <Table selectable>
+              <Table.Header>
+                <Table.Row>
+                  {cols}
+                </Table.Row>
+              </Table.Header>
 
-            <Table.Body>
-              {data}
-            </Table.Body>
-          </Table>
-        </div>
-        <div className="middle" />
-        <div className="rightTable">
-          <br />
-          <h3> Included </h3>
-          <Table basic>
-            <Table.Header>
-              <Table.Row>
-                {cols}
-              </Table.Row>
-            </Table.Header>
-
-            <Table.Body>
-              {data}
-            </Table.Body>
-          </Table>
+              <Table.Body>
+                {rightData}
+              </Table.Body>
+            </Table>
+          </div>
         </div>
       </div>
     );
