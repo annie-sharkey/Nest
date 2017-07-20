@@ -1,136 +1,107 @@
-import React, { Component } from "react";
-import { Table, Button, Badge, Menu, Dropdown, Icon } from "antd";
-import "antd/dist/antd.css";
-//nested table columns and data
-//expandedRowRender is called inside the table in class NestedTable
-const expandedRowRender = () => {
-  const columns = [
-    { title: "Client Email", dataIndex: "Client Email", key: "Client Email" },
-    {
-      title: "Client Birthday",
-      dataIndex: "Client Birthday",
-      key: "Client Birthday"
-    },
-    {
-      title: "Home Anniversary",
-      dataIndex: "Home Anniversary",
-      key: "Home Anniversary"
-    }
-  ];
-  const data = [];
-  for (let i = 0; i < 3; ++i) {
-    data.push({
-      key: i,
-      date: "2014-12-24 23:12:00",
-      name: "This is production name",
-      upgradeNum: "Upgraded: 56"
-    });
-  }
+import React from "react";
+import { Table } from "semantic-ui-react";
+import "./App.css";
+import { Dropdown, Menu } from "semantic-ui-react";
+import axios from "axios";
 
-  return <Table columns={columns} dataSource={data} pagination={false} />;
-};
-// //end NestedTable
-export default class CampaignTable extends Component {
+export default class CampaignTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedRowKeys: [], // Check here to configure the default column
-      loading: false
+      leftData: [],
+      rightData: [],
+      campaigns: [],
+      selectedCampaign: "Not Included",
+      columns: []
     };
   }
-  //   //select rows
-  start() {
 
-    this.setState({ loading: true });
-    // ajax request after empty completing
-    setTimeout(() => {
+  componentWillMount() {
+    axios.get("http://localhost:4000/api/campaigns").then(res => {
+      console.log(res.data[3].campaignColumns);
       this.setState({
-        selectedRowKeys: [],
-        loading: false
+        campaigns: res.data,
+        columns: res.data[3].campaignColumns,
+        leftData: this.props.dataSource
       });
-    }, 1000);
-
+    });
   }
-  onSelectChange(selectedRowKeys) {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
-    this.setState({ selectedRowKeys });
+
+  changeCampaign(e) {
+    this.setState({
+      selectedCampaign: e.target.value
+    });
   }
 
   render() {
-    const columns = [
-      { title: "Client Email", dataIndex: "Client Email", key: "Client Email" },
-      {
-        title: "Client Birthday",
-        dataIndex: "Client Birthday",
-        key: "Client Birthday"
-      },
-      {
-        title: "Home Anniversary",
-        dataIndex: "Home Anniversary",
-        key: "Home Anniversary"
-      }
-    ];
+    var columns = this.state.columns.splice(0, 4);
+    var cols = columns.map(col => {
+      return (
+        <Table.HeaderCell>
+          {col}
+        </Table.HeaderCell>
+      );
+    });
 
-    const data = [];
-    for (let i = 0; i < 3; ++i) {
-      data.push({
-        key: i,
-        date: "2014-12-24 23:12:00",
-        name: "This is production name",
-        upgradeNum: "Upgraded: 56"
-      });
-    }
-    //columns and data for overall table
-    //read data in
-    //     //select feature
+    var notIncluded = this.state.leftData;
+    var data = notIncluded.map(client => {
+      return (
+        <Table.Row>
+          <Table.Cell>
+            {client.clientName.split(" ")[0]}
+          </Table.Cell>
+          <Table.Cell>
+            {client.clientName.split(" ")[1]}
+          </Table.Cell>
+          <Table.Cell>
+            {client.clientCity}
+          </Table.Cell>
+          <Table.Cell>
+            {client.clientAddress}
+          </Table.Cell>
+        </Table.Row>
+      );
+    });
 
-    //fix select menu
-    const { loading, selectedRowKeys } = this.state;
-    const rowSelection = {
-      selectedRowKeys,
-
-      onChange: this.onSelectChange(),
-      selections: [
-        {
-          key: "all-data",
-          text: "Select All Data",
-          onSelect: () => {
-            this.setState({
-              //this is hard coded: adjust
-              selectedRowKeys: [...Array(46).keys()] // 0...45
-            });
-          }
-        }
-      ]
-    };
-    const hasSelected = selectedRowKeys.length > 0;
-
-
-
+    console.log(this.state.leftData);
 
     return (
-      <div>
-        <div style={{ marginBottom: 16 }}>
-          <Button
-            type="primary"
-            onClick={this.start}
-            disabled={!hasSelected}
-            loading={loading}
-          >
-            Reload
-          </Button>
-          <span style={{ marginLeft: 8 }}>
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
-          </span>
+      <div className="buildCampaign">
+        <div className="leftTable">
+          <br />
+          <div className="left-table-title">
+            <h3 className="left-title">
+              {" "}{this.state.selectedCampaign}{" "}
+            </h3>
+          </div>
+          <Table basic>
+            <Table.Header>
+              <Table.Row>
+                {cols}
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {data}
+            </Table.Body>
+          </Table>
         </div>
-        <Table
-          rowSelection={rowSelection}
-          columns={this.props.columns}
-          //call to nested table
-          expandedRowRender={expandedRowRender}
-          dataSource={data}
-          scroll={{ x: 1500 }}
-        />
+        <div className="middle" />
+        <div className="rightTable">
+          <br />
+          <h3> Included </h3>
+          <Table basic>
+            <Table.Header>
+              <Table.Row>
+                {cols}
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {data}
+            </Table.Body>
+          </Table>
+        </div>
       </div>
     );
   }

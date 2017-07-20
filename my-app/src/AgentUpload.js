@@ -1,29 +1,19 @@
 import React, { Component } from "react";
 
-// import { Upload, message, Button, Icon } from "antd";
-// import { Modal, Form, Input, Radio } from "antd";
-
-// const FormItem = Form.Item;
-
-// export default class AgentUpload extends Component {
-//   render() {
-//     return (
-
-//     )
-//   }
-// }
-
 import { Upload, Button, Icon, message } from "antd";
-// import reqwest from 'reqwest';
+
 import axios from "axios";
 
 export default class AgentUpload extends React.Component {
-  state = {
-    fileList: [],
-    uploading: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      fileList: [],
+      uploading: false
+    };
+  }
 
-  handleUpload = () => {
+  handleUpload() {
     const { fileList } = this.state;
     const formData = new FormData();
     fileList.forEach(file => {
@@ -63,7 +53,7 @@ export default class AgentUpload extends React.Component {
       .then(res => {
         console.log(res);
       });
-  };
+  }
 
   render() {
     const { uploading } = this.state;
@@ -98,7 +88,7 @@ export default class AgentUpload extends React.Component {
         <Button
           className="upload-demo-start"
           type="primary"
-          onClick={this.handleUpload}
+          onClick={() => this.handleUpload()}
           disabled={this.state.fileList.length === 0}
           loading={uploading}
         >

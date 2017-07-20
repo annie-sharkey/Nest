@@ -6,12 +6,6 @@ const Agent = require("../models/agent.js");
 
 const Campaign = require("../models/campaign.js");
 
-// router.get("/clients", function(req, res, next) {
-//   Client.find({}).then(function(clients) {
-//     res.send(clients);
-//   });
-// });
-
 router.get("/clients/:code", function(req, res, next) {
   Client.find({ agentCode: req.params.code }).then(function(clients) {
     res.send(clients);
@@ -67,7 +61,6 @@ router.delete("/clients/:id", function(req, res, next) {
   });
 });
 
-
 router.put("/agent/:id", function(req, res, next) {
   Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
     if (err) {
@@ -96,6 +89,8 @@ router.get("/campaigns", function(req, res, next) {
       throw err;
     }
     res.json(campaigns);
+  });
+});
 
 router.post("/campaign/", function(req, res, next) {
   var campaign = new Campaign({
