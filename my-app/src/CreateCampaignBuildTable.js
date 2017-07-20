@@ -34,7 +34,7 @@ export default class CreateCampaignBuildTable extends Component {
 
       edit: false,
       // value: "",
-      editedTitle: "",
+      editedTitle: ""
       // done: false
     };
   }
@@ -49,7 +49,7 @@ export default class CreateCampaignBuildTable extends Component {
   handleNameNewColumn(event) {
     var column = this.state.columnName;
     this.state.columnName = "";
-
+    this.props.updateColumnState(this.state.columns);
     this.setState({
       ...this.state,
       columns: this.state.columns.concat(column)
@@ -57,6 +57,7 @@ export default class CreateCampaignBuildTable extends Component {
   }
 
   handleEditColumn(event, title) {
+    // this.props.updateColumnState(this.state.columns);
     this.setState({
       title: title,
       dataIndex: title,
@@ -78,7 +79,7 @@ export default class CreateCampaignBuildTable extends Component {
     updatedColumns[columnIndex] = updateColumn;
 
     this.state.columnName = "";
-
+    this.props.updateColumnState(this.state.columns);
     this.setState({
       edit: false,
       columns: updatedColumns
@@ -86,6 +87,7 @@ export default class CreateCampaignBuildTable extends Component {
   }
 
   handleDeleteColumn(title) {
+    this.props.updateColumnState(this.state.columns);
     this.setState({
       ...this.state,
       columns: this.state.columns.filter(column => {
@@ -109,7 +111,6 @@ export default class CreateCampaignBuildTable extends Component {
   // }
 
   render() {
-    console.log(this.props.updateState);
     return (
       <div>
         <Form>
@@ -141,16 +142,16 @@ export default class CreateCampaignBuildTable extends Component {
             return (
               <div>
                 {" " + column}
-                  <div className="columnName">
-                    <Icon
-                      type="close"
-                      onClick={event => this.handleDeleteColumn(column)}
-                    />
-                    <Icon
-                      type={"edit"}
-                      onClick={event => this.handleEditColumn(event, column)}
-                    />
-                  </div>
+                <div className="columnName">
+                  <Icon
+                    type="close"
+                    onClick={event => this.handleDeleteColumn(column)}
+                  />
+                  <Icon
+                    type={"edit"}
+                    onClick={event => this.handleEditColumn(event, column)}
+                  />
+                </div>
               </div>
             );
           })}

@@ -59,7 +59,7 @@ export default class CreateCampaignParent extends Component {
       ...this.state,
       writeColumns: columns
     });
-    console.log("write columns:", columns);
+    // console.log("write columns:", this.state.writeColumns);
   };
 
   updateUploadState = uploads => {
@@ -89,6 +89,9 @@ export default class CreateCampaignParent extends Component {
   }
 
   render() {
+    // console.log("write columns:", this.state.writeColumns)
+    // console.log("write uploads parent:", this.state.writeUploads);
+    // console.log("write columns parent:", this.state.writeColumns);
     return (
       <div>
         <Card width={100}>

@@ -5,7 +5,7 @@ import AgentHome from "./AgentHome";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios";
 import CreateCampaignParent from "./CreateCampaignParent";
-import AgentUpload from "./AgentUpload";
+import MediaCenter from "./MediaCenter";
 import { LocaleProvider } from "antd";
 import enUS from "antd/lib/locale-provider/en_US";
 
@@ -142,7 +142,7 @@ class App extends Component {
     //       </Router>
     return (
       <LocaleProvider locale={enUS}>
-        <Router>
+        {/*<Router>
           <div>
             <Route exact path="/" component={AdminHome} />
             <Route
@@ -151,7 +151,11 @@ class App extends Component {
               component={CreateCampaignParent}
             />
           </div>
-        </Router>
+        </Router>*/}
+        <div>
+          <CreateCampaignParent />
+          
+        </div>
       </LocaleProvider>
     );
 
