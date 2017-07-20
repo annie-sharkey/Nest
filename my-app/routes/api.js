@@ -6,12 +6,6 @@ const Agent = require("../models/agent.js");
 
 const Campaign = require("../models/campaign.js");
 
-// router.get("/clients", function(req, res, next) {
-//   Client.find({}).then(function(clients) {
-//     res.send(clients);
-//   });
-// });
-
 router.get("/clients/:code", function(req, res, next) {
   Client.find({ agentCode: req.params.code }).then(function(clients) {
     res.send(clients);

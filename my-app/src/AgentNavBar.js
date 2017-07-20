@@ -87,7 +87,14 @@ export default class AgentNavBar extends Component {
                 getData={() => this.getData()}
               />}
           />
-          <Route path="/managelists/campaigns" component={CampaignTable} />
+          <Route
+            path="/managelists/campaigns"
+            component={() =>
+              <CampaignTable
+                dataSource={this.state.dataSource.reverse()}
+                agentCode={this.props.agent.agentCode}
+              />}
+          />
         </div>
       </Router>
     );
