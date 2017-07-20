@@ -106,16 +106,16 @@ router.post("/campaign/", function(req, res, next) {
   });
 });
 
-router.post("/upload/", function(req, res, next) {
-  var upload = new Upload({
-    uploadedFiles: req.body.uploadedFiles
-  });
-  upload.save(function(err) {
-    if (err) {
-      throw err;
-    }
-    res.json(uploadedFiles);
-  });
-});
+// router.post("/upload/", function(req, res, next) {
+//   var upload = new Upload({
+//     uploadedFiles: req.body.uploadedFiles
+//   });
+//   upload.save(function(err) {
+//     if (err) {
+//       throw err;
+//     }
+//     res.json(uploadedFiles);
+//   });
+// });
 
 module.exports = router;
