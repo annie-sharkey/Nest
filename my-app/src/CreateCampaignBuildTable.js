@@ -34,8 +34,8 @@ export default class CreateCampaignBuildTable extends Component {
 
       edit: false,
       // value: "",
-      editedTitle: "",
-      done: false
+      editedTitle: ""
+      // done: false
     };
   }
 
@@ -49,7 +49,7 @@ export default class CreateCampaignBuildTable extends Component {
   handleNameNewColumn(event) {
     var column = this.state.columnName;
     this.state.columnName = "";
-
+    this.props.updateColumnState(this.state.columns);
     this.setState({
       ...this.state,
       columns: this.state.columns.concat(column)
@@ -57,6 +57,7 @@ export default class CreateCampaignBuildTable extends Component {
   }
 
   handleEditColumn(event, title) {
+    // this.props.updateColumnState(this.state.columns);
     this.setState({
       title: title,
       dataIndex: title,
@@ -78,7 +79,7 @@ export default class CreateCampaignBuildTable extends Component {
     updatedColumns[columnIndex] = updateColumn;
 
     this.state.columnName = "";
-
+    this.props.updateColumnState(this.state.columns);
     this.setState({
       edit: false,
       columns: updatedColumns
@@ -86,6 +87,7 @@ export default class CreateCampaignBuildTable extends Component {
   }
 
   handleDeleteColumn(title) {
+    this.props.updateColumnState(this.state.columns);
     this.setState({
       ...this.state,
       columns: this.state.columns.filter(column => {
@@ -94,31 +96,30 @@ export default class CreateCampaignBuildTable extends Component {
     });
   }
 
-  handleAllColumnsComplete(event) {
-    this.setState({
-      ...this.state,
-      done: true
-    });
-  }
+  // handleAllColumnsComplete(event) {
+  //   this.setState({
+  //     ...this.state,
+  //     done: true
+  //   });
+  // }
 
-  handleAllColumnsEdit(event) {
-    this.setState({
-      ...this.state,
-      done: false
-    });
-  }
+  // handleAllColumnsEdit(event) {
+  //   this.setState({
+  //     ...this.state,
+  //     done: false
+  //   });
+  // }
 
   render() {
-    console.log(this.props.updateState);
     return (
       <div>
         <Form>
           <h3>Columns</h3>
-        
+
           {!this.state.done &&
-            <FormItem label="Create a new column:" style={{ width: 150 }}>
+            <FormItem label="Create a column:" style={{ width: 150 }}>
               <Input
-              placeholder="Column Title"
+                placeholder="Column Title"
                 value={this.state.columnName}
                 onChange={event => this.handleInput(event)}
                 onPressEnter={event =>
@@ -140,23 +141,22 @@ export default class CreateCampaignBuildTable extends Component {
           {this.state.columns.map(column => {
             return (
               <div>
-                {!this.state.done &&
-                  <div className="columnName">
-                    <Icon
-                      type="close"
-                      onClick={event => this.handleDeleteColumn(column)}
-                    />
-                    <Icon
-                      type={"edit"}
-                      onClick={event => this.handleEditColumn(event, column)}
-                    />
-                  </div>}
                 {" " + column}
+                <div className="columnName">
+                  <Icon
+                    type="close"
+                    onClick={event => this.handleDeleteColumn(column)}
+                  />
+                  <Icon
+                    type={"edit"}
+                    onClick={event => this.handleEditColumn(event, column)}
+                  />
+                </div>
               </div>
             );
           })}
           <br />
-          {!this.state.done &&
+          {/*{!this.state.done &&
             <Button
               type="dashed"
               onClick={event => {
@@ -165,8 +165,8 @@ export default class CreateCampaignBuildTable extends Component {
               }}
             >
               Complete Column List
-            </Button>}
-          {this.state.done &&
+            </Button>}*/}
+          {/*{this.state.done &&
             <Button
               type="dashed"
               onClick={event => {
@@ -174,7 +174,7 @@ export default class CreateCampaignBuildTable extends Component {
               }}
             >
               Submit Column List
-            </Button>}
+            </Button>}*/}
         </Form>
       </div>
     );

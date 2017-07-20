@@ -67,7 +67,6 @@ router.delete("/clients/:id", function(req, res, next) {
   });
 });
 
-
 router.put("/agent/:id", function(req, res, next) {
   Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
     if (err) {
@@ -96,6 +95,8 @@ router.get("/campaigns", function(req, res, next) {
       throw err;
     }
     res.json(campaigns);
+  });
+});
 
 router.post("/campaign/", function(req, res, next) {
   var campaign = new Campaign({
@@ -111,16 +112,16 @@ router.post("/campaign/", function(req, res, next) {
   });
 });
 
-router.post("/upload/", function(req, res, next) {
-  var upload = new Upload({
-    uploadedFiles: req.body.uploadedFiles
-  });
-  upload.save(function(err) {
-    if (err) {
-      throw err;
-    }
-    res.json(uploadedFiles);
-  });
-});
+// router.post("/upload/", function(req, res, next) {
+//   var upload = new Upload({
+//     uploadedFiles: req.body.uploadedFiles
+//   });
+//   upload.save(function(err) {
+//     if (err) {
+//       throw err;
+//     }
+//     res.json(uploadedFiles);
+//   });
+// });
 
 module.exports = router;
