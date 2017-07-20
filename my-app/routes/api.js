@@ -96,7 +96,10 @@ router.post("/campaign/", function(req, res, next) {
   var campaign = new Campaign({
     campaignName: req.body.campaignName,
     campaignColumns: req.body.campaignColumns,
-    clients: req.body.clients
+    clients: req.body.clients,
+    campaignUploads: req.body.campaignUploads,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate
   });
   campaign.save(function(err) {
     if (err) {

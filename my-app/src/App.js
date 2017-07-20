@@ -49,6 +49,7 @@ class App extends Component {
   }
 
   logOut() {
+    console.log("log out entered");
     sessionStorage.setItem("logged", "false");
     this.setState({
       logged: false
@@ -87,83 +88,83 @@ class App extends Component {
   }
 
   render() {
-    // if (!this.state.logged) {
-    //   return (
-    //     <div className="login">
-    //       <h1 className="title">NEST PORTAL</h1>
-    //       <div className="login-field">
-    //         <Input
-    //           onChange={e => this.handleFieldChange(e)}
-    //           placeholder="Enter FON Code"
-    //         />
-    //       </div>
-    //       <div className="login-button-container">
-    //         <Button
-    //           className="login-button"
-    //           color="black"
-    //           onClick={() => this.validateLogin()}
-    //         >
-    //           Login
-    //         </Button>
-    //       </div>
-    //     </div>
-    //   );
-    // }
-    // if (this.state.logged) {
-    //   console.log("session storage is true");
-    //   return (
-    //     <div>
-    //       <Router>
-    //         <div>
-    //           <Route
-    //             exact
-    //             path="/"
-    //             component={() =>
-    //               <AgentHome
-    //                 agent={this.state.agent}
-    //                 logOut={() => this.logOut()}
-    //               />}
-    //           />
-    //           <Route
-    //             path="/managelists"
-    //             component={() => <AgentNavBar agent={this.state.agent} />}
-    //           />
-    //           <Route
-    //             path="/profile"
-    //             component={() =>
-    //               <AgentForm
-    //                 agent={this.state.agent}
-    //                 updateAgent={data => {
-    //                   this.updateAgent(data);
-    //                 }}
-    //               />}
-    //           />
-    //         </div>
-    //       </Router>
-    return (
-      <LocaleProvider locale={enUS}>
-        {/*<Router>
-          <div>
-            <Route exact path="/" component={AdminHome} />
-            <Route
-              exact
-              path="/createcampaign"
-              component={CreateCampaignParent}
-            />
-          </div>
-        </Router>*/}
-        <div>
-          <CreateCampaignParent />
-          
-        </div>
-      </LocaleProvider>
-    );
+//     if (!this.state.logged) {
+//       return (
+//         <div className="login">
+//           <h1 className="title">NEST PORTAL</h1>
+//           <div className="login-field">
+//             <Input
+//               onChange={e => this.handleFieldChange(e)}
+//               placeholder="Enter FON Code"
+//             />
+//           </div>
+//           <div className="login-button-container">
+//             <Button
+//               className="login-button"
+//               color="black"
+//               onClick={() => this.validateLogin()}
+//             >
+//               Login
+//             </Button>
+//           </div>
+//         </div>
+//       );
+//     }
+//     if (this.state.logged) {
+//       console.log("session storage is true");
+//       return (
+//         <div>
+//           <Router>
+//             <div>
+//               <Route
+//                 exact
+//                 path="/"
+//                 component={() =>
+//                   <AgentHome
+//                     agent={this.state.agent}
+//                     logOut={() => this.logOut()}
+//                   />}
+//               />
+//               <Route
+//                 path="/managelists"
+//                 component={() => <AgentNavBar agent={this.state.agent} />}
+//               />
+//               <Route
+//                 path="/profile"
+//                 component={() =>
+//                   <AgentForm
+//                     agent={this.state.agent}
+//                     updateAgent={data => {
+//                       this.updateAgent(data);
+//                     }}
+//                   />}
+//               />
+//             </div>
+//           </Router>
+//         </div>
+//       );
+//     }
+//   }
+// }
+return (
+  <LocaleProvider locale={enUS}>
+    {/*<Router>
+      <div>
+        <Route exact path="/" component={AdminHome} />
+        <Route
+          exact
+          path="/createcampaign"
+          component={CreateCampaignParent}
+        />
+      </div>
+    </Router>*/}
+    <div>
+      <CreateCampaignParent />
 
-    // </div>
-
-    // );
-    // }
-  }
-}
+    </div>
+  </LocaleProvider>
+)}};
 
 export default App;
+
+

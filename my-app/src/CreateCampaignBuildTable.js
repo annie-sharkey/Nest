@@ -26,7 +26,7 @@ export default class CreateCampaignBuildTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: ["First Name", "Last Name", "City", "State"],
+      columns: ["Name", "City", "State"],
       // { title: "First Name", dataIndex: "First Name", key: "First Name" },
       // { title: "Last Name", dataIndex: "Last Name", key: "Last Name" },
       // { title: "City", dataIndex: "City", key: "City" },
@@ -49,11 +49,11 @@ export default class CreateCampaignBuildTable extends Component {
   handleNameNewColumn(event) {
     var column = this.state.columnName;
     this.state.columnName = "";
-    this.props.updateColumnState(this.state.columns);
     this.setState({
       ...this.state,
       columns: this.state.columns.concat(column)
     });
+    this.props.updateColumnState(this.state.columns.concat(column));
   }
 
   handleEditColumn(event, title) {
@@ -79,21 +79,23 @@ export default class CreateCampaignBuildTable extends Component {
     updatedColumns[columnIndex] = updateColumn;
 
     this.state.columnName = "";
-    this.props.updateColumnState(this.state.columns);
+
     this.setState({
       edit: false,
       columns: updatedColumns
     });
+    this.props.updateColumnState(updatedColumns);
   }
 
   handleDeleteColumn(title) {
-    this.props.updateColumnState(this.state.columns);
-    this.setState({
-      ...this.state,
-      columns: this.state.columns.filter(column => {
+    var columns = this.state.columns.filter(column => {
         return column != title;
       })
+    this.setState({
+      ...this.state,
+      columns: columns
     });
+    this.props.updateColumnState(columns);
   }
 
   // handleAllColumnsComplete(event) {
@@ -111,6 +113,7 @@ export default class CreateCampaignBuildTable extends Component {
   // }
 
   render() {
+    console.log("columns child:", this.state.columns)
     return (
       <div>
         <Form>

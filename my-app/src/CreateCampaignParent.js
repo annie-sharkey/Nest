@@ -70,21 +70,18 @@ export default class CreateCampaignParent extends Component {
   };
 
   WritetoDatabase() {
-    var writeColumns = this.state.writeColumns;
-    // var columns = []
-    // writeColumns.forEach(function(col){
-    //   columns.push(col.key)
-    // })
-    // console.log(columns);
-    var name = "cam 2";
+    console.log(this.state.writeUploads);
     axios
       .post("http://localhost:4000/api/campaign/", {
-        campaignName: name,
+        campaignName: this.state.campaignTitle,
         campaignColumns: this.state.writeColumns,
-        clients: []
+        clients: [],
+        campaignUploads: this.state.writeUploads,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate
       })
       .then(res => {
-        console.log(res);
+        console.log(res.data);
       });
   }
 
