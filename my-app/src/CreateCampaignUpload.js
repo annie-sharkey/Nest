@@ -74,6 +74,8 @@ export default class CreateCampaignUpload extends Component {
     updatedUploads[uploadIndex] = updateUpload;
     this.state.uploadName = "";
 
+    this.props.updateUploadState(this.state.uploads);
+
     this.setState({
       edit: false,
       uploads: updatedUploads
@@ -82,10 +84,11 @@ export default class CreateCampaignUpload extends Component {
   }
 
   handleDeleteUpload(title) {
+
     var upload = this.state.uploads.filter(upload => {
       return upload != title;
     });
-
+    
     this.setState({
       ...this.state,
       uploads: upload
@@ -109,8 +112,6 @@ export default class CreateCampaignUpload extends Component {
   // }
 
   render() {
-    // console.log("uploads child:", this.state.uploads)
-    // this.props.updateUploadState(this.state.uploads)
     return (
       <div>
         <Form>
@@ -177,7 +178,9 @@ export default class CreateCampaignUpload extends Component {
             >
               Edit Upload List
             </Button>}*/}
+
           {/*<MediaCenter uploadList={this.state.uploads} />*/}
+
         </Form>
       </div>
     );

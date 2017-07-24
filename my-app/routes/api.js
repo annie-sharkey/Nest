@@ -29,6 +29,7 @@ router.post("/clients", function(req, res) {
     clientName: req.body.clientName,
     clientAddress: req.body.clientAddress,
     clientCity: req.body.clientCity,
+    clientState: req.body.clientState,
     clientEmail: req.body.clientEmail,
     clientBirthday: req.body.clientBirthday,
     homeAnniversary: req.body.homeAnniversary,
@@ -50,6 +51,7 @@ router.put("/clients/:id", function(req, res, next) {
     client.clientName = req.body.clientName || client.clientName;
     client.clientAddress = req.body.clientAddress || client.clientAddress;
     client.clientCity = req.body.clientCity || client.clientCity;
+    client.clientState = req.body.clientState || client.clientState;
     client.clientEmail = req.body.clientEmail || client.clientEmail;
     client.clientBirthday = req.body.clientBirthday || client.clientBirthday;
     client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
@@ -120,5 +122,35 @@ router.post("/campaign/", function(req, res, next) {
     res.json(campaign);
   });
 });
+
+
+router.put("/campaign/:id", function(req, res, next) {
+  Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
+    if (err) {
+      throw err;
+    }
+
+    campaign.clients = req.body.clients || campaign.clients;
+
+    campaign.save(function(err, campaign) {
+      if (err) {
+        throw err;
+      }
+      res.json(campaign);
+    });
+  });
+});
+
+// router.post("/upload/", function(req, res, next) {
+//   var upload = new Upload({
+//     uploadedFiles: req.body.uploadedFiles
+//   });
+//   upload.save(function(err) {
+//     if (err) {
+//       throw err;
+//     }
+//     res.json(uploadedFiles);
+//   });
+// });
 
 module.exports = router;

@@ -96,7 +96,7 @@
 }
 
 .middle {
-  width: 6%;
+  width: 4%;
 }
 .rightTable {
   width: 47%;
@@ -132,3 +132,17 @@
 /* .background-gradient {
   background: linear-gradient(to bottom, #46797b 0%, #5c6670 100%);
 } */
+
+.campaignPage {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.save-button {
+  margin-top: 3%;
+}
+
+.save-text {
+  color: #46797b;
+}

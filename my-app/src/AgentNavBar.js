@@ -24,11 +24,19 @@ export default class AgentNavBar extends Component {
   }
 
   getData() {
+    var current = "";
+    if (window.location.href.includes("campaigns")) {
+      current = "database";
+    }
+    if (!window.location.href.includes("campaigns")) {
+      current = "contacts";
+    }
     axios
       .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
       .then(response => {
         this.setState({
-          dataSource: response.data
+          dataSource: response.data,
+          current: current
         });
       });
   }
@@ -43,6 +51,18 @@ export default class AgentNavBar extends Component {
   handleClick(e) {
     this.setState({
       current: e.key
+    });
+  }
+
+  handleMasterHighlight() {
+    this.setState({
+      current: "contacts"
+    });
+  }
+
+  handleCampaignHighlight() {
+    this.setState({
+      current: "database"
     });
   }
   render() {
@@ -64,14 +84,20 @@ export default class AgentNavBar extends Component {
 
             <Menu.Item key="contacts">
               <Link to="/managelists">
-                <Icon type="contacts" />
+                <Icon
+                  type="contacts"
+                  onClick={() => this.handleMasterHighlight()}
+                />
                 Master List
               </Link>
             </Menu.Item>
 
             <Menu.Item key="database">
               <Link to="/managelists/campaigns">
-                <Icon type="database" />
+                <Icon
+                  type="database"
+                  onClick={() => this.handleCampaignHighlight()}
+                />
                 Build a Campaign
               </Link>
             </Menu.Item>

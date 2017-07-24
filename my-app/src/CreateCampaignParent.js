@@ -55,20 +55,20 @@ export default class CreateCampaignParent extends Component {
     });
   }
 
-  updateColumnState = columns => {
+  updateColumnState(columns) {
     this.setState({
       ...this.state,
       writeColumns: columns
     });
     // console.log("write columns:", this.state.writeColumns);
-  };
+  }
 
-  updateUploadState = uploads => {
+  updateUploadState(uploads) {
     this.setState({
       ...this.state,
       writeUploads: uploads
     });
-  };
+  }
 
   WritetoDatabase() {
     console.log(this.state.writeUploads);
@@ -92,10 +92,12 @@ export default class CreateCampaignParent extends Component {
     // console.log("write columns parent:", this.state.writeColumns);
     return (
       <div>
+
         <Card width={100}>
           <Link to="/">
             <Icon type="arrow-left" style={{ fontSize: 20 }} />
           </Link>
+
           <h1>Create A Campaign</h1>
           <br />
           <Grid divided="vertically">
@@ -131,11 +133,13 @@ export default class CreateCampaignParent extends Component {
 
           <Form>
             <CreateCampaignBuildTable
-              updateColumnState={this.updateColumnState}
+              updateColumnState={columns => this.updateColumnState(columns)}
             />
             <br />
             <br />
-            <CreateCampaignUpload updateUploadState={this.updateUploadState} />
+            <CreateCampaignUpload
+              updateUploadState={uploads => this.updateUploadState(uploads)}
+            />
           </Form>
 
           <br />
@@ -144,7 +148,7 @@ export default class CreateCampaignParent extends Component {
           <Button type="danger" onClick={event => this.WritetoDatabase()}>
             Finish Creating Campaign
           </Button>
-        </Card>
+        </Card> */}
       </div>
     );
   }
