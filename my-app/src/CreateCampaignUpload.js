@@ -177,7 +177,7 @@ export default class CreateCampaignUpload extends Component {
             >
               Edit Upload List
             </Button>}*/}
-          <MediaCenter uploadList={this.state.uploads} />
+          {/*<MediaCenter uploadList={this.state.uploads} />*/}
         </Form>
       </div>
     );

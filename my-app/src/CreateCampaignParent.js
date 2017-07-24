@@ -15,6 +15,7 @@ import "antd/dist/antd.css";
 import CampaignTable from "./CampaignTable";
 import CreateCampaignUpload from "./CreateCampaignUpload";
 import CreateCampaignBuildTable from "./CreateCampaignBuildTable";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 import "./CreateCampaignParent.css";
 import axios from "axios";
 import { Grid } from "semantic-ui-react";
@@ -92,6 +93,9 @@ export default class CreateCampaignParent extends Component {
     return (
       <div>
         <Card width={100}>
+          <Link to="/">
+            <Icon type="arrow-left" style={{ fontSize: 20 }} />
+          </Link>
           <h1>Create A Campaign</h1>
           <br />
           <Grid divided="vertically">

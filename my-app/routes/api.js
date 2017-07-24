@@ -6,9 +6,21 @@ const Agent = require("../models/agent.js");
 
 const Campaign = require("../models/campaign.js");
 
+router.get("/clients", function(req, res, next) {
+  Client.find({}).then(function(clients) {
+    res.send(clients);
+  });
+});
+
 router.get("/clients/:code", function(req, res, next) {
   Client.find({ agentCode: req.params.code }).then(function(clients) {
     res.send(clients);
+  });
+});
+
+router.get("/agents", function(req, res, next) {
+  Agent.find({}).then(function(agents) {
+    res.send(agents);
   });
 });
 
@@ -108,17 +120,5 @@ router.post("/campaign/", function(req, res, next) {
     res.json(campaign);
   });
 });
-
-// router.post("/upload/", function(req, res, next) {
-//   var upload = new Upload({
-//     uploadedFiles: req.body.uploadedFiles
-//   });
-//   upload.save(function(err) {
-//     if (err) {
-//       throw err;
-//     }
-//     res.json(uploadedFiles);
-//   });
-// });
 
 module.exports = router;
