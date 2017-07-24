@@ -10,6 +10,7 @@ var ClientSchema = new Schema({
   clientAddress: String,
   clientEmail: String,
   clientCity: String,
+  clientState: String,
   category: {
     type: String,
     default: "buyer"

@@ -24,11 +24,19 @@ export default class AgentNavBar extends Component {
   }
 
   getData() {
+    var current = "";
+    if (window.location.href.includes("campaigns")) {
+      current = "database";
+    }
+    if (!window.location.href.includes("campaigns")) {
+      current = "contacts";
+    }
     axios
       .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
       .then(response => {
         this.setState({
-          dataSource: response.data
+          dataSource: response.data,
+          current: current
         });
       });
   }

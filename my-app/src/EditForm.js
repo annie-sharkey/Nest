@@ -14,6 +14,7 @@ export default class EditForm extends React.Component {
       currentAddress: "",
       currentCity: "",
       currentEmail: "",
+      currentState: "",
       currentBirthday: "",
       currentAnniversary: ""
     };
@@ -28,6 +29,12 @@ export default class EditForm extends React.Component {
   handleAddressChange(e) {
     this.setState({
       currentAddress: e.target.value
+    });
+  }
+
+  handleStateChange(e) {
+    this.setState({
+      currentState: e.target.value
     });
   }
 
@@ -63,13 +70,15 @@ export default class EditForm extends React.Component {
     var city = this.state.currentCity;
     var birthday = this.state.currentBirthday;
     var email = this.state.currentEmail;
+    var state = this.state.currentState;
     var anniversary = this.state.currentAnniversary;
-    this.props.onOk(name, address, city, email, birthday, anniversary);
+    this.props.onOk(name, address, city, email, state, birthday, anniversary);
     this.setState({
       currentName: "",
       currentAddress: "",
       currentCity: "",
       currentEmail: "",
+      currentState: "",
       currentBirthday: "",
       currentAnniversary: ""
     });
@@ -112,6 +121,12 @@ export default class EditForm extends React.Component {
             <Input
               onChange={e => this.handleEmailChange(e)}
               defaultValue={this.state.client.clientEmail}
+            />
+          </FormItem>
+          <FormItem label="State">
+            <Input
+              onChange={e => this.handleStateChange(e)}
+              defaultValue={this.state.client.clientState}
             />
           </FormItem>
           <FormItem label="Birthday">

@@ -9,15 +9,12 @@ const routes = require("./routes/api");
 const Client = require("./models/client.js");
 const Agent = require("./models/agent.js");
 const Campaign = require("./models/campaign.js");
-// const data = require("./src/data.js");
-//and create our instances
+
 var app = express();
 var router = express.Router();
 
-//set our port to either a predetermined port number if you have set it up, or 3001
 var port = process.env.API_PORT || 4000;
 
-//now we should configure the API to use bodyParser and look for JSON data in the request body
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -39,7 +36,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-//config
 mongoose.connect(
   "mongodb://Annie:Ann1esharkey@nest-shard-00-00-icudb.mongodb.net:27017,nest-shard-00-01-icudb.mongodb.net:27017,nest-shard-00-02-icudb.mongodb.net:27017/Nest?ssl=true&replicaSet=Nest-shard-0&authSource=admin",
   {
@@ -53,7 +49,6 @@ mongoose.connect(
 );
 mongoose.Promise = global.Promise;
 
-//now  we can set the route path & initialize the API
 app.get("/:id", function(req, res) {
   Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
     if (err) {
@@ -67,7 +62,6 @@ app.get("/:id", function(req, res) {
   });
 });
 
-//Use our router configuration when we call /api
 app.use("/api", routes);
 app.use(bodyParser.json());
 

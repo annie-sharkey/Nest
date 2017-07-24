@@ -16,7 +16,10 @@ export default class MasterTable extends React.Component {
         title: "Client Name",
         dataIndex: "clientName",
         key: "clientName",
-        width: "25%"
+        width: "25%",
+        sorter: (a, b) => {
+          return this.compareByAlph(a.clientName, b.clientName);
+        }
       },
       {
         title: "Client Address",
@@ -28,14 +31,34 @@ export default class MasterTable extends React.Component {
         title: "Client City",
         dataIndex: "clientCity",
         key: "clientCity",
-        width: "25%"
+        width: "25%",
+        sorter: (a, b) => {
+          return this.compareByAlph(a.clientCity, b.clientCity);
+        }
+      },
+      {
+        title: "Client State",
+        dataIndex: "clientState",
+        key: "clientState",
+        width: "10%"
       },
       {
         title: "Edit",
         dataIndex: "_id",
         key: "_id",
-        render: (record, text, index) =>
-          <Icon type="edit" onClick={text => this.openEditModal(text)} />
+        render: (record, text, index) => {
+          return (
+            <a style={{ color: "#46797b" }}>
+              <Icon
+                type="edit"
+                style={{ fontSize: 16 }}
+                onClick={() => {
+                  this.openEditModal(text);
+                }}
+              />
+            </a>
+          );
+        }
       }
     ];
     this.state = {
@@ -72,11 +95,11 @@ export default class MasterTable extends React.Component {
     });
   }
 
-  openEditModal(record, index) {
-    // console.log(record.clientName);
+  openEditModal(text) {
+    console.log(text);
     this.setState({
       editModal: true,
-      selectedClient: record
+      selectedClient: text
     });
   }
 
@@ -91,6 +114,7 @@ export default class MasterTable extends React.Component {
     clientAddress,
     clientCity,
     clientEmail,
+    clientState,
     clientBirthday,
     clientAnniversary
   ) {
@@ -100,6 +124,7 @@ export default class MasterTable extends React.Component {
       clientAddress: clientAddress,
       clientCity: clientCity,
       clientEmail: clientEmail,
+      clientState: clientState,
       clientBirthday: clientBirthday,
       homeAnniversary: clientAnniversary
     });
@@ -111,6 +136,7 @@ export default class MasterTable extends React.Component {
     clientAddress,
     clientCity,
     clientEmail,
+    clientState,
     clientBirthday,
     clientAnniversary
   ) {
@@ -121,6 +147,7 @@ export default class MasterTable extends React.Component {
       clientAddress: clientAddress,
       clientCity: clientCity,
       clientEmail: clientEmail,
+      clientState: clientState,
       clientBirthday: clientBirthday,
       homeAnniversary: clientAnniversary,
       agentCode: this.props.agentCode
@@ -138,16 +165,18 @@ export default class MasterTable extends React.Component {
     });
   }
 
+  compareByAlph(a, b) {
+    if (a > b) {
+      return -1;
+    }
+    if (a < b) {
+      return 1;
+    }
+    return 0;
+  }
+
   render() {
     console.log(this.state.dataSource);
-    const rowSelection = {
-      onSelect: (record, selected, selectedRows) => {
-        console.log(record);
-      },
-      onSelectAll: selected => {
-        console.log(selected);
-      }
-    };
     var modal;
     if (this.state.modal) {
       modal = (
@@ -161,6 +190,7 @@ export default class MasterTable extends React.Component {
             clientAddress,
             clientCity,
             clientEmail,
+            clientState,
             clientBirthday,
             clientAnniversary
           ) =>
@@ -169,6 +199,7 @@ export default class MasterTable extends React.Component {
               clientAddress,
               clientCity,
               clientEmail,
+              clientState,
               clientBirthday,
               clientAnniversary
             )}
@@ -188,6 +219,7 @@ export default class MasterTable extends React.Component {
             clientAddress,
             clientCity,
             clientEmail,
+            clientState,
             clientBirthday,
             clientAnniversary
           ) =>
@@ -196,6 +228,7 @@ export default class MasterTable extends React.Component {
               clientAddress,
               clientCity,
               clientEmail,
+              clientState,
               clientBirthday,
               clientAnniversary
             )}
@@ -222,7 +255,6 @@ export default class MasterTable extends React.Component {
             dataSource={this.state.dataSource}
             columns={columns}
             pagination={false}
-            onRowClick={(record, index) => this.openEditModal(record, index)}
           />
         </div>
       </div>

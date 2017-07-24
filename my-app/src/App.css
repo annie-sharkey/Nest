@@ -96,7 +96,7 @@
 }
 
 .middle {
-  width: 6%;
+  width: 4%;
 }
 .rightTable {
   width: 47%;
@@ -137,4 +137,12 @@
   display: flex;
   flex-direction: column;
   text-align: center;
+}
+
+.save-button {
+  margin-top: 3%;
+}
+
+.save-text {
+  color: #46797b;
 }

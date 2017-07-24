@@ -12,6 +12,7 @@ export default class ClientForm extends React.Component {
       address: "",
       city: "",
       email: "",
+      state: "",
       birthday: "",
       anniversary: ""
     };
@@ -20,6 +21,12 @@ export default class ClientForm extends React.Component {
   handleNameChange(e) {
     this.setState({
       name: e.target.value
+    });
+  }
+
+  handleStateChange(e) {
+    this.setState({
+      state: e.target.value
     });
   }
 
@@ -62,9 +69,10 @@ export default class ClientForm extends React.Component {
     var address = this.state.address;
     var city = this.state.city;
     var email = this.state.email;
+    var state = this.state.state;
     var birthday = this.state.birthday;
     var anniversary = this.state.anniversary;
-    this.props.onOk(name, address, city, email, birthday, anniversary);
+    this.props.onOk(name, address, city, email, state, birthday, anniversary);
   }
 
   handleEmailChange(e) {
@@ -107,6 +115,9 @@ export default class ClientForm extends React.Component {
           </FormItem>
           <FormItem label="Client Email">
             <Input onChange={e => this.handleEmailChange(e)} />
+          </FormItem>
+          <FormItem label="Client State">
+            <Input onChange={e => this.handleStateChange(e)} />
           </FormItem>
           <FormItem label="Client Birthday">
             <Input onChange={e => this.handleBirthdayChange(e)} />
