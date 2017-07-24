@@ -16,6 +16,9 @@ import { Button } from "semantic-ui-react";
 //import TestCreateCampaign from "./TestCreateCampaign";
 import AdminHome from "./AdminHome";
 
+import AdminClientDirectory from "./AdminClientDirectory";
+import AdminAgentDirectory from "./AdminAgentDirectory";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -49,6 +52,7 @@ class App extends Component {
   }
 
   logOut() {
+    console.log("log out entered");
     sessionStorage.setItem("logged", "false");
     this.setState({
       logged: false
@@ -85,6 +89,7 @@ class App extends Component {
   }
 
   render() {
+
     if (!this.state.logged) {
       return (
         <div className="login">
@@ -93,8 +98,12 @@ class App extends Component {
             <Input
               onChange={e => this.handleFieldChange(e)}
               placeholder="Enter FON Code"
+
             />
+            <Route path="/clientdirectory" component={AdminClientDirectory} />
+            <Route path="/agentdirectory" component={AdminAgentDirectory} />
           </div>
+
           <div className="login-button-container">
             <Button
               className="login-button"
@@ -141,6 +150,7 @@ class App extends Component {
         </div>
       );
     }
+
   }
 }
 

@@ -44,11 +44,12 @@ export default class CreateCampaignUpload extends Component {
   handleNameNewUpload(event) {
     var upload = this.state.uploadName;
     this.state.uploadName = "";
-    this.props.updateUploadState(this.state.uploads);
+
     this.setState({
       ...this.state,
       uploads: this.state.uploads.concat(upload)
     });
+    this.props.updateUploadState(this.state.uploads.concat(upload));
   }
 
   handleEditUpload(event, title) {
@@ -72,21 +73,28 @@ export default class CreateCampaignUpload extends Component {
     const updatedUploads = this.state.uploads.slice(0);
     updatedUploads[uploadIndex] = updateUpload;
     this.state.uploadName = "";
+
     this.props.updateUploadState(this.state.uploads);
+
     this.setState({
       edit: false,
       uploads: updatedUploads
     });
+    this.props.updateUploadState(updatedUploads);
   }
 
   handleDeleteUpload(title) {
-    this.props.updateUploadState(this.state.uploads);
+
+    var upload = this.state.uploads.filter(upload => {
+      return upload != title;
+    });
+    
     this.setState({
       ...this.state,
-      uploads: this.state.uploads.filter(upload => {
-        return upload != title;
-      })
+      uploads: upload
     });
+
+    this.props.updateUploadState(upload);
   }
 
   // handleAllUploadsComplete(event) {
@@ -170,7 +178,9 @@ export default class CreateCampaignUpload extends Component {
             >
               Edit Upload List
             </Button>}*/}
-          <MediaCenter uploadList={this.state.uploads} />
+
+          {/*<MediaCenter uploadList={this.state.uploads} />*/}
+
         </Form>
       </div>
     );

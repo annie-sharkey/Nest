@@ -20,9 +20,16 @@ export default class AdminHome extends Component {
               <div className="secondbutton">
                 <button className="btn">Manage Campaigns</button>
               </div>
-              <div className="secondbutton">
-                <button className="btn">Agent Directory</button>
-              </div>
+              <Link to="/clientdirectory">
+                <div className="secondbutton">
+                  <button className="btn">Client Directory</button>
+                </div>
+              </Link>
+              <Link to="/agentdirectory">
+                <div className="secondbutton">
+                  <button className="btn">Agent Directory</button>
+                </div>
+              </Link>
             </div>
           </div>
           <div className="logout">

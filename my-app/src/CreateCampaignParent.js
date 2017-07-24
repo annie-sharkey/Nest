@@ -15,6 +15,7 @@ import "antd/dist/antd.css";
 import CampaignTable from "./CampaignTable";
 import CreateCampaignUpload from "./CreateCampaignUpload";
 import CreateCampaignBuildTable from "./CreateCampaignBuildTable";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 import "./CreateCampaignParent.css";
 import axios from "axios";
 import { Grid } from "semantic-ui-react";
@@ -70,21 +71,18 @@ export default class CreateCampaignParent extends Component {
   }
 
   WritetoDatabase() {
-    var writeColumns = this.state.writeColumns;
-    // var columns = []
-    // writeColumns.forEach(function(col){
-    //   columns.push(col.key)
-    // })
-    // console.log(columns);
-    var name = "cam 2";
+    console.log(this.state.writeUploads);
     axios
       .post("http://localhost:4000/api/campaign/", {
-        campaignName: name,
+        campaignName: this.state.campaignTitle,
         campaignColumns: this.state.writeColumns,
-        clients: []
+        clients: [],
+        campaignUploads: this.state.writeUploads,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate
       })
       .then(res => {
-        console.log(res);
+        console.log(res.data);
       });
   }
 
@@ -94,7 +92,12 @@ export default class CreateCampaignParent extends Component {
     // console.log("write columns parent:", this.state.writeColumns);
     return (
       <div>
-        {/* <Card width={100}>
+
+        <Card width={100}>
+          <Link to="/">
+            <Icon type="arrow-left" style={{ fontSize: 20 }} />
+          </Link>
+
           <h1>Create A Campaign</h1>
           <br />
           <Grid divided="vertically">

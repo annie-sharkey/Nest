@@ -6,9 +6,21 @@ const Agent = require("../models/agent.js");
 
 const Campaign = require("../models/campaign.js");
 
+router.get("/clients", function(req, res, next) {
+  Client.find({}).then(function(clients) {
+    res.send(clients);
+  });
+});
+
 router.get("/clients/:code", function(req, res, next) {
   Client.find({ agentCode: req.params.code }).then(function(clients) {
     res.send(clients);
+  });
+});
+
+router.get("/agents", function(req, res, next) {
+  Agent.find({}).then(function(agents) {
+    res.send(agents);
   });
 });
 
@@ -98,7 +110,10 @@ router.post("/campaign/", function(req, res, next) {
   var campaign = new Campaign({
     campaignName: req.body.campaignName,
     campaignColumns: req.body.campaignColumns,
-    clients: req.body.clients
+    clients: req.body.clients,
+    campaignUploads: req.body.campaignUploads,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate
   });
   campaign.save(function(err) {
     if (err) {
@@ -107,6 +122,7 @@ router.post("/campaign/", function(req, res, next) {
     res.json(campaign);
   });
 });
+
 
 router.put("/campaign/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
