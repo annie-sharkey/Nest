@@ -159,25 +159,6 @@ export default class CreateCampaignBuildTable extends Component {
             );
           })}
           <br />
-          {/*{!this.state.done &&
-            <Button
-              type="dashed"
-              onClick={event => {
-                this.handleAllColumnsComplete(event);
-                this.props.updateColumnState(this.state.columns);
-              }}
-            >
-              Complete Column List
-            </Button>}*/}
-          {/*{this.state.done &&
-            <Button
-              type="dashed"
-              onClick={event => {
-                this.handleAllColumnsEdit(event);
-              }}
-            >
-              Submit Column List
-            </Button>}*/}
         </Form>
       </div>
     );

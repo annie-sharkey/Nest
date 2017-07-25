@@ -113,7 +113,8 @@ router.post("/campaign/", function(req, res, next) {
     clients: req.body.clients,
     campaignUploads: req.body.campaignUploads,
     startDate: req.body.startDate,
-    endDate: req.body.endDate
+    endDate: req.body.endDate,
+    officesIncludedinCampaign: req.body.officesIncludedinCampaign
   });
   campaign.save(function(err) {
     if (err) {
