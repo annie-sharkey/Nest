@@ -2,130 +2,166 @@ import React, { Component } from "react";
 import { Form, Input, Button } from "semantic-ui-react";
 import "./App.css";
 import axios from "axios";
-import { Icon } from "semantic-ui-react";
+import { Icon, List, Grid } from "semantic-ui-react";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
+import EditProfileForm from "./EditProfileForm.js";
 
 class AgentProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
       agent: this.props.agent,
-      name: "",
-      email: "",
-      title: "",
-      phone: "",
-      office: ""
+      editModal: false
     };
   }
 
-  handleNameChange(e) {
+  openEditModal() {
     this.setState({
-      name: e.target.value
+      editModal: true
     });
   }
 
-  handleEmailChange(e) {
+  cancelEditModal() {
     this.setState({
-      email: e.target.value
+      editModal: false
     });
   }
 
-  handleTitleChange(e) {
-    this.setState({
-      title: e.target.value
-    });
-  }
-
-  handlePhoneChange(e) {
-    this.setState({
-      phone: e.target.value
-    });
-  }
-
-  handleOfficeChange(e) {
-    this.setState({
-      office: e.target.value
-    });
-  }
-
-  editInfo() {
-    var agent = this.state.agent;
-    console.log(agent);
-    agent.agentName = this.state.name;
-    agent.agentEmail = this.state.email;
-    agent.agentPhoneNumber = this.state.phone;
-    agent.agentTitle = this.state.title;
-    agent.agentOffice = this.state.office;
-
-    axios
-      .put("http://localhost:4000/api/agent/" + agent.agentCode, agent)
-      .then(response => {
-        this.props.updateAgent(response.data);
-      });
+  updateAgent(agent) {
+    this.cancelEditModal();
+    this.props.updateAgent(agent);
   }
 
   render() {
+    var editModal;
+    if (this.state.editModal) {
+      editModal = (
+        <EditProfileForm
+          editModal={this.state.editModal}
+          onCancel={() => this.cancelEditModal()}
+          onOk={agent => this.updateAgent(agent)}
+          agent={this.state.agent}
+        />
+      );
+    }
     var agent = this.state.agent;
     return (
       <div>
+        {editModal}
         <Link to="/">
-          <Icon name="home" color="positive" size="huge" />
+          <a className="home-icon">
+            <Icon name="home" color="positive" size="huge" />
+          </a>
         </Link>
+        <div
+          className="profile-pic"
+          style={{
+            "border-radius": "50%",
+            width: "80px",
+            height: "80px",
+            backgroundColor: "black"
+          }}
+        />
         <div className="form-container">
-          <Form className="form" onSubmit={e => this.handleSubmit(e)}>
-            <Form.Input
-              className="form-field"
-              placeholder="Name"
-              label="Name"
-              onChange={e => this.handleNameChange(e)}
-              width="7"
-              defaultValue={agent.agentName}
-            />
-            <Form.Input
-              className="form-field"
-              placeholder="Email"
-              label="Email"
-              onChange={e => this.handleEmailChange(e)}
-              width="7"
-              defaultValue={agent.agentEmail}
-            />
-            <Form.Input
-              className="form-field"
-              placeholder="Title"
-              label="Title"
-              onChange={e => this.handleTitleChange(e)}
-              width="7"
-              defaultValue={agent.agentTitle}
-            />
-            <Form.Input
-              className="form-field"
-              label="FON Code"
-              disabled={true}
-              width="7"
-              defaultValue={agent.agentCode}
-            />
-            <Form.Input
-              className="form-field"
-              defaultValue="111-111-1111"
-              label="Phone"
-              width="7"
-              onChange={e => this.handlePhoneChange(e)}
-              defaultValue={agent.agentPhoneNumber}
-            />
-            <Form.Input
-              className="form-field"
-              placeholder="Charlottesville"
-              label="Office"
-              onChange={e => this.handleOfficeChange(e)}
-              width="7"
-              defaultValue={agent.agentOffice}
-            />
-          </Form>
+          <Grid columns={3} textAlign={"center"}>
+            <Grid.Row>
+              <Grid.Column>
+                <h3 style={{ color: "#46797b" }}>Name</h3>
+                <strong style={{ fontSize: "20px" }}>
+                  {agent.agentName}
+                </strong>
+              </Grid.Column>
+              <Grid.Column>
+                <h3 style={{ color: "#46797b" }}>Email</h3>
+                <strong style={{ fontSize: "20px" }}>
+                  {agent.agentEmail}
+                </strong>
+              </Grid.Column>
+              <Grid.Column>
+                <h3 style={{ color: "#46797b" }}>Title</h3>
+                <strong style={{ fontSize: "20px" }}>
+                  {agent.agentTitle}
+                </strong>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <h3 style={{ color: "#46797b" }}>Phone Number</h3>
+                <strong style={{ fontSize: "20px" }}>
+                  {agent.agentPhoneNumber}
+                </strong>
+              </Grid.Column>
+              <Grid.Column>
+                <h3 style={{ color: "#46797b" }}>Agent Code</h3>
+                <strong style={{ fontSize: "20px" }}>
+                  {agent.agentCode}
+                </strong>
+              </Grid.Column>
+              <Grid.Column>
+                <h3 style={{ color: "#46797b" }}>Office</h3>
+                <strong style={{ fontSize: "20px" }}>
+                  {agent.agentOffice}
+                </strong>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          {/* <div className="form">
+            <List>
+              <List.Item className="form-item">
+                <List.Content>
+                  <h2>Name</h2>
+                  <List.Description>
+                    {agent.agentName}
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item className="form-item">
+                <List.Content>
+                  <h2>Email</h2>
+                  <List.Description>
+                    {agent.agentEmail}
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item className="form-item">
+                <List.Content>
+                  <h2>Title</h2>
+                  <List.Description>
+                    {agent.agentTitle}
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item className="form-item">
+                <List.Content>
+                  <h2>Agent Code</h2>
+                  <List.Description>
+                    {agent.agentCode}
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item className="form-item">
+                <List.Content>
+                  <h2>Phone Number</h2>
+                  <List.Description>
+                    {agent.agentPhoneNumber}
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item className="form-item">
+                <List.Content>
+                  <h2>Agent Office</h2>
+                  <List.Description>
+                    {agent.agentOffice}
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+            </List>
+          </div> */}
         </div>
         <div className="edit-button">
           <Button
             content="Edit"
-            onClick={() => this.editInfo()}
+            onClick={() => this.openEditModal()}
             color="black"
           />
         </div>
@@ -135,3 +171,13 @@ class AgentProfile extends Component {
 }
 
 export default AgentProfile;
+
+{
+  /* <List.Item>
+  <List.Icon name="folder" />
+  <List.Content>
+    <List.Header>site</List.Header>
+    <List.Description>Your site's theme</List.Description>
+  </List.Content>
+</List.Item>; */
+}

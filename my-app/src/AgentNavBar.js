@@ -41,10 +41,9 @@ export default class AgentNavBar extends Component {
       });
   }
 
-  handleTableUpdate(data) {
-    console.log(data);
+  updateClients(clients) {
     this.setState({
-      dataSource: data
+      dataSource: clients
     });
   }
 
@@ -110,7 +109,7 @@ export default class AgentNavBar extends Component {
               <MasterTable
                 dataSource={this.state.dataSource.reverse()}
                 agentCode={this.props.agent.agentCode}
-                getData={() => this.getData()}
+                updateClients={clients => this.updateClients(clients)}
               />}
           />
           <Route

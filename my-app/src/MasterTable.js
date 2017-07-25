@@ -70,19 +70,6 @@ export default class MasterTable extends React.Component {
     };
   }
 
-  onCellChange(index, key) {
-    return value => {
-      const dataSource = [...this.state.dataSource];
-      dataSource[index][key] = value;
-      this.setState({ dataSource });
-    };
-  }
-  onDelete(index) {
-    const dataSource = [...this.state.dataSource];
-    dataSource.splice(index, 1);
-    this.setState({ dataSource });
-  }
-
   handleOpenModal() {
     this.setState({
       modal: true
@@ -104,6 +91,13 @@ export default class MasterTable extends React.Component {
   }
 
   closeEditModal() {
+    this.setState({
+      editModal: false
+    });
+    window.location.reload();
+  }
+
+  cancelEditModal() {
     this.setState({
       editModal: false
     });
@@ -129,6 +123,7 @@ export default class MasterTable extends React.Component {
       homeAnniversary: clientAnniversary
     });
     this.closeEditModal();
+    //this.props.updateClients(clientName);
   }
 
   handleAdd(
@@ -140,8 +135,7 @@ export default class MasterTable extends React.Component {
     clientBirthday,
     clientAnniversary
   ) {
-    var self = this;
-    var data;
+    var data = this.state.dataSource;
     axios.post("http://localhost:4000/api/clients", {
       clientName: clientName,
       clientAddress: clientAddress,
@@ -163,6 +157,7 @@ export default class MasterTable extends React.Component {
     this.setState({
       editModal: false
     });
+    window.location.reload();
   }
 
   compareByAlph(a, b) {
@@ -213,7 +208,7 @@ export default class MasterTable extends React.Component {
       editModal = (
         <EditForm
           editModal={this.state.editModal}
-          onCancel={() => this.closeEditModal()}
+          onCancel={() => this.cancelEditModal()}
           onOk={(
             clientName,
             clientAddress,

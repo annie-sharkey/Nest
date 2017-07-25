@@ -88,3 +88,15 @@ img {
 .login-button-container {
   margin-top: 4%;
 }
+
+.logout-text {
+  color: "black";
+}
+
+.name {
+  color: #46797b;
+}
+
+.edit-icon {
+  color: #46797b;
+}

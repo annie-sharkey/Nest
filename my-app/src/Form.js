@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { Button, Modal, Form, Input, Radio } from "antd";
+import { Confirm } from "semantic-ui-react";
 const FormItem = Form.Item;
 
 export default class ClientForm extends React.Component {
@@ -8,6 +9,7 @@ export default class ClientForm extends React.Component {
     super(props);
     this.state = {
       visible: this.props.modal,
+      confirm: false,
       name: "",
       address: "",
       city: "",
@@ -93,6 +95,18 @@ export default class ClientForm extends React.Component {
     });
   }
 
+  showConfirm() {
+    this.setState({
+      confirm: true
+    });
+  }
+
+  handleCancelConfirm() {
+    this.setState({
+      confirm: false
+    });
+  }
+
   render() {
     return (
       <Modal
@@ -101,7 +115,7 @@ export default class ClientForm extends React.Component {
         okText="Add Client"
         cancelText="Cancel"
         onCancel={() => this.handleCancel()}
-        onOk={() => this.handleAdd()}
+        onOk={() => this.showConfirm()}
       >
         <Form layout="vertical">
           <FormItem label="Client Name">
@@ -126,6 +140,14 @@ export default class ClientForm extends React.Component {
             <Input onChange={e => this.handleAnniversaryChange(e)} />
           </FormItem>
         </Form>
+        <Confirm
+          open={this.state.confirm}
+          content="Are you sure you want to add this client?"
+          cancelButton="No"
+          confirmButton="Yes"
+          onCancel={() => this.handleCancelConfirm()}
+          onConfirm={() => this.handleAdd()}
+        />
       </Modal>
     );
   }

@@ -37,7 +37,7 @@ router.post("/clients", function(req, res) {
   });
   client.save(function(err) {
     if (err) {
-      res.send(err);
+      throw err;
     }
     res.json(client);
   });
@@ -122,7 +122,6 @@ router.post("/campaign/", function(req, res, next) {
     res.json(campaign);
   });
 });
-
 
 router.put("/campaign/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {

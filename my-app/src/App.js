@@ -9,7 +9,7 @@ import MediaCenter from "./MediaCenter";
 import { LocaleProvider } from "antd";
 import enUS from "antd/lib/locale-provider/en_US";
 
-import AgentForm from "./AgentProfile";
+import AgentProfile from "./AgentProfile";
 import { Modal, Form, Input, Radio } from "antd";
 import { Button } from "semantic-ui-react";
 //import TestTable from "./TestTable";
@@ -33,6 +33,24 @@ class App extends Component {
   handleFieldChange(e) {
     this.setState({
       field: e.target.value
+    });
+  }
+
+  updateAgent(agent) {
+    console.log("Updated Agent", agent);
+    var self = this;
+    var updateAgent = this.state.agent;
+    updateAgent = agent;
+    axios.put("http://localhost:4000/api/agent/" + agent.agentCode, agent);
+    // axios.get("http://localhost:4000/" + agent.agentCode).then(function(res) {
+    //   updateAgent.agentName = res.data.agentName;
+    //   updateAgent.agentTitle = res.data.agentTitle;
+    //   updateAgent.agentEmail = res.data.agentEmail;
+    //   updateAgent.agentOffice = res.data.agentOffice;
+    //   updateAgent.agentPhoneNumber = res.data.agentPhoneNumber;
+    // });
+    self.setState({
+      agent: updateAgent
     });
   }
 
@@ -81,27 +99,17 @@ class App extends Component {
     }
   }
 
-  updateAgent(data) {
-    this.setState({
-      updated: true,
-      agent: data
-    });
-  }
-
   render() {
-
+    console.log(this.state.agent);
     if (!this.state.logged) {
       return (
         <div className="login">
-          <h1 className="title">NEST PORTAL</h1>
+          <h2 className="title">NEST PORTAL</h2>
           <div className="login-field">
             <Input
               onChange={e => this.handleFieldChange(e)}
               placeholder="Enter FON Code"
-
             />
-            <Route path="/clientdirectory" component={AdminClientDirectory} />
-            <Route path="/agentdirectory" component={AdminAgentDirectory} />
           </div>
 
           <div className="login-button-container">
@@ -138,10 +146,10 @@ class App extends Component {
               <Route
                 path="/profile"
                 component={() =>
-                  <AgentForm
+                  <AgentProfile
                     agent={this.state.agent}
-                    updateAgent={data => {
-                      this.updateAgent(data);
+                    updateAgent={agent => {
+                      this.updateAgent(agent);
                     }}
                   />}
               />
@@ -149,8 +157,25 @@ class App extends Component {
           </Router>
         </div>
       );
-    }
+      // return (
+      //   <LocaleProvider locale={enUS}>
+      //     <Router>
+      //       <div>
+      //         <Route exact path="/" component={AdminHome} />
+      //         <Route
+      //           exact
+      //           path="/createcampaign"
+      //           component={CreateCampaignParent}
+      //         />
 
+      //         <Route path="/clientdirectory" component={AdminClientDirectory} />
+
+      //         <Route path="/agentdirectory" component={AdminAgentDirectory} />
+      //       </div>
+      //     </Router>
+      //   </LocaleProvider>
+      // );
+    }
   }
 }
 
