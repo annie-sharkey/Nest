@@ -4,25 +4,24 @@ import "antd/dist/antd.css";
 import axios from "axios";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import "./AdminDirectory.css";
+import AgentEditForm from "./AgentEditForm";
 const TabPane = Tabs.TabPane;
 
 export default class AdminAgentDirectory extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filterDropdownVisible: false,
-      data: [],
-      officeData: [],
-      searchText: "",
-      filtered: false,
-      searchData: []
-    };
-  }
-
-  onInputChange(e) {
+  state = {
+    filterDropdownVisible: false,
+    data: [],
+    officeData: [],
+    searchText: "",
+    filtered: false,
+    searchData: [],
+    editModal: false,
+    selectedAgent: {}
+  };
+  onInputChange = e => {
     this.setState({ searchText: e.target.value });
-  }
-  onSearch() {
+  };
+  onSearch = () => {
     const { searchText } = this.state;
     const reg = new RegExp(searchText, "gi");
     this.setState({
@@ -55,10 +54,11 @@ export default class AdminAgentDirectory extends Component {
         })
         .filter(record => !!record)
     });
-  }
+  };
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/agents").then(res => {
+      console.log(res.data);
       this.setState({
         data: res.data,
         officeData: res.data.filter(agent => {
@@ -89,7 +89,71 @@ export default class AdminAgentDirectory extends Component {
     });
   }
 
+  openEditModal(text) {
+    console.log(text);
+    this.setState({
+      editModal: true,
+      selectedAgent: text
+    });
+  }
+
+  updateAgent(agentCode, agentName, agentEmail, agentPhoneNumber, agentOffice) {
+    console.log(agentCode, agentName, agentEmail, agentPhoneNumber, agentOffice)
+    var agentId = this.state.selectedAgent._id;
+    console.log("id:", agentId)
+    axios.put("http://localhost:4000/api/agent/" + this.state.selectedAgent.agentCode, {
+      // agentCode: agentCode,
+      agentName: agentName,
+      agentEmail: agentEmail,
+      agentPhoneNumber: agentPhoneNumber,
+      agentOffice: agentOffice
+    });
+    this.closeEditModal();
+
+  }
+
+  closeEditModal() {
+    this.setState({
+      editModal: false
+    });
+  }
+
+  deleteAgent() {
+    axios.delete(
+      "http://localhost:4000/api/agent/" + this.state.selectedAgent.agentCode
+    );
+    this.setState({
+      editModal: false
+    });
+  }
   render() {
+    var editModal;
+    if (this.state.editModal) {
+      editModal = (
+        <AgentEditForm
+          editModal={this.state.editModal}
+          onCancel={() => this.closeEditModal()}
+          onOk={(
+            agentCode,
+            agentName,
+            agentEmail,
+            agentPhoneNumber,
+            agentOffice
+          ) =>
+            this.updateAgent(
+              agentCode,
+              agentName,
+              agentEmail,
+              agentPhoneNumber,
+              agentOffice
+            )}
+          selectedAgent={this.state.selectedAgent}
+          deleteAgent={() => {
+            this.deleteAgent();
+          }}
+        />
+      );
+    }
     let { sortedInfo } = this.state;
     sortedInfo = sortedInfo || {};
     const columns = [
@@ -113,8 +177,8 @@ export default class AdminAgentDirectory extends Component {
               ref={ele => (this.searchInput = ele)}
               placeholder="Search name"
               value={this.state.searchText}
-              onChange={e => this.onInputChange(e)}
-              onPressEnter={() => this.onSearch()}
+              onChange={this.onInputChange}
+              onPressEnter={this.onSearch}
             />
             <Button type="primary" onClick={this.onSearch}>
               Search
@@ -167,7 +231,12 @@ export default class AdminAgentDirectory extends Component {
         key: "action",
         render: (text, record) =>
           <span>
-            <Icon type="edit" />
+            <Icon
+              type="edit"
+              onClick={() => {
+                this.openEditModal(text);
+              }}
+            />
           </span>
       }
     ];
@@ -175,6 +244,7 @@ export default class AdminAgentDirectory extends Component {
     return (
       <div>
         <div className="header">
+          {editModal}
           <Link to="/">
             <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>

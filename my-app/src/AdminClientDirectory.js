@@ -8,21 +8,19 @@ import EditForm from "./EditForm";
 const TabPane = Tabs.TabPane;
 
 export default class AdminClientDirectory extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filterDropdownVisible: false,
-      data: [],
-      officeData: [],
-      searchText: "",
-      filtered: false,
-      searchData: []
-    };
-  }
-  onInputChange(e) {
+  state = {
+    filterDropdownVisible: false,
+    data: [],
+    officeData: [],
+    searchText: "",
+    filtered: false,
+    searchData: [],
+    editModal: false
+  };
+  onInputChange = e => {
     this.setState({ searchText: e.target.value });
-  }
-  onSearch() {
+  };
+  onSearch = () => {
     const { searchText } = this.state;
     const reg = new RegExp(searchText, "gi");
     this.setState({
@@ -55,7 +53,7 @@ export default class AdminClientDirectory extends Component {
         })
         .filter(record => !!record)
     });
-  }
+  };
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(res => {
@@ -80,7 +78,84 @@ export default class AdminClientDirectory extends Component {
     });
   }
 
+  openEditModal(text) {
+    console.log(text);
+    this.setState({
+      editModal: true,
+      selectedClient: text
+    });
+  }
+
+    updateClient(
+    clientName,
+    clientAddress,
+    clientCity,
+    clientEmail,
+    clientState,
+    clientBirthday,
+    clientAnniversary
+  ) {
+    var clientId = this.state.selectedClient._id;
+    axios.put("http://localhost:4000/api/clients/" + clientId, {
+      clientName: clientName,
+      clientAddress: clientAddress,
+      clientCity: clientCity,
+      clientEmail: clientEmail,
+      clientState: clientState,
+      clientBirthday: clientBirthday,
+      homeAnniversary: clientAnniversary
+    });
+    this.closeEditModal();
+  }
+
+    closeEditModal() {
+    this.setState({
+      editModal: false
+    });
+  }
+
+  deleteClient() {
+    axios.delete(
+      "http://localhost:4000/api/clients/" + this.state.selectedClient._id
+    );
+    this.setState({
+      editModal: false
+    })
+  }
+
   render() {
+    var editModal;
+    if (this.state.editModal) {
+      editModal = (
+        <EditForm
+          editModal={this.state.editModal}
+          onCancel={() => this.closeEditModal()}
+          onOk={(
+            clientName,
+            clientAddress,
+            clientCity,
+            clientEmail,
+            clientState,
+            clientBirthday,
+            clientAnniversary
+          ) =>
+            this.updateClient(
+              clientName,
+              clientAddress,
+              clientCity,
+              clientEmail,
+              clientState,
+              clientBirthday,
+              clientAnniversary
+            )}
+          selectedClient={this.state.selectedClient}
+          deleteClient={() => {
+            this.deleteClient();
+          }}
+        />
+      );
+    }
+
     let { sortedInfo } = this.state;
     sortedInfo = sortedInfo || {};
     console.log("search data:", this.state.searchData);
@@ -106,8 +181,8 @@ export default class AdminClientDirectory extends Component {
               ref={ele => (this.searchInput = ele)}
               placeholder="Search name"
               value={this.state.searchText}
-              onChange={e => this.onInputChange(e)}
-              onPressEnter={() => this.onSearch()}
+              onChange={this.onInputChange}
+              onPressEnter={this.onSearch}
             />
             <Button type="primary" onClick={this.onSearch}>
               Search
@@ -176,7 +251,9 @@ export default class AdminClientDirectory extends Component {
             <Icon
               type="edit"
               onClick={() => {
-                <EditForm />;
+                
+                  this.openEditModal(text);
+              
               }}
             />
           </span>
@@ -186,6 +263,7 @@ export default class AdminClientDirectory extends Component {
     return (
       <div>
         <div className="header">
+          {editModal}
           <Link to="/">
             <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>
