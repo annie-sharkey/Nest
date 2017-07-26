@@ -9,15 +9,16 @@ import MediaCenter from "./MediaCenter";
 import { LocaleProvider } from "antd";
 import enUS from "antd/lib/locale-provider/en_US";
 
+
 import AgentProfile from "./AgentProfile";
+
+
 import { Modal, Form, Input, Radio } from "antd";
 import { Button } from "semantic-ui-react";
-//import TestTable from "./TestTable";
-//import TestCreateCampaign from "./TestCreateCampaign";
 import AdminHome from "./AdminHome";
-
 import AdminClientDirectory from "./AdminClientDirectory";
 import AdminAgentDirectory from "./AdminAgentDirectory";
+import ManageCampaigns from './ManageCampaigns';
 
 class App extends Component {
   constructor(props) {
@@ -100,82 +101,77 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.agent);
-    if (!this.state.logged) {
-      return (
-        <div className="login">
-          <h2 className="title">NEST PORTAL</h2>
-          <div className="login-field">
-            <Input
-              onChange={e => this.handleFieldChange(e)}
-              placeholder="Enter FON Code"
-            />
+
+    // if (!this.state.logged) {
+    //   return (
+    //     <div className="login">
+    //       <h1 className="title">NEST PORTAL</h1>
+    //       <div className="login-field">
+    //         <Input
+    //           onChange={e => this.handleFieldChange(e)}
+    //           placeholder="Enter FON Code"
+
+    //         />
+    //       </div>
+
+    //       <div className="login-button-container">
+    //         <Button
+    //           className="login-button"
+    //           color="black"
+    //           onClick={() => this.validateLogin()}
+    //         >
+    //           Login
+    //         </Button>
+    //       </div>
+    //     </div>
+    //   );
+    // }
+    // if (this.state.logged) {
+    //   console.log("session storage is true");
+    //   return (
+    //     <div>
+    //       <Router>
+    //         <div>
+    //           <Route
+    //             exact
+    //             path="/"
+    //             component={() =>
+    //               <AgentHome
+    //                 agent={this.state.agent}
+    //                 logOut={() => this.logOut()}
+    //               />}
+    //           />
+    //           <Route
+    //             path="/managelists"
+    //             component={() => <AgentNavBar agent={this.state.agent} />}
+    //           />
+    //           <Route
+    //             path="/profile"
+    //             component={() =>
+    //               <AgentForm
+    //                 agent={this.state.agent}
+    //                 updateAgent={data => {
+    //                   this.updateAgent(data);
+    //                 }}
+    //               />}
+    //           />
+    //         </div>
+    //       </Router>
+    //     </div>
+
+    return (
+      <LocaleProvider locale={enUS}>
+        <Router>
+          <div>
+            <Route exact path="/" component={AdminHome} />
+            <Route path="/createcampaign" component={CreateCampaignParent} />
+            <Route path="/clientdirectory" component={AdminClientDirectory} />
+            <Route path="/agentdirectory" component={AdminAgentDirectory} />
+            <Route path="/managecampaigns" component={ManageCampaigns}/>
           </div>
-
-          <div className="login-button-container">
-            <Button
-              className="login-button"
-              color="black"
-              onClick={() => this.validateLogin()}
-            >
-              Login
-            </Button>
-          </div>
-        </div>
-      );
-    }
-    if (this.state.logged) {
-      console.log("session storage is true");
-      return (
-        <div>
-          <Router>
-            <div>
-              <Route
-                exact
-                path="/"
-                component={() =>
-                  <AgentHome
-                    agent={this.state.agent}
-                    logOut={() => this.logOut()}
-                  />}
-              />
-              <Route
-                path="/managelists"
-                component={() => <AgentNavBar agent={this.state.agent} />}
-              />
-              <Route
-                path="/profile"
-                component={() =>
-                  <AgentProfile
-                    agent={this.state.agent}
-                    updateAgent={agent => {
-                      this.updateAgent(agent);
-                    }}
-                  />}
-              />
-            </div>
-          </Router>
-        </div>
-      );
-      // return (
-      //   <LocaleProvider locale={enUS}>
-      //     <Router>
-      //       <div>
-      //         <Route exact path="/" component={AdminHome} />
-      //         <Route
-      //           exact
-      //           path="/createcampaign"
-      //           component={CreateCampaignParent}
-      //         />
-
-      //         <Route path="/clientdirectory" component={AdminClientDirectory} />
-
-      //         <Route path="/agentdirectory" component={AdminAgentDirectory} />
-      //       </div>
-      //     </Router>
-      //   </LocaleProvider>
-      // );
-    }
+        </Router>
+      </LocaleProvider>
+    );
   }
 }
 

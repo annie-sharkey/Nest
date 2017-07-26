@@ -9,17 +9,21 @@ export default class AdminHome extends Component {
     return (
       <Router>
         <div className="home-container">
-          <div className="center">
+          <div className="centerAdmin">
+            <div className="adminLogo">
             <img src={Nest} width={75} />
+            </div>
             <div className="buttons">
               <Link to="/createcampaign">
                 <div className="spaceAroundButton">
                   <button className="btn">Create a Campaign</button>
                 </div>
               </Link>
+              <Link to="/managecampaigns">
               <div className="secondbutton">
                 <button className="btn">Manage Campaigns</button>
               </div>
+              </Link>
               <Link to="/clientdirectory">
                 <div className="secondbutton">
                   <button className="btn">Client Directory</button>

@@ -157,3 +157,16 @@
 .form-item {
   margin-top: 2.5%;
 }
+
+.campaignform {
+  display: flex;
+  flex-direction: column;
+  margin-left: 25%;
+  margin-top: 1%
+}
+
+.createcampaigntables {
+  display: flex;
+  flex-direction: row;
+  /*display: inline-block;*/
+}

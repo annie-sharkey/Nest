@@ -8,10 +8,10 @@ import {
   Checkbox,
   Button,
   Card,
-  DatePicker
+  DatePicker,
+  Popconfirm
 } from "antd";
 import "antd/dist/antd.css";
-// import TestTable from "./TestTable";
 import CampaignTable from "./CampaignTable";
 import CreateCampaignUpload from "./CreateCampaignUpload";
 import CreateCampaignBuildTable from "./CreateCampaignBuildTable";
@@ -22,6 +22,10 @@ import { Grid } from "semantic-ui-react";
 
 const FormItem = Form.Item;
 const { MonthPicker, RangePicker } = DatePicker;
+const CheckboxGroup = Checkbox.Group;
+
+const plainOptions = ["Asheville", "Charlottesville", "Fredericksburg", "New River Valley", "Richmond", "Shenandoah Valley", "Wilmington"];
+const defaultCheckedList = [];
 
 export default class CreateCampaignParent extends Component {
   constructor(props) {
@@ -31,7 +35,10 @@ export default class CreateCampaignParent extends Component {
       endDate: "",
       writeColumns: [],
       writeUploads: [],
-      campaignTitle: ""
+      campaignTitle: "",
+      checkedList: defaultCheckedList,
+      indeterminate: true,
+      checkAll: false
     };
   }
 
@@ -79,27 +86,42 @@ export default class CreateCampaignParent extends Component {
         clients: [],
         campaignUploads: this.state.writeUploads,
         startDate: this.state.startDate,
-        endDate: this.state.endDate
+        endDate: this.state.endDate,
+        officesIncludedinCampaign: this.state.checkedList
       })
       .then(res => {
         console.log(res.data);
       });
   }
 
+  onChange = checkedList => {
+    this.setState({
+      checkedList,
+      indeterminate:
+        !!checkedList.length && checkedList.length < plainOptions.length,
+      checkAll: checkedList.length === plainOptions.length
+    });
+    console.log("checked list:", this.state.checkedList)
+  };
+  onCheckAllChange = e => {
+    this.setState({
+      checkedList: e.target.checked ? plainOptions : [],
+      indeterminate: false,
+      checkAll: e.target.checked
+    });
+  };
+
   render() {
-    // console.log("write columns:", this.state.writeColumns)
-    // console.log("write uploads parent:", this.state.writeUploads);
-    // console.log("write columns parent:", this.state.writeColumns);
     return (
       <div>
-
-        <Card width={100}>
+        <div className="header">
           <Link to="/">
-            <Icon type="arrow-left" style={{ fontSize: 20 }} />
+            <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>
-
-          <h1>Create A Campaign</h1>
-          <br />
+          <h1>Create a Campaign</h1>
+        </div>
+        {/*<Card>*/}
+        <div className="campaignform">
           <Grid divided="vertically">
             <Grid.Row columns={2}>
               <Grid.Column>
@@ -130,13 +152,32 @@ export default class CreateCampaignParent extends Component {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-
-          <Form>
+          <div>
+            <h3>Select Offices to Include</h3>
+            <br />
+            <div style={{ borderBottom: "1px solid #E9E9E9" }}>
+              <Checkbox
+                indeterminate={this.state.indeterminate}
+                onChange={this.onCheckAllChange}
+                checked={this.state.checkAll}
+              >
+                Check all
+              </Checkbox>
+            </div>
+            <br />
+            <CheckboxGroup
+              options={plainOptions}
+              value={this.state.checkedList}
+              onChange={this.onChange}
+            />
+          </div>
+          <br />
+          <br />
+          <Form className="createcampaigntables">
             <CreateCampaignBuildTable
               updateColumnState={columns => this.updateColumnState(columns)}
             />
-            <br />
-            <br />
+
             <CreateCampaignUpload
               updateUploadState={uploads => this.updateUploadState(uploads)}
             />
@@ -144,11 +185,16 @@ export default class CreateCampaignParent extends Component {
 
           <br />
           <br />
-
-          <Button type="danger" onClick={event => this.WritetoDatabase()}>
-            Finish Creating Campaign
-          </Button>
-        </Card> */}
+          <Popconfirm
+            title="Are you sure you're finished creating the campaign？"
+            okText="Yes"
+            cancelText="Keep Editing"
+            onConfirm={event => this.WritetoDatabase()}
+          >
+            <Button type="danger">Finish Creating Campaign</Button>
+          </Popconfirm>
+          {/*</Card>*/}
+        </div>
       </div>
     );
   }

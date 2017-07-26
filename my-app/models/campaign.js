@@ -11,7 +11,8 @@ var CampaignSchema = new Schema({
   clients: [String],
   campaignUploads: [String],
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  officesIncludedinCampaign: [String]
 });
 
 //export our module to use in server.js
