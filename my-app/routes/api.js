@@ -33,7 +33,8 @@ router.post("/clients", function(req, res) {
     clientEmail: req.body.clientEmail,
     clientBirthday: req.body.clientBirthday,
     homeAnniversary: req.body.homeAnniversary,
-    agentCode: req.body.agentCode
+    agentCode: req.body.agentCode,
+    lastEdited: new Date()
   });
   client.save(function(err) {
     if (err) {
@@ -55,6 +56,7 @@ router.put("/clients/:id", function(req, res, next) {
     client.clientEmail = req.body.clientEmail || client.clientEmail;
     client.clientBirthday = req.body.clientBirthday || client.clientBirthday;
     client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
+    client.lastEdited = new Date();
 
     client.save(function(err, client) {
       if (err) {

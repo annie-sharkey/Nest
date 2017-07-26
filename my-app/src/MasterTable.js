@@ -123,7 +123,6 @@ export default class MasterTable extends React.Component {
       homeAnniversary: clientAnniversary
     });
     this.closeEditModal();
-    //this.props.updateClients(clientName);
   }
 
   handleAdd(

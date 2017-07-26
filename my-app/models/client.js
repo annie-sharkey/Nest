@@ -20,7 +20,8 @@ var ClientSchema = new Schema({
   campaigns: [String],
   childrenNames: [String],
   agentCode: String,
-  office: String
+  office: String,
+  lastEdited: Date
 });
 
 //export our module to use in server.js
