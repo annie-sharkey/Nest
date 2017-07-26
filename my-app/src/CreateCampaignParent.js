@@ -9,7 +9,9 @@ import {
   Button,
   Card,
   DatePicker,
-  Popconfirm
+  Popconfirm,
+  Alert,
+  message
 } from "antd";
 import "antd/dist/antd.css";
 import CampaignTable from "./CampaignTable";
@@ -24,7 +26,15 @@ const FormItem = Form.Item;
 const { MonthPicker, RangePicker } = DatePicker;
 const CheckboxGroup = Checkbox.Group;
 
-const plainOptions = ["Asheville", "Charlottesville", "Fredericksburg", "New River Valley", "Richmond", "Shenandoah Valley", "Wilmington"];
+const plainOptions = [
+  "Asheville",
+  "Charlottesville",
+  "Fredericksburg",
+  "New River Valley",
+  "Richmond",
+  "Shenandoah Valley",
+  "Wilmington"
+];
 const defaultCheckedList = [];
 
 export default class CreateCampaignParent extends Component {
@@ -78,7 +88,7 @@ export default class CreateCampaignParent extends Component {
   }
 
   WritetoDatabase() {
-    console.log(this.state.writeUploads);
+    message.success("Campaign successfully created. See Manage Campaigns to edit or delete your campaign.", 6);
     axios
       .post("http://localhost:4000/api/campaign/", {
         campaignName: this.state.campaignTitle,
@@ -101,7 +111,7 @@ export default class CreateCampaignParent extends Component {
         !!checkedList.length && checkedList.length < plainOptions.length,
       checkAll: checkedList.length === plainOptions.length
     });
-    console.log("checked list:", this.state.checkedList)
+    console.log("checked list:", this.state.checkedList);
   };
   onCheckAllChange = e => {
     this.setState({

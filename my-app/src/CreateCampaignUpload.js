@@ -84,11 +84,10 @@ export default class CreateCampaignUpload extends Component {
   }
 
   handleDeleteUpload(title) {
-
     var upload = this.state.uploads.filter(upload => {
       return upload != title;
     });
-    
+
     this.setState({
       ...this.state,
       uploads: upload
@@ -129,6 +128,10 @@ export default class CreateCampaignUpload extends Component {
                     : this.handleNameNewUpload(event)}
               />
               <div>
+                {!this.state.edit &&
+                  <Button onClick={event => this.handleNameNewUpload(event)}>
+                    Enter
+                  </Button>}
                 {this.state.edit &&
                   <Button
                     type="primary"
@@ -180,7 +183,6 @@ export default class CreateCampaignUpload extends Component {
             </Button>}*/}
 
           {/*<MediaCenter uploadList={this.state.uploads} />*/}
-
         </Form>
       </div>
     );

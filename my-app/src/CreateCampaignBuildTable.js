@@ -89,8 +89,8 @@ export default class CreateCampaignBuildTable extends Component {
 
   handleDeleteColumn(title) {
     var columns = this.state.columns.filter(column => {
-        return column != title;
-      })
+      return column != title;
+    });
     this.setState({
       ...this.state,
       columns: columns
@@ -113,7 +113,7 @@ export default class CreateCampaignBuildTable extends Component {
   // }
 
   render() {
-    console.log("columns child:", this.state.columns)
+    console.log("columns child:", this.state.columns);
     return (
       <div>
         <Form>
@@ -130,7 +130,9 @@ export default class CreateCampaignBuildTable extends Component {
                     ? this.handleResubmitColumn(event)
                     : this.handleNameNewColumn(event)}
               />
+
               <div>
+                {!this.state.edit && <Button onClick={event => this.handleNameNewColumn(event)}>Enter</Button>}
                 {this.state.edit &&
                   <Button
                     type="primary"
@@ -140,7 +142,7 @@ export default class CreateCampaignBuildTable extends Component {
                   </Button>}
               </div>
             </FormItem>}
-
+{this.state.columns.length < 1 && <div>No Columns</div>}
           {this.state.columns.map(column => {
             return (
               <div>
