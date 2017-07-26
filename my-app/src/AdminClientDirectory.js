@@ -4,22 +4,25 @@ import "antd/dist/antd.css";
 import axios from "axios";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import "./AdminDirectory.css";
-import EditForm from './EditForm';
+import EditForm from "./EditForm";
 const TabPane = Tabs.TabPane;
 
 export default class AdminClientDirectory extends Component {
-  state = {
-    filterDropdownVisible: false,
-    data: [],
-    officeData: [],
-    searchText: "",
-    filtered: false,
-    searchData: []
-  };
-  onInputChange = e => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterDropdownVisible: false,
+      data: [],
+      officeData: [],
+      searchText: "",
+      filtered: false,
+      searchData: []
+    };
+  }
+  onInputChange(e) {
     this.setState({ searchText: e.target.value });
-  };
-  onSearch = () => {
+  }
+  onSearch() {
     const { searchText } = this.state;
     const reg = new RegExp(searchText, "gi");
     this.setState({
@@ -52,7 +55,7 @@ export default class AdminClientDirectory extends Component {
         })
         .filter(record => !!record)
     });
-  };
+  }
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(res => {
@@ -103,8 +106,8 @@ export default class AdminClientDirectory extends Component {
               ref={ele => (this.searchInput = ele)}
               placeholder="Search name"
               value={this.state.searchText}
-              onChange={this.onInputChange}
-              onPressEnter={this.onSearch}
+              onChange={e => this.onInputChange(e)}
+              onPressEnter={() => this.onSearch()}
             />
             <Button type="primary" onClick={this.onSearch}>
               Search
@@ -170,7 +173,12 @@ export default class AdminClientDirectory extends Component {
         key: "action",
         render: (text, record) =>
           <span>
-            <Icon type="edit" onClick={()=> {<EditForm />}}/>
+            <Icon
+              type="edit"
+              onClick={() => {
+                <EditForm />;
+              }}
+            />
           </span>
       }
     ];

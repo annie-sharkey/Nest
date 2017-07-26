@@ -24,7 +24,9 @@ export default class AgentHome extends Component {
         <div className="home-container">
           <div className="profile">
             <Link to="/profile">
-              <Icon name="edit" size="huge" />
+              <a className="edit-icon">
+                <Icon name="edit" size="huge" />
+              </a>
             </Link>
             <text className="name">
               <strong>
@@ -46,8 +48,8 @@ export default class AgentHome extends Component {
             </div>
           </div>
           <div className="logout">
-            <Button color="black" onClick={() => this.props.logOut()}>
-              Log Out
+            <Button color="grey" onClick={() => this.props.logOut()}>
+              <text className="logout-text">Log Out</text>
             </Button>
           </div>
         </div>

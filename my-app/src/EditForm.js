@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { Button, Modal, Form, Input, Radio } from "antd";
+import { Confirm } from "semantic-ui-react";
 const FormItem = Form.Item;
 
 export default class EditForm extends React.Component {
@@ -16,7 +17,9 @@ export default class EditForm extends React.Component {
       currentEmail: "",
       currentState: "",
       currentBirthday: "",
-      currentAnniversary: ""
+      currentAnniversary: "",
+      confirm: false,
+      deleteConfirm: false
     };
   }
 
@@ -88,6 +91,30 @@ export default class EditForm extends React.Component {
     this.props.deleteClient();
   }
 
+  showConfirm() {
+    this.setState({
+      confirm: true
+    });
+  }
+
+  handleCancelEditConfirm() {
+    this.setState({
+      confirm: false
+    });
+  }
+
+  handleCancelDeleteConfirm() {
+    this.setState({
+      deleteConfirm: false
+    });
+  }
+
+  showDeleteConfirm() {
+    this.setState({
+      deleteConfirm: true
+    });
+  }
+
   render() {
     return (
       <Modal
@@ -96,7 +123,7 @@ export default class EditForm extends React.Component {
         okText="Update"
         cancelText="Cancel"
         onCancel={() => this.handleCancel()}
-        onOk={() => this.handleUpdate()}
+        onOk={() => this.showConfirm()}
       >
         <Form layout="vertical">
           <FormItem label="Name">
@@ -141,8 +168,24 @@ export default class EditForm extends React.Component {
               defaultValue={this.state.client.homeAnniversary}
             />
           </FormItem>
-          <Button onClick={() => this.handleDeleteClient()}>Delete</Button>
+          <Button onClick={() => this.showDeleteConfirm()}>Delete</Button>
         </Form>
+        <Confirm
+          open={this.state.confirm}
+          content="Are you sure you want to edit this client?"
+          cancelButton="No"
+          confirmButton="Yes"
+          onCancel={() => this.handleCancelEditConfirm()}
+          onConfirm={() => this.handleUpdate()}
+        />
+        <Confirm
+          open={this.state.deleteConfirm}
+          content="Are you sure you want to delete this client?"
+          cancelButton="No"
+          confirmButton="Yes"
+          onCancel={() => this.handleCancelDeleteConfirm()}
+          onConfirm={() => this.handleDeleteClient()}
+        />
       </Modal>
     );
   }

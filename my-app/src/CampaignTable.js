@@ -29,7 +29,7 @@ export default class CampaignTable extends React.Component {
       var left_data = [];
       var right_data = [];
       var clients = this.props.dataSource;
-      var last = res.data.length - 1;
+      var last = 1;
       clients.forEach(function(client) {
         if (!res.data[last].clients.includes(client._id)) {
           left_data.push(client);
