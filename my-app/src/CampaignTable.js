@@ -5,6 +5,8 @@ import React from "react";
 import axios from "axios";
 import { Table, Input, Icon, Popconfirm } from "antd";
 import { Button } from "semantic-ui-react";
+import { Confirm } from "semantic-ui-react";
+import moment from "moment";
 
 export default class CampaignTable extends React.Component {
   constructor(props) {
@@ -17,7 +19,8 @@ export default class CampaignTable extends React.Component {
       columns: [],
       campaignId: "",
       clientsToSave: [],
-      agentCode: this.props.agentCode
+      agentCode: this.props.agentCode,
+      confirm: false
     };
   }
 
@@ -28,8 +31,49 @@ export default class CampaignTable extends React.Component {
     axios.get("http://localhost:4000/api/campaigns").then(res => {
       var left_data = [];
       var right_data = [];
-      var clients = this.props.dataSource;
-      var last = 1;
+      var last = res.data.length - 1;
+      var clients = [];
+
+      console.log(res.data[last - 1]);
+      var lastCampaignClients = res.data[last - 1].clients;
+      console.log("clients from last campaign", lastCampaignClients);
+
+      var masterClients = this.props.dataSource;
+      console.log("clients from master", masterClients);
+
+      var lastCampaignTime = moment(res.data[last - 1].endDate)
+        .toDate()
+        .getTime();
+
+      console.log("last campaign end date", lastCampaignTime);
+
+      masterClients.forEach(function(client) {
+        var editedTime = moment(client.lastEdited).toDate().getTime();
+        console.log(editedTime);
+        console.log(lastCampaignTime);
+        console.log(editedTime > lastCampaignTime);
+        if (editedTime > lastCampaignTime) {
+          clients.push(client);
+        }
+      });
+
+      var self = this;
+      lastCampaignClients.forEach(function(client) {
+        if (!clients.includes(client)) {
+          axios
+            .get("http://localhost:4000/api/clients/" + self.props.agentCode)
+            .then(res => {
+              if (res.data.includes(client)) {
+                clients.push(client);
+              }
+            });
+        }
+      });
+
+      console.log(clients);
+      //Left Data: All clients from last campaign and any clients that were added since then
+      //Right Data: All clients to be included for the current campaign
+
       clients.forEach(function(client) {
         if (!res.data[last].clients.includes(client._id)) {
           left_data.push(client);
@@ -117,11 +161,26 @@ export default class CampaignTable extends React.Component {
       clients: clients
     };
 
+    var self = this;
     axios
       .put("http://localhost:4000/api/campaign/" + this.state.campaignId, data)
       .then(res => {
-        console.log(res.data);
+        self.setState({
+          confirm: false
+        });
       });
+  }
+
+  showConfirm() {
+    this.setState({
+      confirm: true
+    });
+  }
+
+  handleCancelConfirm() {
+    this.setState({
+      confirm: false
+    });
   }
 
   render() {
@@ -273,7 +332,7 @@ export default class CampaignTable extends React.Component {
             <div className="save-button">
               <Button
                 onClick={e => {
-                  this.saveClients(this.state.clientsToSave);
+                  this.showConfirm();
                 }}
                 color="white"
               >
@@ -282,6 +341,14 @@ export default class CampaignTable extends React.Component {
             </div>
           </div>
         </div>
+        <Confirm
+          open={this.state.confirm}
+          content="Are you sure you want to save your changes to this Campaign?"
+          cancelButton="No"
+          confirmButton="Yes"
+          onCancel={() => this.handleCancelConfirm()}
+          onConfirm={e => this.saveClients(this.state.clientsToSave)}
+        />
       </div>
     );
   }
