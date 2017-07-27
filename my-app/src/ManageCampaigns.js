@@ -194,6 +194,7 @@ export default class ManageCampaigns extends Component {
             <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>
           <h1>Manage Campaigns</h1>
+          <br />
         </div>
         <Table columns={columns} dataSource={this.state.data} />
 
