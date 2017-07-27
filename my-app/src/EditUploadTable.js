@@ -26,7 +26,7 @@ export default class CreateCampaignUpload extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      uploads: [],
+      uploads: this.props.selectedCampaign.campaignUploads,
       edit: false,
       // value: "",
       editedTitle: ""
@@ -95,20 +95,6 @@ export default class CreateCampaignUpload extends Component {
 
     this.props.updateUploadState(upload);
   }
-
-  // handleAllUploadsComplete(event) {
-  //   this.setState({
-  //     ...this.state,
-  //     done: true
-  //   });
-  // }
-
-  // handleAllUploadsEdit(event) {
-  //   this.setState({
-  //     ...this.state,
-  //     done: false
-  //   });
-  // }
 
   render() {
     return (

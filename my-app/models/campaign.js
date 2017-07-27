@@ -10,8 +10,8 @@ var CampaignSchema = new Schema({
   campaignColumns: [String],
   clients: [String],
   campaignUploads: [String],
-  startDate: Date,
-  endDate: Date,
+  startDate: String,
+  endDate: String,
   officesIncludedinCampaign: [String]
 });
 

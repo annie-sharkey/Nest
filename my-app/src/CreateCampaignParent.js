@@ -59,17 +59,22 @@ export default class CreateCampaignParent extends Component {
   }
 
   handleStartDate(date) {
+    
     this.setState({
       ...this.state,
-      startDate: date._d
+      startDate: date._d.toISOString()
     });
+    console.log("start date date._d:", date._d)
   }
 
   handleEndDate(date) {
+    // console.log("handle end date:", date)
     this.setState({
       ...this.state,
-      endDate: date._d
+      endDate: date._d.toISOString()
     });
+    console.log("end date:", this.state.endDate)
+    
   }
 
   updateColumnState(columns) {
@@ -100,7 +105,7 @@ export default class CreateCampaignParent extends Component {
         officesIncludedinCampaign: this.state.checkedList
       })
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
       });
   }
 
@@ -111,7 +116,7 @@ export default class CreateCampaignParent extends Component {
         !!checkedList.length && checkedList.length < plainOptions.length,
       checkAll: checkedList.length === plainOptions.length
     });
-    console.log("checked list:", this.state.checkedList);
+    // console.log("checked list:", this.state.checkedList);
   };
   onCheckAllChange = e => {
     this.setState({
@@ -122,6 +127,8 @@ export default class CreateCampaignParent extends Component {
   };
 
   render() {
+    console.log("end date:", this.state.endDate)
+    console.log("end date type:", typeof(this.state.endDate))
     return (
       <div>
         <div className="header">
