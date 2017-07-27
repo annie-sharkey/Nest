@@ -8,20 +8,24 @@ import AgentEditForm from "./AgentEditForm";
 const TabPane = Tabs.TabPane;
 
 export default class AdminAgentDirectory extends Component {
-  state = {
-    filterDropdownVisible: false,
-    data: [],
-    officeData: [],
-    searchText: "",
-    filtered: false,
-    searchData: [],
-    editModal: false,
-    selectedAgent: {}
-  };
-  onInputChange = e => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterDropdownVisible: false,
+      data: [],
+      officeData: [],
+      searchText: "",
+      filtered: false,
+      searchData: [],
+      editModal: false,
+      selectedAgent: {}
+    };
+  }
+
+  onInputChange(e) {
     this.setState({ searchText: e.target.value });
-  };
-  onSearch = () => {
+  }
+  onSearch() {
     const { searchText } = this.state;
     const reg = new RegExp(searchText, "gi");
     this.setState({
@@ -54,7 +58,7 @@ export default class AdminAgentDirectory extends Component {
         })
         .filter(record => !!record)
     });
-  };
+  }
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/agents").then(res => {
@@ -98,18 +102,26 @@ export default class AdminAgentDirectory extends Component {
   }
 
   updateAgent(agentCode, agentName, agentEmail, agentPhoneNumber, agentOffice) {
-    console.log(agentCode, agentName, agentEmail, agentPhoneNumber, agentOffice)
+    console.log(
+      agentCode,
+      agentName,
+      agentEmail,
+      agentPhoneNumber,
+      agentOffice
+    );
     var agentId = this.state.selectedAgent._id;
-    console.log("id:", agentId)
-    axios.put("http://localhost:4000/api/agent/" + this.state.selectedAgent.agentCode, {
-      // agentCode: agentCode,
-      agentName: agentName,
-      agentEmail: agentEmail,
-      agentPhoneNumber: agentPhoneNumber,
-      agentOffice: agentOffice
-    });
+    console.log("id:", agentId);
+    axios.put(
+      "http://localhost:4000/api/agent/" + this.state.selectedAgent.agentCode,
+      {
+        // agentCode: agentCode,
+        agentName: agentName,
+        agentEmail: agentEmail,
+        agentPhoneNumber: agentPhoneNumber,
+        agentOffice: agentOffice
+      }
+    );
     this.closeEditModal();
-
   }
 
   closeEditModal() {
@@ -177,8 +189,8 @@ export default class AdminAgentDirectory extends Component {
               ref={ele => (this.searchInput = ele)}
               placeholder="Search name"
               value={this.state.searchText}
-              onChange={this.onInputChange}
-              onPressEnter={this.onSearch}
+              onChange={e => this.onInputChange(e)}
+              onPressEnter={() => this.onSearch()}
             />
             <Button type="primary" onClick={this.onSearch}>
               Search

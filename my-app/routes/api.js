@@ -12,6 +12,12 @@ router.get("/clients", function(req, res, next) {
   });
 });
 
+router.get("/client/:id", function(req, res, next) {
+  Client.findOne({ _id: req.params.id }).then(function(client) {
+    res.json(client);
+  });
+});
+
 router.get("/clients/:code", function(req, res, next) {
   Client.find({ agentCode: req.params.code }).then(function(clients) {
     res.send(clients);

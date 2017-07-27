@@ -4,8 +4,8 @@ import AgentNavBar from "./AgentNavBar";
 import AgentHome from "./AgentHome";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios";
-//import CreateCampaignParent from "./CreateCampaignParent";
-//import MediaCenter from "./MediaCenter";
+import CreateCampaignParent from "./CreateCampaignParent";
+import MediaCenter from "./MediaCenter";
 import { LocaleProvider } from "antd";
 import enUS from "antd/lib/locale-provider/en_US";
 
@@ -13,10 +13,10 @@ import AgentProfile from "./AgentProfile";
 
 import { Modal, Form, Input, Radio } from "antd";
 import { Button } from "semantic-ui-react";
-//import AdminHome from "./AdminHome";
-//import AdminClientDirectory from "./AdminClientDirectory";
-//import AdminAgentDirectory from "./AdminAgentDirectory";
-//import ManageCampaigns from "./ManageCampaigns";
+import AdminHome from "./AdminHome";
+import AdminClientDirectory from "./AdminClientDirectory";
+import AdminAgentDirectory from "./AdminAgentDirectory";
+import ManageCampaigns from "./ManageCampaigns";
 
 class App extends Component {
   constructor(props) {
@@ -25,7 +25,8 @@ class App extends Component {
       field: "",
       agent: {},
       logged: false,
-      updated: false
+      updated: false,
+      admin: false
     };
   }
 
@@ -54,16 +55,27 @@ class App extends Component {
   }
 
   validateLogin() {
+    var self = this;
     axios
       .get("http://localhost:4000/" + this.state.field.toLocaleUpperCase())
       .then(response => {
-        if (response != false) {
+        var admin = false;
+        if (response.data.agentCode === "ADMIN") {
+          admin = true;
+        }
+        if (response != false && !admin) {
           this.setState({
             agent: response.data,
             logged: true
           });
           sessionStorage.setItem("logged", "true");
           sessionStorage.setItem("agent", response.data.agentCode);
+        } else if (admin) {
+          this.setState({
+            admin: true
+          });
+          sessionStorage.setItem("admin", "true");
+          sessionStorage.setItem("logged", "false");
         }
       });
   }
@@ -71,13 +83,24 @@ class App extends Component {
   logOut() {
     console.log("log out entered");
     sessionStorage.setItem("logged", "false");
+    sessionStorage.setItem("admin", "false");
     this.setState({
-      logged: false
+      logged: false,
+      admin: false
     });
   }
 
   componentWillMount() {
-    if (sessionStorage.getItem("logged") == "true") {
+    if (sessionStorage.getItem("admin") == "true") {
+      console.log("admin session");
+      this.setState({
+        logged: false,
+        admin: true
+      });
+    } else if (
+      sessionStorage.getItem("logged") == "true" &&
+      sessionStorage.getItem("agent")
+    ) {
       var agentCode = sessionStorage.getItem("agent");
       var agent;
       axios.get("http://localhost:4000/" + agentCode).then(response => {
@@ -99,6 +122,26 @@ class App extends Component {
   }
 
   render() {
+    if (this.state.admin) {
+      return (
+        <LocaleProvider locale={enUS}>
+          <Router>
+            <div>
+              <Route
+                exact
+                path="/"
+                component={() => <AdminHome logOut={() => this.logOut()} />}
+              />
+              <Route path="/createcampaign" component={CreateCampaignParent} />
+              <Route path="/clientdirectory" component={AdminClientDirectory} />
+              <Route path="/agentdirectory" component={AdminAgentDirectory} />
+              <Route path="/managecampaigns" component={ManageCampaigns} />
+            </div>
+          </Router>
+        </LocaleProvider>
+      );
+    }
+
     if (!this.state.logged) {
       return (
         <div className="login">
@@ -122,6 +165,7 @@ class App extends Component {
         </div>
       );
     }
+
     if (this.state.logged) {
       console.log("session storage is true");
       return (
@@ -154,20 +198,6 @@ class App extends Component {
             </div>
           </Router>
         </div>
-
-        // return (
-        //   <LocaleProvider locale={enUS}>
-        //     <Router>
-        //       <div>
-        //         <Route exact path="/" component={AdminHome} />
-        //         <Route path="/createcampaign" component={CreateCampaignParent} />
-        //         <Route path="/clientdirectory" component={AdminClientDirectory} />
-        //         <Route path="/agentdirectory" component={AdminAgentDirectory} />
-        //         <Route path="/managecampaigns" component={ManageCampaigns}/>
-        //       </div>
-        //     </Router>
-        //   </LocaleProvider>
-        // );
       );
     }
   }

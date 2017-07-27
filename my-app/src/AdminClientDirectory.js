@@ -8,19 +8,23 @@ import EditForm from "./EditForm";
 const TabPane = Tabs.TabPane;
 
 export default class AdminClientDirectory extends Component {
-  state = {
-    filterDropdownVisible: false,
-    data: [],
-    officeData: [],
-    searchText: "",
-    filtered: false,
-    searchData: [],
-    editModal: false
-  };
-  onInputChange = e => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterDropdownVisible: false,
+      data: [],
+      officeData: [],
+      searchText: "",
+      filtered: false,
+      searchData: [],
+      editModal: false
+    };
+  }
+
+  onInputChange(e) {
     this.setState({ searchText: e.target.value });
-  };
-  onSearch = () => {
+  }
+  onSearch() {
     const { searchText } = this.state;
     const reg = new RegExp(searchText, "gi");
     this.setState({
@@ -53,7 +57,7 @@ export default class AdminClientDirectory extends Component {
         })
         .filter(record => !!record)
     });
-  };
+  }
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(res => {
@@ -86,7 +90,7 @@ export default class AdminClientDirectory extends Component {
     });
   }
 
-    updateClient(
+  updateClient(
     clientName,
     clientAddress,
     clientCity,
@@ -108,7 +112,7 @@ export default class AdminClientDirectory extends Component {
     this.closeEditModal();
   }
 
-    closeEditModal() {
+  closeEditModal() {
     this.setState({
       editModal: false
     });
@@ -120,7 +124,7 @@ export default class AdminClientDirectory extends Component {
     );
     this.setState({
       editModal: false
-    })
+    });
   }
 
   render() {
@@ -181,10 +185,10 @@ export default class AdminClientDirectory extends Component {
               ref={ele => (this.searchInput = ele)}
               placeholder="Search name"
               value={this.state.searchText}
-              onChange={this.onInputChange}
-              onPressEnter={this.onSearch}
+              onChange={e => this.onInputChange(e)}
+              onPressEnter={() => this.onSearch()}
             />
-            <Button type="primary" onClick={this.onSearch}>
+            <Button type="primary" onClick={() => this.onSearch()}>
               Search
             </Button>
           </div>
@@ -251,9 +255,7 @@ export default class AdminClientDirectory extends Component {
             <Icon
               type="edit"
               onClick={() => {
-                
-                  this.openEditModal(text);
-              
+                this.openEditModal(text);
               }}
             />
           </span>

@@ -20,10 +20,6 @@ export default class AgentNavBar extends Component {
   }
 
   componentWillMount() {
-    this.getData();
-  }
-
-  getData() {
     var current = "";
     if (window.location.href.includes("campaigns")) {
       current = "database";
@@ -34,6 +30,7 @@ export default class AgentNavBar extends Component {
     axios
       .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
       .then(response => {
+        console.log(response.data);
         this.setState({
           dataSource: response.data,
           current: current
