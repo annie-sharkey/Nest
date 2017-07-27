@@ -59,12 +59,11 @@ export default class CreateCampaignParent extends Component {
   }
 
   handleStartDate(date) {
-    
     this.setState({
       ...this.state,
       startDate: date._d.toISOString()
     });
-    console.log("start date date._d:", date._d)
+    console.log("start date date._d:", date._d);
   }
 
   handleEndDate(date) {
@@ -73,8 +72,7 @@ export default class CreateCampaignParent extends Component {
       ...this.state,
       endDate: date._d.toISOString()
     });
-    console.log("end date:", this.state.endDate)
-    
+    console.log("end date:", this.state.endDate);
   }
 
   updateColumnState(columns) {
@@ -119,9 +117,9 @@ export default class CreateCampaignParent extends Component {
         !!checkedList.length && checkedList.length < plainOptions.length,
       checkAll: checkedList.length === plainOptions.length
     });
+  }
 
-  onCheckAllChange = e => {
-
+  onCheckAllChange(e) {
     this.setState({
       checkedList: e.target.checked ? plainOptions : [],
       indeterminate: false,
@@ -130,8 +128,8 @@ export default class CreateCampaignParent extends Component {
   }
 
   render() {
-    console.log("end date:", this.state.endDate)
-    console.log("end date type:", typeof(this.state.endDate))
+    console.log("end date:", this.state.endDate);
+    console.log("end date type:", typeof this.state.endDate);
     return (
       <div>
         <div className="header">
@@ -178,7 +176,7 @@ export default class CreateCampaignParent extends Component {
             <div style={{ borderBottom: "1px solid #E9E9E9" }}>
               <Checkbox
                 indeterminate={this.state.indeterminate}
-                onChange={e => this.onCheckAllChange()}
+                onChange={e => this.onCheckAllChange(e)}
                 checked={this.state.checkAll}
               >
                 Check all

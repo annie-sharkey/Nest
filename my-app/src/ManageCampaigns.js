@@ -128,19 +128,20 @@ export default class ManageCampaigns extends Component {
     });
   }
 
-  onChange = checkedList => {
+  onChange(checkedList) {
     this.setState({
       checkedList,
       indeterminate:
         !!checkedList.length && checkedList.length < plainOptions.length,
       checkAll: checkedList.length === plainOptions.length
     });
-  };
+  }
 
   WritetoDatabase() {
     axios
       .put(
-        "http://localhost:4000/api/campaigns/" + this.state.selectedCampaign._id,
+        "http://localhost:4000/api/campaigns/" +
+          this.state.selectedCampaign._id,
         {
           campaignName: this.state.campaignName,
           campaignColumns: this.state.writeColumns,
@@ -262,7 +263,7 @@ export default class ManageCampaigns extends Component {
                     defaultValue={
                       this.state.selectedCampaign.officesIncludedinCampaign
                     }
-                    onChange={this.onChange}
+                    onChange={checkedList => this.onChange(checkedList)}
                   />
                 </div>
                 <br />

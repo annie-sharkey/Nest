@@ -25,164 +25,109 @@ export default class CampaignTable extends React.Component {
   }
 
   componentWillMount() {
+    //Cases:
+    // 1) Agent already has clients in current Campaign
+    // 2) Agent doesn't have clients in current campaign but had some in previous campaign
+    // 3) Agent doesn't have clients in this campaign or previous campaign
+    var notIncluded = [];
+    var included = [];
+    var campaigns = [];
+    var currentCampaign = "";
+    var columns = [];
+    var campaignId = "";
+    var clientsToSave = [];
+    var masterClients = this.props.dataSource;
+
     var self = this;
     axios.get("http://localhost:4000/api/campaigns").then(res => {
-      if (res.data.length > 1) {
-        //Current Campaign Index
-        var last = res.data.length - 1;
-        //Agent Clients Saved In Campaign
-        var savedAgentClients = [];
-        //Check all Clients in Campaign and filter the ones from this agent
-        this.props.dataSource.forEach(function(client) {
-          if (res.data[last].clients.includes(client._id)) {
-            savedAgentClients.push(client._id);
+      var lastIndex = res.data.length - 1;
+      var currentCampaign = res.data[lastIndex];
+      var currentClientIds = res.data[lastIndex].clients;
+      var previousClientsIds = res.data[lastIndex - 1].clients;
+
+      var agentClientsPrevious = [];
+      masterClients.forEach(function(client) {
+        if (previousClientsIds.includes(client._id)) {
+          agentClientsPrevious.push(client);
+        }
+      });
+
+      masterClients.forEach(function(client) {
+        if (currentClientIds.includes(client._id)) {
+          included.push(client);
+        }
+      });
+
+      if (included.length == 0 && agentClientsPrevious.length == 0) {
+        self.setState({
+          leftData: self.props.dataSource,
+          rightData: [],
+          campaigns: res.data,
+          currentCampaign: currentCampaign.campaignName,
+          columns: currentCampaign.campaignColumns,
+          campaignId: currentCampaign._id,
+          clientsToSave: currentClientIds
+        });
+        console.log("annie");
+      }
+
+      //Case 1
+      if (included.length > 0) {
+        masterClients.forEach(function(client) {
+          if (!included.includes(client)) {
+            notIncluded.push(client);
           }
         });
 
-        var lastAgentClients = [];
-        var lastCampaignClients = res.data[last - 1].clients;
-        lastAgentClients.forEach(function(client) {
-          axios.get("http://localhost:4000/api/client/" + client).then(y => {
-            if (y.agentCode == this.state.agentCode) {
-              lastAgentClients.push(y);
-            }
-          });
+        self.setState({
+          leftData: notIncluded,
+          rightData: included,
+          campaigns: res.data,
+          currentCampaign: currentCampaign.campaignName,
+          columns: currentCampaign.campaignColumns,
+          campaignId: currentCampaign._id,
+          clientsToSave: currentClientIds
+        });
+      } else if (included.length == 0 && agentClientsPrevious.length > 0) {
+        //Case 2
+        console.log("agent has clients from previous campaign but not current");
+        agentClientsPrevious.forEach(function(client) {
+          included.push(client);
         });
 
-        //If no clients are saved for this agent, make a default list included clients
-        if (savedAgentClients.length == 0 && lastAgentClients.length > 0) {
-          var defaultClients = [];
+        var previousCampaignTime = moment(currentCampaign.endDate)
+          .toDate()
+          .getTime();
 
-          var lastCampaignClientsIds = res.data[last - 1].clients;
+        masterClients.forEach(function(client) {
+          var editTime = moment(client.lastEdited).toDate().getTime();
 
-          var masterClients = this.props.dataSource;
-
-          var lastCampaignTime = moment(res.data[last - 1].endDate)
-            .toDate()
-            .getTime();
-
-          //From agent clients, any clients that were edited after previous campaign
-          //and any clients from previous campaign
-          masterClients.forEach(function(client) {
-            var editedTime = moment(client.lastEdited).toDate().getTime();
-            if (editedTime > lastCampaignTime) {
-              console.log("New Client", client);
-              defaultClients.push(client);
+          if (previousCampaignTime < editTime) {
+            if (!included.includes(client)) {
+              included.push(client);
             }
-            if (lastCampaignClientsIds.includes(client._id)) {
-              console.log("Client from Previous Campaign", client);
-              defaultClients.push(client);
-            }
-          });
-          console.log("default clients", defaultClients);
+          }
+        });
 
-          //Not Included Table Data
-          var leftData = [];
-          //Any clients Not in Default List
-          masterClients.forEach(function(client) {
-            if (!defaultClients.includes(client)) {
-              leftData.push(client);
-            }
-          });
+        masterClients.forEach(function(client) {
+          if (!included.includes(client)) {
+            notIncluded.push(client);
+          }
+        });
 
-          //Clients to put into the database
-          var clientsToSave = [];
-          defaultClients.forEach(function(client) {
-            clientsToSave.push(client._id);
-          });
+        var includedIds = [];
+        included.forEach(function(client) {
+          includedIds.push(client._id);
+        });
 
-          this.setState({
-            campaigns: res.data,
-            columns: res.data[last].campaignColumns,
-            campaignId: res.data[last]._id,
-            leftData: leftData,
-            rightData: defaultClients,
-            currentCampaign: res.data[last].campaignName,
-            clientsToSave: clientsToSave
-          });
-        } else if (
-          savedAgentClients.length == 0 &&
-          lastAgentClients.length == 0
-        ) {
-          //The case that the agent has no clients in previous campaign as well
-          var clientsToSave = res.data[last].clients;
-          var lastCampaignTime = moment(res.data[last - 1].endDate)
-            .toDate()
-            .getTime();
-
-          var masterClients = this.props.dataSource;
-          var defaultClients = [];
-          masterClients.forEach(function(client) {
-            var editedTime = moment(client.lastEdited).toDate().getTime();
-            if (editedTime > lastCampaignTime) {
-              console.log("New Client", client);
-              defaultClients.push(client);
-            }
-          });
-
-          //Not Included Table Data
-          var leftData = [];
-          //Any clients Not in Default List
-          masterClients.forEach(function(client) {
-            if (!defaultClients.includes(client)) {
-              leftData.push(client);
-            }
-          });
-
-          //Clients to put into the database
-          var clientsToSave = [];
-          defaultClients.forEach(function(client) {
-            clientsToSave.push(client._id);
-          });
-
-          this.setState({
-            campaigns: res.data,
-            columns: res.data[last].campaignColumns,
-            campaignId: res.data[last]._id,
-            leftData: leftData,
-            rightData: defaultClients,
-            currentCampaign: res.data[last].campaignName,
-            clientsToSave: clientsToSave
-          });
-        } else {
-          //The case that the Agent already has clients saved in the campaign
-          var last = res.data.length - 1;
-          //All clients saved in current campaign
-          var clientsToSave = res.data[last].clients;
-          //All clients of this agent
-          var allClients = this.props.dataSource;
-
-          var leftData = [];
-          var rightData = [];
-          allClients.forEach(function(client) {
-            if (clientsToSave.includes(client._id)) {
-              rightData.push(client);
-            } else {
-              leftData.push(client);
-            }
-          });
-
-          this.setState({
-            campaigns: res.data,
-            columns: res.data[last].campaignColumns,
-            campaignId: res.data[last]._id,
-            leftData: leftData,
-            rightData: rightData,
-            currentCampaign: res.data[last].campaignName,
-            clientsToSave: clientsToSave
-          });
-        }
-      } else {
-        //case that only one campaign exists
-        var clientsToSave = res.data[0].clients;
-        this.setState({
+        self.setState({
+          leftData: notIncluded,
+          rightData: included,
           campaigns: res.data,
-          columns: res.data[0].campaignColumns,
-          campaignId: res.data[0]._id,
-          leftData: self.props.dataSource,
-          rightData: [],
-          currentCampaign: res.data[0].campaignName,
-          clientsToSave: clientsToSave
+          currentCampaign: currentCampaign.campaignName,
+          columns: currentCampaign.campaignColumns,
+          campaignId: currentCampaign._id,
+          clientsToSave: includedIds
         });
       }
     });
@@ -213,7 +158,7 @@ export default class CampaignTable extends React.Component {
         index = i;
       }
     }
-    console.log(clients);
+
     notIncluded.splice(index, 1);
     this.setState({
       rightData: included,
@@ -243,7 +188,6 @@ export default class CampaignTable extends React.Component {
         index = i;
       }
     }
-    console.log(client_ids);
     included.splice(index, 1);
     this.setState({
       rightData: included,
@@ -253,12 +197,11 @@ export default class CampaignTable extends React.Component {
   }
 
   saveClients(clients) {
-    console.log(clients);
+    var self = this;
     var data = {
       clients: clients
     };
 
-    var self = this;
     axios
       .put("http://localhost:4000/api/campaign/" + this.state.campaignId, data)
       .then(res => {
