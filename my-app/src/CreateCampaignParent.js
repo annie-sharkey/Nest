@@ -120,7 +120,9 @@ export default class CreateCampaignParent extends Component {
     });
   }
 
+
   onCheckAllChange = e => {
+
     this.setState({
       checkedList: e.target.checked ? plainOptions : [],
       indeterminate: false,
@@ -129,6 +131,7 @@ export default class CreateCampaignParent extends Component {
   };
 
   render() {
+
     message.config({
       top: 100
     });
@@ -144,6 +147,7 @@ export default class CreateCampaignParent extends Component {
               />
             </Link>
             <h1>Create a Campaign</h1>
+
             <br />
           </div>
 
