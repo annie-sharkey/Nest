@@ -142,13 +142,30 @@ router.post("/campaign/", function(req, res, next) {
   });
 });
 
-router.put("/campaign/:id", function(req, res, next) {
+router.put("/campaigns/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
     if (err) {
       throw err;
     }
-
+    campaign.campaignName = req.body.campaignName || campaign.campaignName;
+    campaign.startDate = req.body.startDate || campaign.startDate;
+    campaign.endDate = req.body.endDate || campaign.endDate;
     campaign.clients = req.body.clients || campaign.clients;
+    
+    if(req.body.officesIncludedinCampaign.length > 0){
+    campaign.officesIncludedinCampaign =
+      req.body.officesIncludedinCampaign
+    }
+
+    if(req.body.campaignUploads.length > 0){
+    campaign.campaignUploads =
+      req.body.campaignUploads;
+    }
+    
+    if(req.body.campaignColumns.length > 0){
+    campaign.campaignColumns =
+      req.body.campaignColumns
+    }
 
     campaign.save(function(err, campaign) {
       if (err) {

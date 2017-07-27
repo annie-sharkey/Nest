@@ -5,7 +5,9 @@ import AgentHome from "./AgentHome";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios";
 import CreateCampaignParent from "./CreateCampaignParent";
+
 import MediaCenter from "./MediaCenter";
+
 import { LocaleProvider } from "antd";
 import enUS from "antd/lib/locale-provider/en_US";
 
@@ -122,6 +124,7 @@ class App extends Component {
   }
 
   render() {
+
     if (this.state.admin) {
       return (
         <LocaleProvider locale={enUS}>
@@ -200,6 +203,7 @@ class App extends Component {
         </div>
       );
     }
+
   }
 }
 
