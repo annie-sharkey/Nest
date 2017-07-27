@@ -261,6 +261,7 @@ export default class AdminAgentDirectory extends Component {
             <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>
           <h1>Agent Directory</h1>
+          <br />
         </div>
 
         <Tabs

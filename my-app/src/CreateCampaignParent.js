@@ -48,7 +48,8 @@ export default class CreateCampaignParent extends Component {
       campaignTitle: "",
       checkedList: defaultCheckedList,
       indeterminate: true,
-      checkAll: false
+      checkAll: false,
+      done: false
     };
   }
 
@@ -91,10 +92,10 @@ export default class CreateCampaignParent extends Component {
   }
 
   WritetoDatabase() {
-    message.success(
-      "Campaign successfully created. See Manage Campaigns to edit or delete your campaign.",
-      6
-    );
+    this.setState({
+      done: true
+    });
+    console.log("entered");
     axios
       .post("http://localhost:4000/api/campaign/", {
         campaignName: this.state.campaignTitle,
@@ -119,99 +120,117 @@ export default class CreateCampaignParent extends Component {
     });
   }
 
-  onCheckAllChange(e) {
+
+  onCheckAllChange = e => {
+
     this.setState({
       checkedList: e.target.checked ? plainOptions : [],
       indeterminate: false,
       checkAll: e.target.checked
     });
-  }
+  };
 
   render() {
-    console.log("end date:", this.state.endDate);
-    console.log("end date type:", typeof this.state.endDate);
+
+    message.config({
+      top: 100
+    });
     return (
       <div>
-        <div className="header">
-          <Link to="/">
-            <Icon type="arrow-left" style={{ fontSize: 30 }} />
-          </Link>
-          <h1>Create a Campaign</h1>
-        </div>
-        {/*<Card>*/}
-        <div className="campaignform">
-          <Grid divided="vertically">
-            <Grid.Row columns={2}>
-              <Grid.Column>
-                <h3>Campaign</h3>
-                <br />
-                <FormItem style={{ width: 150 }}>
-                  <Input
-                    placeholder="Title"
-                    onChange={event => this.handleCampaignTitle(event)}
-                  />
-                </FormItem>
-              </Grid.Column>
-              <Grid.Column>
-                <h3>Campaign Timeline</h3>
-                <br />
-                <FormItem>
-                  <DatePicker
-                    placeholder="Start date"
-                    format="MM/DD/YYYY"
-                    onChange={event => this.handleStartDate(event)}
-                  />
-                  <DatePicker
-                    placeholder="End date"
-                    format="MM/DD/YYYY"
-                    onChange={event => this.handleEndDate(event)}
-                  />
-                </FormItem>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-          <div>
-            <h3>Select Offices to Include</h3>
+        <div>
+          <div className="header">
+            <Link to="/">
+              <Icon
+                type="arrow-left"
+                style={{ fontSize: 30 }}
+                onClick={message.destroy()}
+              />
+            </Link>
+            <h1>Create a Campaign</h1>
+
             <br />
-            <div style={{ borderBottom: "1px solid #E9E9E9" }}>
-              <Checkbox
-                indeterminate={this.state.indeterminate}
-                onChange={e => this.onCheckAllChange(e)}
-                checked={this.state.checkAll}
-              >
-                Check all
-              </Checkbox>
-            </div>
-            <br />
-            <CheckboxGroup
-              options={plainOptions}
-              value={this.state.checkedList}
-              onChange={e => this.onChange(e)}
-            />
           </div>
-          <br />
-          <br />
-          <Form className="createcampaigntables">
-            <CreateCampaignBuildTable
-              updateColumnState={columns => this.updateColumnState(columns)}
-            />
 
-            <CreateCampaignUpload
-              updateUploadState={uploads => this.updateUploadState(uploads)}
-            />
-          </Form>
+          {!this.state.done &&
+            <div className="campaignform">
+              <Grid divided="vertically">
+                <Grid.Row columns={2}>
+                  <Grid.Column>
+                    <h3>Campaign</h3>
+                    <br />
+                    <FormItem style={{ width: 150 }}>
+                      <Input
+                        placeholder="Title"
+                        onChange={event => this.handleCampaignTitle(event)}
+                      />
+                    </FormItem>
+                  </Grid.Column>
+                  <Grid.Column>
+                    <h3>Campaign Timeline</h3>
+                    <br />
+                    <FormItem>
+                      <DatePicker
+                        placeholder="Start date"
+                        format="MM/DD/YYYY"
+                        onChange={event => this.handleStartDate(event)}
+                      />
+                      <DatePicker
+                        placeholder="End date"
+                        format="MM/DD/YYYY"
+                        onChange={event => this.handleEndDate(event)}
+                      />
+                    </FormItem>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+              <div>
+                <h3>Select Offices to Include</h3>
+                <br />
+                <div style={{ borderBottom: "1px solid #E9E9E9" }}>
+                  {/*<Checkbox
+                    indeterminate={this.state.indeterminate}
+                    onChange={e => this.onCheckAllChange()}
+                    checked={this.state.checkAll}
+                  >
+                    Check all
+                  </Checkbox>*/}
+                </div>
+                <br />
+                <CheckboxGroup
+                  options={plainOptions}
+                  value={this.state.checkedList}
+                  onChange={e => this.onChange(e)}
+                />
+              </div>
+              <br />
+              <br />
+              <Form className="createcampaigntables">
+                <CreateCampaignBuildTable
+                  updateColumnState={columns => this.updateColumnState(columns)}
+                />
 
-          <br />
-          <br />
-          <Popconfirm
-            title="Are you sure you're finished creating the campaign？"
-            okText="Yes"
-            cancelText="Keep Editing"
-            onConfirm={event => this.WritetoDatabase()}
-          >
-            <Button type="danger">Finish Creating Campaign</Button>
-          </Popconfirm>
-          {/*</Card>*/}
+                <CreateCampaignUpload
+                  updateUploadState={uploads => this.updateUploadState(uploads)}
+                />
+              </Form>
+
+              <br />
+              <br />
+              <Popconfirm
+                title="Are you sure you're finished creating the campaign？"
+                okText="Yes"
+                cancelText="Keep Editing"
+                onConfirm={event => this.WritetoDatabase()}
+              >
+                <Button type="danger">Finish Creating Campaign</Button>
+              </Popconfirm>
+              {/*</Card>*/}
+            </div>}
+          {this.state.done &&
+            <div className="successText">
+              Campaign successfully created. See Manage Campaigns to edit or
+              delete your campaign.
+            </div>}
         </div>
       </div>
     );

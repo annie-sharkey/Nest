@@ -270,6 +270,7 @@ export default class AdminClientDirectory extends Component {
             <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>
           <h1>Client Directory</h1>
+          <br />
         </div>
         <Tabs
           defaultActiveKey="Asheville"

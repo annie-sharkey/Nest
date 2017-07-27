@@ -180,3 +180,8 @@
   font-family: 'Cantarell', serif;
   color: #46797b;
 }
+
+.successText {
+  text-align: center;
+  font-size: 30px
+}
