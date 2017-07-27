@@ -236,11 +236,7 @@ export default class MasterTable extends React.Component {
     const columns = this.columns;
     return (
       <div className="master">
-        <div className="editable-add-btn">
-          <Button onClick={() => this.handleOpenModal()} width="4" color="grey">
-            Add Client
-          </Button>
-        </div>
+        <h2 className="master-title">Your List of Clients</h2>
         {modal}
         {editModal}
         <div className="master-table">
@@ -250,6 +246,11 @@ export default class MasterTable extends React.Component {
             columns={columns}
             pagination={false}
           />
+        </div>
+        <div className="editable-add-btn">
+          <Button onClick={() => this.handleOpenModal()} width="4" color="grey">
+            Add Client
+          </Button>
         </div>
       </div>
     );

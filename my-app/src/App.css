@@ -57,16 +57,21 @@
 .master {
   display: flex;
   flex-direction: column;
+  margin-top: 1.5%;
+}
+
+.master-title {
+  margin: auto;
+  color: #46797b;
 }
 
 .editable-add-btn {
   margin: auto;
-  margin-top: 0.5%;
-  margin-left: 45%;
+  margin-top: 1%;
 }
 
 .master-table {
-  margin-top: 0.5%;
+  margin-top: 1%;
 }
 
 .form {
@@ -162,11 +167,16 @@
   display: flex;
   flex-direction: column;
   margin-left: 25%;
-  margin-top: 1%
+  margin-top: 1%;
 }
 
 .createcampaigntables {
   display: flex;
   flex-direction: row;
   /*display: inline-block;*/
+}
+
+.campaign-title {
+  font-family: 'Cantarell', serif;
+  color: #46797b;
 }

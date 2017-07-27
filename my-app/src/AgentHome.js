@@ -14,10 +14,6 @@ export default class AgentHome extends Component {
     super(props);
   }
 
-  logOut() {
-    sessionStorage.setItem("logged", false);
-  }
-
   render() {
     return (
       <Router>

@@ -5,7 +5,9 @@ import AgentHome from "./AgentHome";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios";
 import CreateCampaignParent from "./CreateCampaignParent";
-//import MediaCenter from "./MediaCenter";
+
+import MediaCenter from "./MediaCenter";
+
 import { LocaleProvider } from "antd";
 import enUS from "antd/lib/locale-provider/en_US";
 
@@ -25,7 +27,8 @@ class App extends Component {
       field: "",
       agent: {},
       logged: false,
-      updated: false
+      updated: false,
+      admin: false
     };
   }
 
@@ -54,16 +57,27 @@ class App extends Component {
   }
 
   validateLogin() {
+    var self = this;
     axios
       .get("http://localhost:4000/" + this.state.field.toLocaleUpperCase())
       .then(response => {
-        if (response != false) {
+        var admin = false;
+        if (response.data.agentCode === "ADMIN") {
+          admin = true;
+        }
+        if (response != false && !admin) {
           this.setState({
             agent: response.data,
             logged: true
           });
           sessionStorage.setItem("logged", "true");
           sessionStorage.setItem("agent", response.data.agentCode);
+        } else if (admin) {
+          this.setState({
+            admin: true
+          });
+          sessionStorage.setItem("admin", "true");
+          sessionStorage.setItem("logged", "false");
         }
       });
   }
@@ -71,13 +85,24 @@ class App extends Component {
   logOut() {
     console.log("log out entered");
     sessionStorage.setItem("logged", "false");
+    sessionStorage.setItem("admin", "false");
     this.setState({
-      logged: false
+      logged: false,
+      admin: false
     });
   }
 
   componentWillMount() {
-    if (sessionStorage.getItem("logged") == "true") {
+    if (sessionStorage.getItem("admin") == "true") {
+      console.log("admin session");
+      this.setState({
+        logged: false,
+        admin: true
+      });
+    } else if (
+      sessionStorage.getItem("logged") == "true" &&
+      sessionStorage.getItem("agent")
+    ) {
       var agentCode = sessionStorage.getItem("agent");
       var agent;
       axios.get("http://localhost:4000/" + agentCode).then(response => {
@@ -99,75 +124,86 @@ class App extends Component {
   }
 
   render() {
-    // if (!this.state.logged) {
-    //   return (
-    //     <div className="login">
-    //       <h1 className="title">NEST PORTAL</h1>
-    //       <div className="login-field">
-    //         <Input
-    //           onChange={e => this.handleFieldChange(e)}
-    //           placeholder="Enter FON Code"
-    //         />
-    //       </div>
 
-    //       <div className="login-button-container">
-    //         <Button
-    //           className="login-button"
-    //           color="black"
-    //           onClick={() => this.validateLogin()}
-    //         >
-    //           Login
-    //         </Button>
-    //       </div>
-    //     </div>
-    //   );
-    // }
-    // if (this.state.logged) {
-    //   console.log("session storage is true");
-    //   return (
-    //     <div>
-    //       <Router>
-    //         <div>
-    //           <Route
-    //             exact
-    //             path="/"
-    //             component={() =>
-    //               <AgentHome
-    //                 agent={this.state.agent}
-    //                 logOut={() => this.logOut()}
-    //               />}
-    //           />
-    //           <Route
-    //             path="/managelists"
-    //             component={() => <AgentNavBar agent={this.state.agent} />}
-    //           />
-    //           <Route
-    //             path="/profile"
-    //             component={() =>
-    //               <AgentProfile
-    //                 agent={this.state.agent}
-    //                 updateAgent={data => {
-    //                   this.updateAgent(data);
-    //                 }}
-    //               />}
-    //           />
-    //         </div>
-    //       </Router>
-    //     </div>
+    if (this.state.admin) {
+      return (
+        <LocaleProvider locale={enUS}>
+          <Router>
+            <div>
+              <Route
+                exact
+                path="/"
+                component={() => <AdminHome logOut={() => this.logOut()} />}
+              />
+              <Route path="/createcampaign" component={CreateCampaignParent} />
+              <Route path="/clientdirectory" component={AdminClientDirectory} />
+              <Route path="/agentdirectory" component={AdminAgentDirectory} />
+              <Route path="/managecampaigns" component={ManageCampaigns} />
+            </div>
+          </Router>
+        </LocaleProvider>
+      );
+    }
 
-    return (
-      <LocaleProvider locale={enUS}>
-        <Router>
-          <div>
-            <Route exact path="/" component={AdminHome} />
-            <Route path="/createcampaign" component={CreateCampaignParent} />
-            <Route path="/clientdirectory" component={AdminClientDirectory} />
-            <Route path="/agentdirectory" component={AdminAgentDirectory} />
-            <Route path="/managecampaigns" component={ManageCampaigns} />
+    if (!this.state.logged) {
+      return (
+        <div className="login">
+          <h1 className="title">NEST PORTAL</h1>
+          <div className="login-field">
+            <Input
+              onChange={e => this.handleFieldChange(e)}
+              placeholder="Enter FON Code"
+            />
           </div>
-        </Router>
-      </LocaleProvider>
-    );
+
+          <div className="login-button-container">
+            <Button
+              className="login-button"
+              color="black"
+              onClick={() => this.validateLogin()}
+            >
+              Login
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    if (this.state.logged) {
+      console.log("session storage is true");
+      return (
+        <div>
+          <Router>
+            <div>
+              <Route
+                exact
+                path="/"
+                component={() =>
+                  <AgentHome
+                    agent={this.state.agent}
+                    logOut={() => this.logOut()}
+                  />}
+              />
+              <Route
+                path="/managelists"
+                component={() => <AgentNavBar agent={this.state.agent} />}
+              />
+              <Route
+                path="/profile"
+                component={() =>
+                  <AgentProfile
+                    agent={this.state.agent}
+                    updateAgent={data => {
+                      this.updateAgent(data);
+                    }}
+                  />}
+              />
+            </div>
+          </Router>
+        </div>
+      );
+    }
+
   }
 }
 

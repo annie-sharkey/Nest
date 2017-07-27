@@ -11,7 +11,7 @@ export default class AdminHome extends Component {
         <div className="home-container">
           <div className="centerAdmin">
             <div className="adminLogo">
-            <img src={Nest} width={75} />
+              <img src={Nest} width={75} />
             </div>
             <div className="buttons">
               <Link to="/createcampaign">
@@ -20,9 +20,9 @@ export default class AdminHome extends Component {
                 </div>
               </Link>
               <Link to="/managecampaigns">
-              <div className="secondbutton">
-                <button className="btn">Manage Campaigns</button>
-              </div>
+                <div className="secondbutton">
+                  <button className="btn">Manage Campaigns</button>
+                </div>
               </Link>
               <Link to="/clientdirectory">
                 <div className="secondbutton">

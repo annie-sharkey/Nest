@@ -93,7 +93,10 @@ export default class CreateCampaignParent extends Component {
   }
 
   WritetoDatabase() {
-    message.success("Campaign successfully created. See Manage Campaigns to edit or delete your campaign.", 6);
+    message.success(
+      "Campaign successfully created. See Manage Campaigns to edit or delete your campaign.",
+      6
+    );
     axios
       .post("http://localhost:4000/api/campaign/", {
         campaignName: this.state.campaignTitle,
@@ -109,22 +112,22 @@ export default class CreateCampaignParent extends Component {
       });
   }
 
-  onChange = checkedList => {
+  onChange(checkedList) {
     this.setState({
       checkedList,
       indeterminate:
         !!checkedList.length && checkedList.length < plainOptions.length,
       checkAll: checkedList.length === plainOptions.length
     });
-    // console.log("checked list:", this.state.checkedList);
-  };
+
   onCheckAllChange = e => {
+
     this.setState({
       checkedList: e.target.checked ? plainOptions : [],
       indeterminate: false,
       checkAll: e.target.checked
     });
-  };
+  }
 
   render() {
     console.log("end date:", this.state.endDate)
@@ -175,7 +178,7 @@ export default class CreateCampaignParent extends Component {
             <div style={{ borderBottom: "1px solid #E9E9E9" }}>
               <Checkbox
                 indeterminate={this.state.indeterminate}
-                onChange={this.onCheckAllChange}
+                onChange={e => this.onCheckAllChange()}
                 checked={this.state.checkAll}
               >
                 Check all
@@ -185,7 +188,7 @@ export default class CreateCampaignParent extends Component {
             <CheckboxGroup
               options={plainOptions}
               value={this.state.checkedList}
-              onChange={this.onChange}
+              onChange={e => this.onChange(e)}
             />
           </div>
           <br />
