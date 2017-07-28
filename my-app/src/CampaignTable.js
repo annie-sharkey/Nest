@@ -27,6 +27,26 @@ export default class CampaignTable extends React.Component {
     };
   }
 
+  getNoCurrentAndNoPreviousData(
+    left,
+    campaigns,
+    name,
+    columns,
+    id,
+    currentClientIds
+  ) {
+    this.setState({
+      leftData: left,
+      rightData: [],
+      campaigns: campaigns,
+      currentCampaign: name,
+      columns: columns,
+      campaignId: id,
+      clientsToSave: currentClientIds
+    });
+    console.log("annie");
+  }
+
   componentWillMount() {
     //Cases:
     // 1) Agent already has clients in current Campaign
@@ -43,95 +63,115 @@ export default class CampaignTable extends React.Component {
 
     var self = this;
     axios.get("http://localhost:4000/api/campaigns").then(res => {
-      var lastIndex = res.data.length - 1;
-      var currentCampaign = res.data[lastIndex];
-      var currentClientIds = res.data[lastIndex].clients;
-      var previousClientsIds = res.data[lastIndex - 1].clients;
-
-      var agentClientsPrevious = [];
-      masterClients.forEach(function(client) {
-        if (previousClientsIds.includes(client._id)) {
-          agentClientsPrevious.push(client);
-        }
-      });
-
-      masterClients.forEach(function(client) {
-        if (currentClientIds.includes(client._id)) {
-          included.push(client);
-        }
-      });
-
-      if (included.length == 0 && agentClientsPrevious.length == 0) {
+      if (res.data.length == 1) {
         self.setState({
           leftData: self.props.dataSource,
           rightData: [],
           campaigns: res.data,
-          currentCampaign: currentCampaign.campaignName,
-          columns: currentCampaign.campaignColumns,
-          campaignId: currentCampaign._id,
-          clientsToSave: currentClientIds
+          currentCampaign: res.data[0].campaignName,
+          columns: res.data[0].campaignColumns,
+          campaignId: res.data[0]._id,
+          clientsToSave: []
         });
-        console.log("annie");
       }
+      if (res.data.length > 1) {
+        var lastIndex = res.data.length - 1;
+        var currentCampaign = res.data[lastIndex];
+        var previousCampaign = res.data[lastIndex - 1];
+        var currentClientIds = res.data[lastIndex].clients;
+        var previousClientsIds = res.data[lastIndex - 1].clients;
 
-      //Case 1
-      if (included.length > 0) {
+        var agentClientsPrevious = [];
         masterClients.forEach(function(client) {
-          if (!included.includes(client)) {
-            notIncluded.push(client);
+          if (previousClientsIds.includes(client._id)) {
+            agentClientsPrevious.push(client);
           }
         });
 
-        self.setState({
-          leftData: notIncluded,
-          rightData: included,
-          campaigns: res.data,
-          currentCampaign: currentCampaign.campaignName,
-          columns: currentCampaign.campaignColumns,
-          campaignId: currentCampaign._id,
-          clientsToSave: currentClientIds
-        });
-      } else if (included.length == 0 && agentClientsPrevious.length > 0) {
-        //Case 2
-        console.log("agent has clients from previous campaign but not current");
-        agentClientsPrevious.forEach(function(client) {
-          included.push(client);
-        });
-
-        var previousCampaignTime = moment(currentCampaign.endDate)
-          .toDate()
-          .getTime();
-
         masterClients.forEach(function(client) {
-          var editTime = moment(client.lastEdited).toDate().getTime();
+          if (currentClientIds.includes(client._id)) {
+            included.push(client);
+          }
+        });
 
-          if (previousCampaignTime < editTime) {
+        if (included.length == 0 && agentClientsPrevious.length == 0) {
+          this.getNoCurrentAndNoPreviousData(
+            self.props.dataSource,
+            res.data,
+            currentCampaign.campaignName,
+            currentCampaign.campaignColumns,
+            currentCampaign._id,
+            currentClientIds
+          );
+        }
+
+        //Case 1
+        if (included.length > 0) {
+          console.log("agent has clients in current campaign");
+          masterClients.forEach(function(client) {
             if (!included.includes(client)) {
-              included.push(client);
+              notIncluded.push(client);
             }
-          }
-        });
+          });
 
-        masterClients.forEach(function(client) {
-          if (!included.includes(client)) {
-            notIncluded.push(client);
-          }
-        });
+          self.setState({
+            leftData: notIncluded,
+            rightData: included,
+            campaigns: res.data,
+            currentCampaign: currentCampaign.campaignName,
+            columns: currentCampaign.campaignColumns,
+            campaignId: currentCampaign._id,
+            clientsToSave: currentClientIds
+          });
+        } else if (included.length == 0 && agentClientsPrevious.length > 0) {
+          //Case 2
+          console.log(
+            "agent has clients from previous campaign but not current"
+          );
+          agentClientsPrevious.forEach(function(client) {
+            included.push(client);
+          });
 
-        var includedIds = [];
-        included.forEach(function(client) {
-          includedIds.push(client._id);
-        });
+          console.log("Previous Clients", included);
 
-        self.setState({
-          leftData: notIncluded,
-          rightData: included,
-          campaigns: res.data,
-          currentCampaign: currentCampaign.campaignName,
-          columns: currentCampaign.campaignColumns,
-          campaignId: currentCampaign._id,
-          clientsToSave: includedIds
-        });
+          var previousCampaignTime = moment(previousCampaign.endDate)
+            .toDate()
+            .getTime();
+
+          masterClients.forEach(function(client) {
+            var editTime = moment(client.lastEdited).toDate().getTime();
+            console.log(
+              moment(client.lastEdited).toDate(),
+              moment(previousCampaign.endDate).toDate()
+            );
+            if (previousCampaignTime < editTime) {
+              if (!included.includes(client)) {
+                included.push(client);
+              }
+            }
+          });
+
+          masterClients.forEach(function(client) {
+            if (!included.includes(client)) {
+              notIncluded.push(client);
+            }
+          });
+
+          var includedIds = [];
+          included.forEach(function(client) {
+            includedIds.push(client._id);
+          });
+
+          self.setState({
+            leftData: notIncluded,
+            rightData: included,
+            campaigns: res.data,
+            currentCampaign: currentCampaign.campaignName,
+            columns: currentCampaign.campaignColumns,
+            campaignId: currentCampaign._id,
+            clientsToSave: includedIds
+          });
+        }
       }
     });
   }
@@ -423,7 +463,11 @@ export default class CampaignTable extends React.Component {
             </div>
             <Table
               bordered
-              dataSource={this.state.leftFiltered ? this.state.leftSearchData : this.state.leftData}
+              dataSource={
+                this.state.leftFiltered
+                  ? this.state.leftSearchData
+                  : this.state.leftData
+              }
               columns={leftColumns}
               pagination={false}
               scroll={{ y: 350 }}

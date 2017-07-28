@@ -5,6 +5,7 @@ import axios from "axios";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import "./AdminDirectory.css";
 import AgentEditForm from "./AgentEditForm";
+import AgentForm from "./AgentForm";
 const TabPane = Tabs.TabPane;
 
 export default class AdminAgentDirectory extends Component {
@@ -18,7 +19,8 @@ export default class AdminAgentDirectory extends Component {
       filtered: false,
       searchData: [],
       editModal: false,
-      selectedAgent: {}
+      selectedAgent: {},
+      modal: false
     };
   }
 
@@ -138,7 +140,68 @@ export default class AdminAgentDirectory extends Component {
       editModal: false
     });
   }
+
+  addAgent(
+    agentCode,
+    agentName,
+    agentEmail,
+    agentTitle,
+    agentPhoneNumber,
+    agentOffice
+  ) {
+    var data = {
+      agentCode: agentCode,
+      agentEmail: agentEmail,
+      agentName: agentName,
+      agentTitle: agentTitle,
+      agentPhoneNumber: agentPhoneNumber,
+      agentOffice: agentOffice
+    };
+
+    axios.post("http://localhost:4000/api/agent/new", data);
+    this.setState({
+      modal: false
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      modal: false
+    });
+  }
+
+  openModal() {
+    this.setState({
+      modal: true
+    });
+  }
   render() {
+    var modal;
+    if (this.state.modal) {
+      modal = (
+        <AgentForm
+          modal={this.state.modal}
+          onCancel={() => this.closeModal()}
+          onOk={(
+            agentCode,
+            agentName,
+            agentEmail,
+            agentTitle,
+            agentPhoneNumber,
+            agentOffice
+          ) =>
+            this.addAgent(
+              agentCode,
+              agentName,
+              agentEmail,
+              agentTitle,
+              agentPhoneNumber,
+              agentOffice
+            )}
+        />
+      );
+    }
+
     var editModal;
     if (this.state.editModal) {
       editModal = (
@@ -257,9 +320,11 @@ export default class AdminAgentDirectory extends Component {
       <div>
         <div className="header">
           {editModal}
+          {modal}
           <Link to="/">
             <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>
+          <Button onClick={() => this.openModal()}>Add Client</Button>
           <h1>Agent Directory</h1>
           <br />
         </div>

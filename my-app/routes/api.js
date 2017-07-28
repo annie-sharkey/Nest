@@ -41,7 +41,8 @@ router.post("/clients", function(req, res) {
     homeAnniversary: req.body.homeAnniversary,
     agentCode: req.body.agentCode,
     lastEdited: new Date().toISOString(),
-    office: req.body.office
+    office: req.body.office,
+    agent: req.body.agent
   });
   client.save(function(err) {
     if (err) {
@@ -65,6 +66,7 @@ router.put("/clients/:id", function(req, res, next) {
     client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
     client.lastEdited = new Date().toISOString();
     client.office = req.body.office || client.office;
+    client.agent = req.body.agent || client.agent;
 
     client.save(function(err, client) {
       if (err) {
@@ -114,6 +116,25 @@ router.put("/agent/:id", function(req, res, next) {
       }
       res.json(agent);
     });
+  });
+});
+
+router.post("/agent/new", function(req, res, next) {
+  var agent = new Agent({
+    agentCode: req.body.agentCode,
+    agentName: req.body.agentName,
+    agentTitle: req.body.agentTitle,
+    agentEmail: req.body.agentEmail,
+    agentPhoneNumber: req.body.agentPhoneNumber,
+    agentOffice: req.body.agentOffice,
+    pastCampaigns: []
+  });
+
+  agent.save(function(err, agent) {
+    if (err) {
+      throw err;
+    }
+    res.json(agent);
   });
 });
 
