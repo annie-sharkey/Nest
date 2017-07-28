@@ -62,6 +62,7 @@ router.put("/clients/:id", function(req, res, next) {
     client.clientEmail = req.body.clientEmail || client.clientEmail;
     client.clientBirthday = req.body.clientBirthday || client.clientBirthday;
     client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
+    client.agentCode = req.body.agentCode || client.agentCode;
     client.lastEdited = new Date();
 
     client.save(function(err, client) {

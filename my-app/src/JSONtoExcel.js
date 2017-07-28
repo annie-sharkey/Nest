@@ -1,7 +1,8 @@
-// import React, { Component } from "react";
-// import "./JSONtoExcel.css";
+import React, { Component } from "react";
+import "./JSONtoExcel.css";
+import axios from "axios";
 
-// //***Note: to make sure that data is in the right column, if a field is empty, make sure it is set to an empty string instead of not being there at all
+//***Note: to make sure that data is in the right column, if a field is empty, make sure it is set to an empty string instead of not being there at all
 
 // const value = [
 //   {
@@ -55,92 +56,107 @@
 //     Test: "test"
 //   }
 // ];
-// export default class JSONtoExcel extends Component {
-//   handleClick = event => {
-//     var data = value;
-//     if (data == "") return;
+export default class JSONtoExcel extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: []
+    };
+  }
 
-//     this.JSONToCSVConvertor(data, "Vehicle Report", true);
-//   };
+  componentWillMount() {
+    axios.get("http://localhost:4000/api/clients").then(res => {
+      this.setState({
+        data: res.data
+      });
+    });
+  }
 
-//   JSONToCSVConvertor = (JSONData, ReportTitle, ShowLabel) => {
-//     var arrData = typeof JSONData != "object" ? JSON.parse(JSONData) : JSONData;
+  handleClick = event => {
+    var data = this.state.data;
+    if (data == "") return;
 
-//     var CSV = "";
-//     //Set Report title in first row or line
+    this.JSONToCSVConvertor(data, "Vehicle Report", true);
+  };
 
-//     CSV += ReportTitle + "\r\n\n";
+  JSONToCSVConvertor = (JSONData, ReportTitle, ShowLabel) => {
+    var arrData = typeof JSONData != "object" ? JSON.parse(JSONData) : JSONData;
 
-//     //This condition will generate the Label/Header
-//     if (ShowLabel) {
-//       var row = "";
+    var CSV = "";
+    //Set Report title in first row or line
 
-//       //This loop will extract the label from 1st index of on array
-//       for (var index in arrData[0]) {
-//         //Now convert each value to string and comma-seprated
-//         row += index + ",";
-//       }
+    CSV += ReportTitle + "\r\n\n";
 
-//       row = row.slice(0, -1);
+    //This condition will generate the Label/Header
+    if (ShowLabel) {
+      var row = "";
 
-//       //append Label row with line break
-//       CSV += row + "\r\n";
-//     }
+      //This loop will extract the label from 1st index of on array
+      for (var index in arrData[0]) {
+        //Now convert each value to string and comma-seprated
+        row += index + ",";
+      }
 
-//     //1st loop is to extract each row
-//     for (var i = 0; i < arrData.length; i++) {
-//       var row = "";
+      row = row.slice(0, -1);
 
-//       //2nd loop will extract each column and convert it in string comma-seprated
-//       for (var index in arrData[i]) {
-//         row += '"' + arrData[i][index] + '",';
-//       }
+      //append Label row with line break
+      CSV += row + "\r\n";
+    }
 
-//       row.slice(0, row.length - 1);
+    //1st loop is to extract each row
+    for (var i = 0; i < arrData.length; i++) {
+      var row = "";
 
-//       //add a line break after each row
-//       CSV += row + "\r\n";
-//     }
+      //2nd loop will extract each column and convert it in string comma-seprated
+      for (var index in arrData[i]) {
+        row += '"' + arrData[i][index] + '",';
+      }
 
-//     if (CSV == "") {
-//       alert("Invalid data");
-//       return;
-//     }
+      row.slice(0, row.length - 1);
 
-//     //Generate a file name
-//     var fileName = "MyReport_";
-//     //this will remove the blank-spaces from the title and replace it with an underscore
-//     fileName += ReportTitle.replace(/ /g, "_");
+      //add a line break after each row
+      CSV += row + "\r\n";
+    }
 
-//     //Initialize file format you want csv or xls
-//     var uri = "data:text/csv;charset=utf-8," + escape(CSV);
+    if (CSV == "") {
+      alert("Invalid data");
+      return;
+    }
 
-//     // Now the little tricky part.
-//     // you can use either>> window.open(uri);
-//     // but this will not work in some browsers
-//     // or you will not get the correct file extension
+    //Generate a file name
+    var fileName = "MyReport_";
+    //this will remove the blank-spaces from the title and replace it with an underscore
+    fileName += ReportTitle.replace(/ /g, "_");
 
-//     //this trick will generate a temp <a /> tag
-//     var link = document.createElement("a");
-//     link.href = uri;
+    //Initialize file format you want csv or xls
+    var uri = "data:text/csv;charset=utf-8," + escape(CSV);
 
-//     //set the visibility hidden so it will not effect on your web-layout
-//     link.style = "visibility:hidden";
-//     link.download = fileName + ".csv";
+    // Now the little tricky part.
+    // you can use either>> window.open(uri);
+    // but this will not work in some browsers
+    // or you will not get the correct file extension
 
-//     //this part will append the anchor tag and remove it after automatic click
-//     document.body.appendChild(link);
-//     link.click();
-//     document.body.removeChild(link);
-//   };
-//   render() {
-//     return (
-//       <div className="mydiv">
-//         {/*<textarea id="txt" className="txtarea" value={value} />*/}
-//         <button className="gen_btn" onClick={event => this.handleClick(event)}>
-//           Generate File
-//         </button>
-//       </div>
-//     );
-//   }
-// }
+    //this trick will generate a temp <a /> tag
+    var link = document.createElement("a");
+    link.href = uri;
+
+    //set the visibility hidden so it will not effect on your web-layout
+    link.style = "visibility:hidden";
+    link.download = fileName + ".csv";
+
+    //this part will append the anchor tag and remove it after automatic click
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  render() {
+    return (
+      <div className="mydiv">
+        {/*<textarea id="txt" className="txtarea" value={value} />*/}
+        <button className="gen_btn" onClick={event => this.handleClick(event)}>
+          Generate File
+        </button>
+      </div>
+    );
+  }
+}
