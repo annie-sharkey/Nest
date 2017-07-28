@@ -4,63 +4,13 @@ import axios from "axios";
 
 //***Note: to make sure that data is in the right column, if a field is empty, make sure it is set to an empty string instead of not being there at all
 
-// const value = [
-//   {
-//     Vehicle: "BMW",
-//     Date: "30, Jul 2013 09:24 AM",
-//     Location: "Hauz Khas, Enclave, New Delhi, Delhi, India",
-//     Speed: 42,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Honda CBR",
-//     Date: "30, Jul 2013 12:00 AM",
-//     Location: "Military Road,  West Bengal 734013,  India",
-//     Speed: 0
-//   },
-//   {
-//     Vehicle: "Supra",
-//     Date: "30, Jul 2013 07:53 AM",
-//     Location: "Sec-45, St. Angel's School, Gurgaon, Haryana, India",
-//     Speed: 58,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Land Cruiser",
-//     Date: "30, Jul 2013 09:35 AM",
-//     Location: "DLF Phase I, Marble Market, Gurgaon, Haryana, India",
-//     Speed: 83,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Suzuki Swift",
-//     Date: "30, Jul 2013 12:02 AM",
-//     Location:
-//       "Behind Central Bank RO, Ram Krishna Rd by-lane, Siliguri, West Bengal, India",
-//     Speed: 0,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Honda Civic",
-//     Date: "30, Jul 2013 12:00 AM",
-//     Location:
-//       "Behind Central Bank RO, Ram Krishna Rd by-lane, Siliguri, West Bengal, India",
-//     Speed: 0,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Honda Accord",
-//     Date: "30, Jul 2013 11:05 AM",
-//     Location: "DLF Phase IV, Super Mart 1, Gurgaon, Haryana, India",
-//     Speed: 71,
-//     Test: "test"
-//   }
-// ];
 export default class JSONtoExcel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      campaignName: this.props.campaignName,
+      office: this.props.office
     };
   }
 
@@ -76,7 +26,7 @@ export default class JSONtoExcel extends Component {
     var data = this.state.data;
     if (data == "") return;
 
-    this.JSONToCSVConvertor(data, "Vehicle Report", true);
+    this.JSONToCSVConvertor(data, this.state.campaignName + this.state.office, true);
   };
 
   JSONToCSVConvertor = (JSONData, ReportTitle, ShowLabel) => {
@@ -124,7 +74,7 @@ export default class JSONtoExcel extends Component {
     }
 
     //Generate a file name
-    var fileName = "MyReport_";
+    var fileName = "";
     //this will remove the blank-spaces from the title and replace it with an underscore
     fileName += ReportTitle.replace(/ /g, "_");
 

@@ -26,6 +26,7 @@ import { Grid } from "semantic-ui-react";
 import moment from "moment";
 import EditBuildTable from "./EditBuildTable";
 import EditUploadTable from "./EditUploadTable";
+import JSONtoExcel from './JSONtoExcel';
 
 const FormItem = Form.Item;
 const { MonthPicker, RangePicker } = DatePicker;
@@ -54,7 +55,8 @@ export default class ManageCampaigns extends Component {
       campaignName: "",
       checkedList: [],
       writeColumns: [],
-      writeUploads: []
+      writeUploads: [],
+      openExportDataModal: false
     };
   }
 
@@ -100,16 +102,19 @@ export default class ManageCampaigns extends Component {
       openModal: true,
       selectedCampaign: text
     });
+  }
 
-    console.log(
-      "selected campaign text:",
-      moment(text.startDate).format("MM/DD/YYYY")
-    );
+  handleOpenExportDataModal(text) {
+    this.setState({
+      openExportDataModal: true,
+      selectedCampaign: text
+    });
   }
 
   handleCancel(event) {
     this.setState({
-      openModal: false
+      openModal: false,
+      openExportDataModal: false
     });
   }
 
@@ -158,11 +163,7 @@ export default class ManageCampaigns extends Component {
   }
 
   render() {
-    // console.log("campaign start date:", this.state.startDate);
-    // console.log("campaign end date:", this.state.endDate);
-    console.log("checked list:", this.state.checkedList);
-    // console.log("selected start date:", typeof(this.state.selectedCampaign.startDate))
-    console.log("write uploads:", this.state.writeUploads);
+    console.log("selected campaign text:", this.state.selectedCampaign)
 
     const columns = [
       {
@@ -185,6 +186,10 @@ export default class ManageCampaigns extends Component {
             >
               <a>Delete Campaign</a>
             </Popconfirm>
+            <span className="ant-divider" />
+            <a onClick={() => this.handleOpenExportDataModal(text)}>
+              Export Data
+            </a>
           </span>
       }
     ];
@@ -285,6 +290,21 @@ export default class ManageCampaigns extends Component {
               </div>
             </Modal>
           </div>}
+
+        {this.state.openExportDataModal &&
+          <Modal visible={true} onCancel={event => this.handleCancel(event)}>
+            <div>
+              {this.state.selectedCampaign.officesIncludedinCampaign.map(office => {
+                return (
+                  <div>
+                    {office}
+                    <JSONtoExcel office={office} campaignName={this.state.selectedCampaign.campaignName}/>
+                    {/*<Button onClick={(office)=> {<JSONtoExcel office={office}} >Export Office Data</Button>*/}
+                  </div>
+                );
+              })}
+            </div>
+          </Modal>}
       </div>
     );
   }
