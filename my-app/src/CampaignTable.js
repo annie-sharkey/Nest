@@ -20,7 +20,10 @@ export default class CampaignTable extends React.Component {
       campaignId: "",
       clientsToSave: [],
       agentCode: this.props.agentCode,
-      confirm: false
+      confirm: false,
+      searchText: "",
+      leftSearchData: [],
+      leftFiltered: false
     };
   }
 
@@ -223,6 +226,46 @@ export default class CampaignTable extends React.Component {
     });
   }
 
+  //search functions
+  onInputChange(e) {
+    this.setState({ searchText: e.target.value });
+  }
+  onSearch() {
+    const { searchText } = this.state;
+    const reg = new RegExp(searchText, "gi");
+    this.setState({
+      filterDropdownVisible: false,
+      filtered: !!searchText,
+      searchData: this.state.leftData
+        .map(record => {
+          const match = record.clientName.match(reg);
+          if (!match) {
+            return null;
+          }
+          return {
+            ...record,
+            name: (
+              <span>
+                {record.clientName.split(reg).map(
+                  (text, i) =>
+                    i > 0
+                      ? [
+                          <span className="highlight">
+                            {match[0]}
+                          </span>,
+                          text
+                        ]
+                      : text
+                )}
+              </span>
+            )
+          };
+        })
+        .filter(record => !!record)
+    });
+  }
+  //end search functions
+
   render() {
     var leftColumns = [
       {
@@ -232,6 +275,35 @@ export default class CampaignTable extends React.Component {
         width: "20%",
         sorter: (a, b) => {
           return this.compareByAlph(a.clientName, b.clientName);
+        },
+        filterDropdown: (
+          <div className="custom-filter-dropdown">
+            <Input
+              ref={ele => (this.searchInput = ele)}
+              placeholder="Search name"
+              value={this.state.searchText}
+              onChange={e => this.onInputChange(e)}
+              onPressEnter={() => this.onSearch()}
+            />
+            <Button type="primary" onClick={() => this.onSearch()}>
+              Search
+            </Button>
+          </div>
+        ),
+        filterIcon: (
+          <Icon
+            type="search"
+            style={{ color: this.state.leftFiltered ? "#108ee9" : "#aaa" }}
+          />
+        ),
+        filterDropdownVisible: this.state.filterDropdownVisible,
+        onFilterDropdownVisibleChange: visible => {
+          this.setState(
+            {
+              filterDropdownVisible: visible
+            },
+            () => this.searchInput.focus()
+          );
         }
       },
       {
@@ -351,7 +423,7 @@ export default class CampaignTable extends React.Component {
             </div>
             <Table
               bordered
-              dataSource={this.state.leftData}
+              dataSource={this.state.leftFiltered ? this.state.leftSearchData : this.state.leftData}
               columns={leftColumns}
               pagination={false}
               scroll={{ y: 350 }}

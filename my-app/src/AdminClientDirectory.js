@@ -15,8 +15,8 @@ export default class AdminClientDirectory extends Component {
       data: [],
       officeData: [],
       searchText: "",
-      filtered: false,
       searchData: [],
+      filtered: false,
       editModal: false
     };
   }

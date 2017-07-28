@@ -11,62 +11,15 @@ import "./App.css";
 export default class MasterTable extends React.Component {
   constructor(props) {
     super(props);
-    this.columns = [
-      {
-        title: "Client Name",
-        dataIndex: "clientName",
-        key: "clientName",
-        width: "25%",
-        sorter: (a, b) => {
-          return this.compareByAlph(a.clientName, b.clientName);
-        }
-      },
-      {
-        title: "Client Address",
-        dataIndex: "clientAddress",
-        key: "clientAddress",
-        width: "25%"
-      },
-      {
-        title: "Client City",
-        dataIndex: "clientCity",
-        key: "clientCity",
-        width: "25%",
-        sorter: (a, b) => {
-          return this.compareByAlph(a.clientCity, b.clientCity);
-        }
-      },
-      {
-        title: "Client State",
-        dataIndex: "clientState",
-        key: "clientState",
-        width: "10%"
-      },
-      {
-        title: "Edit",
-        dataIndex: "_id",
-        key: "_id",
-        render: (record, text, index) => {
-          return (
-            <a style={{ color: "#46797b" }}>
-              <Icon
-                type="edit"
-                style={{ fontSize: 16 }}
-                onClick={() => {
-                  this.openEditModal(text);
-                }}
-              />
-            </a>
-          );
-        }
-      }
-    ];
     this.state = {
       dataSource: this.props.dataSource,
       count: 2,
       modal: false,
       editModal: false,
-      selectedClient: {}
+      selectedClient: {},
+      searchText: "",
+      searchData: [],
+      filtered: false
     };
   }
 
@@ -169,6 +122,46 @@ export default class MasterTable extends React.Component {
     return 0;
   }
 
+  //search functions
+  onInputChange(e) {
+    this.setState({ searchText: e.target.value });
+  }
+  onSearch() {
+    const { searchText } = this.state;
+    const reg = new RegExp(searchText, "gi");
+    this.setState({
+      filterDropdownVisible: false,
+      filtered: !!searchText,
+      searchData: this.state.dataSource
+        .map(record => {
+          const match = record.clientName.match(reg);
+          if (!match) {
+            return null;
+          }
+          return {
+            ...record,
+            name: (
+              <span>
+                {record.clientName.split(reg).map(
+                  (text, i) =>
+                    i > 0
+                      ? [
+                          <span className="highlight">
+                            {match[0]}
+                          </span>,
+                          text
+                        ]
+                      : text
+                )}
+              </span>
+            )
+          };
+        })
+        .filter(record => !!record)
+    });
+  }
+  //end search functions
+
   render() {
     console.log(this.state.dataSource);
     var modal;
@@ -233,7 +226,85 @@ export default class MasterTable extends React.Component {
         />
       );
     }
-    const columns = this.columns;
+    const columns = [
+      {
+        title: "Client Name",
+        dataIndex: "clientName",
+        key: "clientName",
+        width: "25%",
+        sorter: (a, b) => {
+          return this.compareByAlph(a.clientName, b.clientName);
+        },
+        filterDropdown: (
+          <div className="custom-filter-dropdown">
+            <Input
+              ref={ele => (this.searchInput = ele)}
+              placeholder="Search name"
+              value={this.state.searchText}
+              onChange={e => this.onInputChange(e)}
+              onPressEnter={() => this.onSearch()}
+            />
+            <Button type="primary" onClick={() => this.onSearch()}>
+              Search
+            </Button>
+          </div>
+        ),
+        filterIcon: (
+          <Icon
+            type="search"
+            style={{ color: this.state.filtered ? "#108ee9" : "#aaa" }}
+          />
+        ),
+        filterDropdownVisible: this.state.filterDropdownVisible,
+        onFilterDropdownVisibleChange: visible => {
+          this.setState(
+            {
+              filterDropdownVisible: visible
+            },
+            () => this.searchInput.focus()
+          );
+        }
+      },
+      {
+        title: "Client Address",
+        dataIndex: "clientAddress",
+        key: "clientAddress",
+        width: "25%"
+      },
+      {
+        title: "Client City",
+        dataIndex: "clientCity",
+        key: "clientCity",
+        width: "25%",
+        sorter: (a, b) => {
+          return this.compareByAlph(a.clientCity, b.clientCity);
+        }
+      },
+      {
+        title: "Client State",
+        dataIndex: "clientState",
+        key: "clientState",
+        width: "10%"
+      },
+      {
+        title: "Edit",
+        dataIndex: "_id",
+        key: "_id",
+        render: (record, text, index) => {
+          return (
+            <a style={{ color: "#46797b" }}>
+              <Icon
+                type="edit"
+                style={{ fontSize: 16 }}
+                onClick={() => {
+                  this.openEditModal(text);
+                }}
+              />
+            </a>
+          );
+        }
+      }
+    ];
     return (
       <div className="master">
         <h2 className="master-title">Your List of Clients</h2>
@@ -242,7 +313,11 @@ export default class MasterTable extends React.Component {
         <div className="master-table">
           <Table
             bordered
-            dataSource={this.state.dataSource}
+            dataSource={
+              this.state.filtered
+                ? this.state.searchData
+                : this.state.dataSource
+            }
             columns={columns}
             pagination={false}
           />
