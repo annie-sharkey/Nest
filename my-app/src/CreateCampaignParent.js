@@ -120,18 +120,15 @@ export default class CreateCampaignParent extends Component {
     });
   }
 
-
-  onCheckAllChange = e => {
-
+  onCheckAllChange(e) {
     this.setState({
       checkedList: e.target.checked ? plainOptions : [],
       indeterminate: false,
       checkAll: e.target.checked
     });
-  };
+  }
 
   render() {
-
     message.config({
       top: 100
     });

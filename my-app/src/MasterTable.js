@@ -73,7 +73,8 @@ export default class MasterTable extends React.Component {
       clientEmail: clientEmail,
       clientState: clientState,
       clientBirthday: clientBirthday,
-      homeAnniversary: clientAnniversary
+      homeAnniversary: clientAnniversary,
+      office: this.props.agent.agentOffice
     });
     this.closeEditModal();
   }
@@ -96,7 +97,8 @@ export default class MasterTable extends React.Component {
       clientState: clientState,
       clientBirthday: clientBirthday,
       homeAnniversary: clientAnniversary,
-      agentCode: this.props.agentCode
+      agentCode: this.props.agentCode,
+      office: this.props.agent.agentOffice
     });
     this.handleCloseModal();
   }

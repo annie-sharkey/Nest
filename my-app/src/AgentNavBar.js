@@ -106,6 +106,7 @@ export default class AgentNavBar extends Component {
               <MasterTable
                 dataSource={this.state.dataSource.reverse()}
                 agentCode={this.props.agent.agentCode}
+                agent={this.props.agent}
                 updateClients={clients => this.updateClients(clients)}
               />}
           />
@@ -115,6 +116,7 @@ export default class AgentNavBar extends Component {
               <CampaignTable
                 dataSource={this.state.dataSource.reverse()}
                 agentCode={this.props.agent.agentCode}
+                agent={this.props.agent}
               />}
           />
         </div>

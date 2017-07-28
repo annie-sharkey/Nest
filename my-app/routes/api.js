@@ -40,7 +40,8 @@ router.post("/clients", function(req, res) {
     clientBirthday: req.body.clientBirthday,
     homeAnniversary: req.body.homeAnniversary,
     agentCode: req.body.agentCode,
-    lastEdited: new Date()
+    lastEdited: new Date().toISOString(),
+    office: req.body.office
   });
   client.save(function(err) {
     if (err) {
@@ -62,8 +63,8 @@ router.put("/clients/:id", function(req, res, next) {
     client.clientEmail = req.body.clientEmail || client.clientEmail;
     client.clientBirthday = req.body.clientBirthday || client.clientBirthday;
     client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
-    client.agentCode = req.body.agentCode || client.agentCode;
-    client.lastEdited = new Date();
+    client.lastEdited = new Date().toISOString();
+    client.office = req.body.office || client.office;
 
     client.save(function(err, client) {
       if (err) {
