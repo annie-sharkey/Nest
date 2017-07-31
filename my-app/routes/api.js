@@ -42,7 +42,10 @@ router.post("/clients", function(req, res) {
     agentCode: req.body.agentCode,
     lastEdited: new Date().toISOString(),
     office: req.body.office,
-    agent: req.body.agent
+    agentName: req.body.agentName,
+    agentEmail: req.body.agentEmail,
+    agentTitle: req.body.agentTitle,
+    agentPhone: req.body.agentPhone
   });
   client.save(function(err) {
     if (err) {
@@ -66,7 +69,6 @@ router.put("/clients/:id", function(req, res, next) {
     client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
     client.lastEdited = new Date().toISOString();
     client.office = req.body.office || client.office;
-    client.agent = req.body.agent || client.agent;
 
     client.save(function(err, client) {
       if (err) {

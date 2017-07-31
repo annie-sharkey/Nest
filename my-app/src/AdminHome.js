@@ -3,8 +3,15 @@ import "./AgentHome.css";
 import Nest from "./Nest.png";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import { Button, Icon } from "semantic-ui-react";
+import axios from "axios";
 
 export default class AdminHome extends Component {
+  handleFileUpload(e) {
+    var path = {
+      path: e.target.value
+    };
+    axios.post("http://localhost:4000/api/upload", path);
+  }
   render() {
     return (
       <Router>
@@ -34,6 +41,13 @@ export default class AdminHome extends Component {
                   <button className="btn">Agent Directory</button>
                 </div>
               </Link>
+              <div className="inputFile">
+                <input
+                  type="file"
+                  accept=".xlsx, .xlx"
+                  onChange={e => this.handleFileUpload(e)}
+                />
+              </div>
             </div>
           </div>
           <div className="logout">

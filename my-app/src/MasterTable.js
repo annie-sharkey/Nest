@@ -104,7 +104,10 @@ export default class MasterTable extends React.Component {
       homeAnniversary: clientAnniversary,
       agentCode: this.props.agentCode,
       office: this.props.agent.agentOffice,
-      agent: this.props.agent
+      agentName: this.props.agent.agentName,
+      agentEmail: this.props.agent.agentEmail,
+      agentTitle: this.props.agent.agentTitle,
+      agentPhone: this.props.agent.agentPhone
     });
     this.handleCloseModal();
   }

@@ -15,14 +15,17 @@ var ClientSchema = new Schema({
     type: String,
     default: "buyer"
   },
-  clientBirthday: String,
-  homeAnniversary: String,
-  campaigns: [String],
-  childrenNames: [String],
-  agentCode: String,
+  clientBirthday: { type: String, default: "" },
+  homeAnniversary: { type: String, default: "" },
+  campaigns: { type: [String], default: [] },
+  childrenNames: { type: [String], default: [] },
+  lastEdited: String,
   office: String,
-  lastEdited: Date,
-  agent: Object
+  agentCode: String,
+  agentName: String,
+  agentEmail: String,
+  agentTitle: String,
+  agentPhone: String
 });
 
 //export our module to use in server.js
