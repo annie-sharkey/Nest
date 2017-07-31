@@ -80,11 +80,8 @@ router.post("/campaign/", function(req, res, next) {
     }
 
     res.json(campaign);
-
-
   });
 });
-
 
 router.delete("/clients/:id", function(req, res, next) {
   Client.findByIdAndRemove(req.params.id, function(err, client) {
@@ -127,7 +124,6 @@ router.put("/agent/:id", function(req, res, next) {
     });
   });
 });
-
 
 router.post("/agent/new", function(req, res, next) {
   var agent = new Agent({
@@ -181,6 +177,9 @@ router.put("/clients/:id", function(req, res, next) {
   });
 });
 
+router.post("/upload", function(req, res, next) {
+  console.log(req.body.path);
+});
 
 router.put("/campaigns/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
