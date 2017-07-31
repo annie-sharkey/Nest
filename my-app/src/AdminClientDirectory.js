@@ -279,10 +279,14 @@ export default class AdminClientDirectory extends Component {
           <TabPane tab="Asheville" key="Asheville" />
           <TabPane tab="Charlottesville" key="Charlottesville" />
           <TabPane tab="Fredericksburg" key="Fredericksburg" />
+          <TabPane tab="Lake Norman" key="Lake Norman" />
           <TabPane tab="New River Valley" key="New River Valley" />
           <TabPane tab="Richmond" key="Richmond" />
           <TabPane tab="Shenandoah Valley" key="Shenandoah Valley" />
+          <TabPane tab="The Triangle" key="The Triangle" />
           <TabPane tab="Wilmington" key="Wilmington" />
+          
+          
         </Tabs>
         <Table
           columns={columns}

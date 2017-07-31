@@ -324,7 +324,7 @@ export default class AdminAgentDirectory extends Component {
           <Link to="/">
             <Icon type="arrow-left" style={{ fontSize: 30 }} />
           </Link>
-          <Button onClick={() => this.openModal()}>Add Client</Button>
+          <Button onClick={() => this.openModal()}>Add Agent</Button>
           <h1>Agent Directory</h1>
           <br />
         </div>
@@ -336,9 +336,11 @@ export default class AdminAgentDirectory extends Component {
           <TabPane tab="Asheville" key="Asheville" />
           <TabPane tab="Charlottesville" key="Charlottesville" />
           <TabPane tab="Fredericksburg" key="Fredericksburg" />
+          <TabPane tab="Lake Norman" key="Lake Norman" />
           <TabPane tab="New River Valley" key="New River Valley" />
           <TabPane tab="Richmond" key="Richmond" />
           <TabPane tab="Shenandoah Valley" key="Shenandoah Valley" />
+          <TabPane tab="The Triangle" key="The Triangle" />
           <TabPane tab="Wilmington" key="Wilmington" />
         </Tabs>
         <Table
