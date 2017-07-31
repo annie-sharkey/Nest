@@ -118,6 +118,12 @@ export default class ManageCampaigns extends Component {
     });
   }
 
+  handleDone(event) {
+    this.setState({
+      openExportDataModal: false
+    })
+  }
+
   updateColumnState(columns) {
     this.setState({
       ...this.state,
@@ -163,7 +169,7 @@ export default class ManageCampaigns extends Component {
   }
 
   render() {
-    console.log("selected campaign text:", this.state.selectedCampaign)
+    // console.log("selected campaign text:", this.state.selectedCampaign)
 
     const columns = [
       {
@@ -292,14 +298,14 @@ export default class ManageCampaigns extends Component {
           </div>}
 
         {this.state.openExportDataModal &&
-          <Modal visible={true} onCancel={event => this.handleCancel(event)}>
+          <Modal visible={true} onCancel={event => this.handleCancel(event)} okText="Done" onOk={event => this.handleDone(event)}>
             <div>
               {this.state.selectedCampaign.officesIncludedinCampaign.map(office => {
                 return (
                   <div>
                     {office}
-                    <JSONtoExcel office={office} campaignName={this.state.selectedCampaign.campaignName}/>
-                    {/*<Button onClick={(office)=> {<JSONtoExcel office={office}} >Export Office Data</Button>*/}
+                    <JSONtoExcel office={office} campaignName={this.state.selectedCampaign.campaignName} selectedCampaignClientIDs={this.state.selectedCampaign.clients}/>
+                    
                   </div>
                 );
               })}

@@ -8,25 +8,48 @@ export default class JSONtoExcel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      // data: [],
       campaignName: this.props.campaignName,
-      office: this.props.office
+      office: this.props.office,
+      selectedCampaignClientIDs: this.props.selectedCampaignClientIDs,
+      allClients: [],
+      selectedCampaignObjects: []
+      // exportData: []
+      // officeIDs: []
     };
   }
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(res => {
       this.setState({
-        data: res.data
+        allClients: res.data
       });
     });
+    // var selectedCampaignObjects = this.state.allClients.forEach(client => {
+    //   this.state.selectedCampaignClientIDs.forEach(ID => {
+    //     return ID === client._id;
+    //   });
+    // });
+    // var OfficeObjects = this.state.allClients.map(client).filter(client => )
+    // var selectedCampaignObjects = this.state.allClients.filter(client => {
+    //   return client === this.state.selectedCampaignClientIDs;
+    // });
+
+    // console.log("selected campaign objects:", selectedCampaignObjects);
   }
 
   handleClick = event => {
-    var data = this.state.data;
+    var selectiveData = this.state.selectedCampaignObjects.filter(data => {
+      return data.office == this.state.office;
+    });
+    var data = selectiveData;
     if (data == "") return;
 
-    this.JSONToCSVConvertor(data, this.state.campaignName + this.state.office, true);
+    this.JSONToCSVConvertor(
+      data,
+      this.state.campaignName + this.state.office,
+      true
+    );
   };
 
   JSONToCSVConvertor = (JSONData, ReportTitle, ShowLabel) => {
@@ -100,9 +123,27 @@ export default class JSONtoExcel extends Component {
     document.body.removeChild(link);
   };
   render() {
+    // console.log(
+    //   "selected campaign client IDs:",
+    //   this.state.selectedCampaignClientIDs
+    // );
+
+    // console.log("all clients:", this.state.allClients);
+
+    var self = this;
+    this.state.allClients.forEach(function(client) {
+      if (self.state.selectedCampaignClientIDs.includes(client._id)) {
+        self.state.selectedCampaignObjects.push(client);
+      }
+    });
+
+    console.log(
+      "selected campaign objects:",
+      this.state.selectedCampaignObjects
+    );
+
     return (
       <div className="mydiv">
-        {/*<textarea id="txt" className="txtarea" value={value} />*/}
         <button className="gen_btn" onClick={event => this.handleClick(event)}>
           Generate File
         </button>
