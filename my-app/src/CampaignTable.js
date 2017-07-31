@@ -235,8 +235,8 @@ export default class CampaignTable extends React.Component {
     const reg = new RegExp(searchText, "gi");
     this.setState({
       filterDropdownVisible: false,
-      filtered: !!searchText,
-      searchData: this.state.leftData
+      leftFiltered: !!searchText,
+      leftSearchData: this.state.leftData
         .map(record => {
           const match = record.clientName.match(reg);
           if (!match) {
@@ -407,7 +407,8 @@ export default class CampaignTable extends React.Component {
         }
       }
     ];
-
+    console.log("left search data:", this.state.leftSearchData);
+    console.log("search text:", this.state.searchText);
     return (
       <div className="campaignPage">
         <h2 className="campaign-title">
@@ -423,7 +424,11 @@ export default class CampaignTable extends React.Component {
             </div>
             <Table
               bordered
-              dataSource={this.state.leftFiltered ? this.state.leftSearchData : this.state.leftData}
+              dataSource={
+                this.state.leftFiltered
+                  ? this.state.leftSearchData
+                  : this.state.leftData
+              }
               columns={leftColumns}
               pagination={false}
               scroll={{ y: 350 }}
