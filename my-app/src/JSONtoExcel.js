@@ -4,79 +4,52 @@ import axios from "axios";
 
 //***Note: to make sure that data is in the right column, if a field is empty, make sure it is set to an empty string instead of not being there at all
 
-// const value = [
-//   {
-//     Vehicle: "BMW",
-//     Date: "30, Jul 2013 09:24 AM",
-//     Location: "Hauz Khas, Enclave, New Delhi, Delhi, India",
-//     Speed: 42,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Honda CBR",
-//     Date: "30, Jul 2013 12:00 AM",
-//     Location: "Military Road,  West Bengal 734013,  India",
-//     Speed: 0
-//   },
-//   {
-//     Vehicle: "Supra",
-//     Date: "30, Jul 2013 07:53 AM",
-//     Location: "Sec-45, St. Angel's School, Gurgaon, Haryana, India",
-//     Speed: 58,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Land Cruiser",
-//     Date: "30, Jul 2013 09:35 AM",
-//     Location: "DLF Phase I, Marble Market, Gurgaon, Haryana, India",
-//     Speed: 83,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Suzuki Swift",
-//     Date: "30, Jul 2013 12:02 AM",
-//     Location:
-//       "Behind Central Bank RO, Ram Krishna Rd by-lane, Siliguri, West Bengal, India",
-//     Speed: 0,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Honda Civic",
-//     Date: "30, Jul 2013 12:00 AM",
-//     Location:
-//       "Behind Central Bank RO, Ram Krishna Rd by-lane, Siliguri, West Bengal, India",
-//     Speed: 0,
-//     Test: "test"
-//   },
-//   {
-//     Vehicle: "Honda Accord",
-//     Date: "30, Jul 2013 11:05 AM",
-//     Location: "DLF Phase IV, Super Mart 1, Gurgaon, Haryana, India",
-//     Speed: 71,
-//     Test: "test"
-//   }
-// ];
 export default class JSONtoExcel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      // data: [],
+      campaignName: this.props.campaignName,
+      office: this.props.office,
+      selectedCampaignClientIDs: this.props.selectedCampaignClientIDs,
+      allClients: [],
+      selectedCampaignObjects: []
+      // exportData: []
+      // officeIDs: []
     };
   }
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(res => {
       this.setState({
-        data: res.data
+        allClients: res.data
       });
     });
+    // var selectedCampaignObjects = this.state.allClients.forEach(client => {
+    //   this.state.selectedCampaignClientIDs.forEach(ID => {
+    //     return ID === client._id;
+    //   });
+    // });
+    // var OfficeObjects = this.state.allClients.map(client).filter(client => )
+    // var selectedCampaignObjects = this.state.allClients.filter(client => {
+    //   return client === this.state.selectedCampaignClientIDs;
+    // });
+
+    // console.log("selected campaign objects:", selectedCampaignObjects);
   }
 
   handleClick = event => {
-    var data = this.state.data;
+    var selectiveData = this.state.selectedCampaignObjects.filter(data => {
+      return data.office == this.state.office;
+    });
+    var data = selectiveData;
     if (data == "") return;
 
-    this.JSONToCSVConvertor(data, "Vehicle Report", true);
+    this.JSONToCSVConvertor(
+      data,
+      this.state.campaignName + this.state.office,
+      true
+    );
   };
 
   JSONToCSVConvertor = (JSONData, ReportTitle, ShowLabel) => {
@@ -124,7 +97,7 @@ export default class JSONtoExcel extends Component {
     }
 
     //Generate a file name
-    var fileName = "MyReport_";
+    var fileName = "";
     //this will remove the blank-spaces from the title and replace it with an underscore
     fileName += ReportTitle.replace(/ /g, "_");
 
@@ -150,9 +123,27 @@ export default class JSONtoExcel extends Component {
     document.body.removeChild(link);
   };
   render() {
+    // console.log(
+    //   "selected campaign client IDs:",
+    //   this.state.selectedCampaignClientIDs
+    // );
+
+    // console.log("all clients:", this.state.allClients);
+
+    var self = this;
+    this.state.allClients.forEach(function(client) {
+      if (self.state.selectedCampaignClientIDs.includes(client._id)) {
+        self.state.selectedCampaignObjects.push(client);
+      }
+    });
+
+    console.log(
+      "selected campaign objects:",
+      this.state.selectedCampaignObjects
+    );
+
     return (
       <div className="mydiv">
-        {/*<textarea id="txt" className="txtarea" value={value} />*/}
         <button className="gen_btn" onClick={event => this.handleClick(event)}>
           Generate File
         </button>
