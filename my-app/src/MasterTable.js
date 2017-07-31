@@ -23,6 +23,10 @@ export default class MasterTable extends React.Component {
     };
   }
 
+  componentWillMount() {
+    console.log(this.props.agent);
+  }
+
   handleOpenModal() {
     this.setState({
       modal: true
@@ -74,7 +78,8 @@ export default class MasterTable extends React.Component {
       clientState: clientState,
       clientBirthday: clientBirthday,
       homeAnniversary: clientAnniversary,
-      office: this.props.agent.agentOffice
+      office: this.props.agent.agentOffice,
+      agent: this.props.agent
     });
     this.closeEditModal();
   }
@@ -98,7 +103,8 @@ export default class MasterTable extends React.Component {
       clientBirthday: clientBirthday,
       homeAnniversary: clientAnniversary,
       agentCode: this.props.agentCode,
-      office: this.props.agent.agentOffice
+      office: this.props.agent.agentOffice,
+      agent: this.props.agent
     });
     this.handleCloseModal();
   }
@@ -165,7 +171,6 @@ export default class MasterTable extends React.Component {
   //end search functions
 
   render() {
-    console.log(this.state.dataSource);
     var modal;
     if (this.state.modal) {
       modal = (
@@ -309,7 +314,18 @@ export default class MasterTable extends React.Component {
     ];
     return (
       <div className="master">
-        <h2 className="master-title">Your List of Clients</h2>
+        <div className="master-title">
+          <h2 style={{ margin: "auto" }}>Your List of Clients</h2>
+          <div className="editable-add-btn">
+            <Button
+              onClick={() => this.handleOpenModal()}
+              width="4"
+              color="grey"
+            >
+              Add Client
+            </Button>
+          </div>
+        </div>
         {modal}
         {editModal}
         <div className="master-table">
@@ -323,11 +339,6 @@ export default class MasterTable extends React.Component {
             columns={columns}
             pagination={false}
           />
-        </div>
-        <div className="editable-add-btn">
-          <Button onClick={() => this.handleOpenModal()} width="4" color="grey">
-            Add Client
-          </Button>
         </div>
       </div>
     );

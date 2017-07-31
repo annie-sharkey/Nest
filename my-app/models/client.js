@@ -21,7 +21,8 @@ var ClientSchema = new Schema({
   childrenNames: [String],
   agentCode: String,
   office: String,
-  lastEdited: Date
+  lastEdited: Date,
+  agent: Object
 });
 
 //export our module to use in server.js
