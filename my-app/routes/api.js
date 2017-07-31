@@ -30,6 +30,15 @@ router.get("/agents", function(req, res, next) {
   });
 });
 
+router.get("/campaigns", function(req, res, next) {
+  Campaign.find({}, function(err, campaigns) {
+    if (err) {
+      throw err;
+    }
+    res.json(campaigns);
+  });
+});
+
 router.post("/clients", function(req, res) {
   var client = new Client({
     clientName: req.body.clientName,
@@ -52,30 +61,25 @@ router.post("/clients", function(req, res) {
   });
 });
 
-router.put("/clients/:id", function(req, res, next) {
-  Client.findById(req.params.id, function(err, client) {
+router.post("/campaign/", function(req, res, next) {
+  var campaign = new Campaign({
+    campaignName: req.body.campaignName,
+    campaignColumns: req.body.campaignColumns,
+    clients: req.body.clients,
+    campaignUploads: req.body.campaignUploads,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate,
+    officesIncludedinCampaign: req.body.officesIncludedinCampaign
+  });
+  campaign.save(function(err) {
     if (err) {
       throw err;
     }
-    client.clientName = req.body.clientName || client.clientName;
-    client.clientAddress = req.body.clientAddress || client.clientAddress;
-    client.clientCity = req.body.clientCity || client.clientCity;
-    client.clientState = req.body.clientState || client.clientState;
-    client.clientEmail = req.body.clientEmail || client.clientEmail;
-    client.clientBirthday = req.body.clientBirthday || client.clientBirthday;
-    client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
-    client.lastEdited = new Date().toISOString();
-    client.office = req.body.office || client.office;
-    client.agent = req.body.agent || client.agent;
+    res.json(campaign);
 
-    client.save(function(err, client) {
-      if (err) {
-        throw err;
-      }
-      res.json(client);
-    });
   });
 });
+
 
 router.delete("/clients/:id", function(req, res, next) {
   Client.findByIdAndRemove(req.params.id, function(err, client) {
@@ -119,6 +123,7 @@ router.put("/agent/:id", function(req, res, next) {
   });
 });
 
+
 router.post("/agent/new", function(req, res, next) {
   var agent = new Agent({
     agentCode: req.body.agentCode,
@@ -147,23 +152,30 @@ router.get("/campaigns", function(req, res, next) {
   });
 });
 
-router.post("/campaign/", function(req, res, next) {
-  var campaign = new Campaign({
-    campaignName: req.body.campaignName,
-    campaignColumns: req.body.campaignColumns,
-    clients: req.body.clients,
-    campaignUploads: req.body.campaignUploads,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    officesIncludedinCampaign: req.body.officesIncludedinCampaign
-  });
-  campaign.save(function(err) {
+router.put("/clients/:id", function(req, res, next) {
+  Client.findById(req.params.id, function(err, client) {
     if (err) {
       throw err;
     }
-    res.json(campaign);
+    client.clientName = req.body.clientName || client.clientName;
+    client.clientAddress = req.body.clientAddress || client.clientAddress;
+    client.clientCity = req.body.clientCity || client.clientCity;
+    client.clientState = req.body.clientState || client.clientState;
+    client.clientEmail = req.body.clientEmail || client.clientEmail;
+    client.clientBirthday = req.body.clientBirthday || client.clientBirthday;
+    client.homeAnniversary = req.body.homeAnniversary || client.homeAnniversary;
+    client.lastEdited = new Date().toISOString();
+    client.office = req.body.office || client.office;
+
+    client.save(function(err, client) {
+      if (err) {
+        throw err;
+      }
+      res.json(client);
+    });
   });
 });
+
 
 router.put("/campaigns/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
