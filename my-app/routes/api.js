@@ -51,7 +51,10 @@ router.post("/clients", function(req, res) {
     agentCode: req.body.agentCode,
     lastEdited: new Date().toISOString(),
     office: req.body.office,
-    agent: req.body.agent
+    agentName: req.body.agentName,
+    agentEmail: req.body.agentEmail,
+    agentTitle: req.body.agentTitle,
+    agentPhone: req.body.agentPhone
   });
   client.save(function(err) {
     if (err) {
@@ -75,7 +78,9 @@ router.post("/campaign/", function(req, res, next) {
     if (err) {
       throw err;
     }
+
     res.json(campaign);
+
 
   });
 });

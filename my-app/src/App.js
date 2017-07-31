@@ -20,7 +20,7 @@ import AdminClientDirectory from "./AdminClientDirectory";
 import AdminAgentDirectory from "./AdminAgentDirectory";
 import ManageCampaigns from "./ManageCampaigns";
 
-import JSONtoExcel from "./JSONtoExcel";
+// import JSONtoExcel from "./JSONtoExcel";
 
 class App extends Component {
   constructor(props) {

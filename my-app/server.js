@@ -9,6 +9,7 @@ const routes = require("./routes/api");
 const Client = require("./models/client.js");
 const Agent = require("./models/agent.js");
 const Campaign = require("./models/campaign.js");
+var convertExcel = require("excel-as-json").processFile;
 
 var app = express();
 var router = express.Router();
@@ -68,4 +69,46 @@ app.use(bodyParser.json());
 //starts the server and listens for requests
 app.listen(port, function() {
   console.log(`api running on port ${port}`);
+});
+
+convertExcel("./ann.xlsx", null, null, function(err, data) {
+  var clients = [];
+  if (err) {
+    throw err;
+  }
+  data.forEach(function(client) {
+    var new_client = new Client({
+      clientName: "",
+      clientAddress: "",
+      clientEmail: "",
+      clientCity: "",
+      clientState: "",
+      office: "",
+      agentCode: "",
+      agentName: "",
+      agentEmail: "",
+      agentTitle: "",
+      agentPhone: "",
+      lastEdited: new Date().toISOString()
+    });
+
+    new_client.clientName = client["DISPLAY NAME"];
+    new_client.clientAddress = client["CLIENT ADDRESS"];
+    new_client.clientCity = client["CLIENT CITY"];
+    new_client.office = client["CLIENT CITY"];
+    new_client.clientEmail = client["CLIENT EMAIL"];
+    new_client.clientState = client["CLIENT STATE"];
+    new_client.agentCode = client["AGENT CODE"];
+    new_client.agentName = client["AGENT FIRST AND LAST NAME"];
+    new_client.agentEmail = client["AGENT NEST REALTY EMAIL"];
+    new_client.agentTitle = client["REAL ESTATE TITLE"];
+    new_client.agentPhone = client["AGENT PHONE NUMBER"];
+
+    clients.push(new_client);
+    new_client.save(function(err, client) {
+      if (err) {
+        throw err;
+      }
+    });
+  });
 });
