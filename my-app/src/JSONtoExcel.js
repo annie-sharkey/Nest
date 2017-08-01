@@ -38,7 +38,7 @@ export default class JSONtoExcel extends Component {
     // console.log("selected campaign objects:", selectedCampaignObjects);
   }
 
-  handleClick = event => {
+  handleClick(event) {
     var selectiveData = this.state.selectedCampaignObjects.filter(data => {
       return data.office == this.state.office;
     });
@@ -50,9 +50,9 @@ export default class JSONtoExcel extends Component {
       this.state.campaignName + this.state.office,
       true
     );
-  };
+  }
 
-  JSONToCSVConvertor = (JSONData, ReportTitle, ShowLabel) => {
+  JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
     var arrData = typeof JSONData != "object" ? JSON.parse(JSONData) : JSONData;
 
     var CSV = "";
@@ -121,7 +121,7 @@ export default class JSONtoExcel extends Component {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }
   render() {
     // console.log(
     //   "selected campaign client IDs:",

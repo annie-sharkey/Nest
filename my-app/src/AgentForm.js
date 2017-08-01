@@ -17,6 +17,7 @@ export default class AgentForm extends React.Component {
       currentTitle: "",
       currentPhoneNumber: "",
       currentAgentOffice: "",
+      currentPassword: "",
       confirm: false
     };
   }
@@ -24,6 +25,12 @@ export default class AgentForm extends React.Component {
   handleNameChange(e) {
     this.setState({
       currentName: e.target.value
+    });
+  }
+
+  handlePasswordChange(e) {
+    this.setState({
+      currentPassword: e.target.value
     });
   }
 
@@ -67,7 +74,8 @@ export default class AgentForm extends React.Component {
     var code = this.state.currentCode;
     var phone = this.state.currentPhoneNumber;
     var office = this.state.currentAgentOffice;
-    this.props.onOk(code, name, email, title, phone, office);
+    var password = this.state.currentPassword;
+    this.props.onOk(code, name, email, title, phone, office, password);
     this.setState({
       currentName: "",
       currentEmail: "",
@@ -75,6 +83,7 @@ export default class AgentForm extends React.Component {
       currentCode: "",
       currentPhoneNumber: "",
       currentAgentOffice: "",
+      currentPassword: "",
       confirm: false
     });
   }
@@ -119,6 +128,9 @@ export default class AgentForm extends React.Component {
           </FormItem>
           <FormItem label="Agent Office">
             <Input onChange={e => this.handleAgentOfficeChange(e)} />
+          </FormItem>
+          <FormItem label="Password">
+            <Input onChange={e => this.handlePasswordChange(e)} />
           </FormItem>
         </Form>
         <Confirm
