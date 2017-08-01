@@ -147,7 +147,8 @@ export default class AdminAgentDirectory extends Component {
     agentEmail,
     agentTitle,
     agentPhoneNumber,
-    agentOffice
+    agentOffice,
+    password
   ) {
     var data = {
       agentCode: agentCode,
@@ -155,7 +156,8 @@ export default class AdminAgentDirectory extends Component {
       agentName: agentName,
       agentTitle: agentTitle,
       agentPhoneNumber: agentPhoneNumber,
-      agentOffice: agentOffice
+      agentOffice: agentOffice,
+      password: password
     };
 
     axios.post("http://localhost:4000/api/agent/new", data);
@@ -188,7 +190,8 @@ export default class AdminAgentDirectory extends Component {
             agentEmail,
             agentTitle,
             agentPhoneNumber,
-            agentOffice
+            agentOffice,
+            password
           ) =>
             this.addAgent(
               agentCode,
@@ -196,7 +199,8 @@ export default class AdminAgentDirectory extends Component {
               agentEmail,
               agentTitle,
               agentPhoneNumber,
-              agentOffice
+              agentOffice,
+              password
             )}
         />
       );

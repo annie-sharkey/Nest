@@ -135,7 +135,8 @@ router.post("/agent/new", function(req, res, next) {
     agentEmail: req.body.agentEmail,
     agentPhoneNumber: req.body.agentPhoneNumber,
     agentOffice: req.body.agentOffice,
-    pastCampaigns: []
+    pastCampaigns: [],
+    password: req.body.password
   });
 
   agent.save(function(err, agent) {
@@ -179,9 +180,6 @@ router.put("/clients/:id", function(req, res, next) {
   });
 });
 
-router.post("/upload", function(req, res, next) {
-  console.log(req.body.path);
-});
 
 router.put("/campaigns/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
@@ -229,6 +227,10 @@ router.put("/campaign/:id", function(req, res, next) {
       res.json(campaign);
     });
   });
+});
+
+router.post("/upload", function(req, res, next) {
+  console.log(req.body.path);
 });
 
 module.exports = router;

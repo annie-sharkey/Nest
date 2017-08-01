@@ -50,16 +50,39 @@ mongoose.connect(
 );
 mongoose.Promise = global.Promise;
 
+app.post("/:id", function(req, res) {
+  Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
+    if (err) {
+      throw err;
+    }
+    if (agent.agentCode == "ADMIN") {
+      console.log("Admin");
+      res.send(agent);
+    } else if (agent.agentCode !== "ADMIN") {
+      console.log("Not admin");
+      agent.comparePassword(req.body.password, function(err, isMatch) {
+        if (err) {
+          throw err;
+        }
+        console.log(req.body.password, isMatch);
+        if (isMatch) {
+          res.send(agent);
+        } else {
+          res.send(false);
+        }
+      });
+    } else {
+      res.send(false);
+    }
+  });
+});
+
 app.get("/:id", function(req, res) {
   Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
     if (err) {
       throw err;
     }
-    if (agent) {
-      res.send(agent);
-    } else {
-      res.send(false);
-    }
+    res.send(agent);
   });
 });
 
@@ -105,10 +128,19 @@ app.listen(port, function() {
 //     new_client.agentPhone = client["AGENT PHONE NUMBER"];
 
 //     clients.push(new_client);
-//     new_client.save(function(err, client) {
-//       if (err) {
+
+//     // new_client.save(function(err, client) {
+//     //   if (err) {
+//     //     throw err;
+//     //   }
+//     // });
+//   });
+//   clients.forEach(function(client){
+//     client.save(function(err,res){
+//       if(err){
 //         throw err;
 //       }
-//     });
-//   });
+//     })
+//   })
+
 // });

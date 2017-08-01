@@ -27,6 +27,7 @@ class App extends Component {
     super(props);
     this.state = {
       field: "",
+      password: "",
       agent: {},
       logged: false,
       updated: false,
@@ -40,19 +41,18 @@ class App extends Component {
     });
   }
 
+  handlePasswordChange(e) {
+    this.setState({
+      password: e.target.value
+    });
+  }
+
   updateAgent(agent) {
     console.log("Updated Agent", agent);
     var self = this;
     var updateAgent = this.state.agent;
     updateAgent = agent;
     axios.put("http://localhost:4000/api/agent/" + agent.agentCode, agent);
-    // axios.get("http://localhost:4000/" + agent.agentCode).then(function(res) {
-    //   updateAgent.agentName = res.data.agentName;
-    //   updateAgent.agentTitle = res.data.agentTitle;
-    //   updateAgent.agentEmail = res.data.agentEmail;
-    //   updateAgent.agentOffice = res.data.agentOffice;
-    //   updateAgent.agentPhoneNumber = res.data.agentPhoneNumber;
-    // });
     self.setState({
       agent: updateAgent
     });
@@ -60,34 +60,37 @@ class App extends Component {
 
   validateLogin() {
     var self = this;
+    var body = {
+      password: this.state.password
+    };
     axios
-      .get("http://localhost:4000/" + this.state.field.toLocaleUpperCase())
+      .post(
+        "http://localhost:4000/" + this.state.field.toLocaleUpperCase(),
+        body
+      )
       .then(response => {
-        var admin = false;
-        if (response.data.agentCode === "ADMIN") {
-          admin = true;
-        }
-        if (response != false && !admin) {
-          this.setState({
-            agent: response.data,
-            logged: true
+        if (response.data) {
+          console.log("Agent Confirmed", response.data);
+          var agent = response.data;
+          var logged = true;
+          var admin = false;
+          if (agent.agentCode == "ADMIN") {
+            admin = true;
+          }
+          self.setState({
+            agent: agent,
+            logged: logged,
+            admin: admin
           });
           sessionStorage.setItem("logged", "true");
-          sessionStorage.setItem("agent", response.data.agentCode);
-        } else if (admin) {
-          this.setState({
-            admin: true
-          });
-          sessionStorage.setItem("admin", "true");
-          sessionStorage.setItem("logged", "false");
+          sessionStorage.setItem("agent", agent.agentCode);
         }
       });
   }
 
   logOut() {
-    console.log("log out entered");
+    sessionStorage.setItem("agent", null);
     sessionStorage.setItem("logged", "false");
-    sessionStorage.setItem("admin", "false");
     this.setState({
       logged: false,
       admin: false
@@ -95,43 +98,26 @@ class App extends Component {
   }
 
   componentWillMount() {
-    if (sessionStorage.getItem("admin") == "true") {
-      console.log("admin session");
-      this.setState({
-        logged: false,
-        admin: true
-      });
-    } else if (
-      sessionStorage.getItem("logged") == "true" &&
-      sessionStorage.getItem("agent")
-    ) {
-      var agentCode = sessionStorage.getItem("agent");
-      var agent;
-      axios.get("http://localhost:4000/" + agentCode).then(response => {
-        this.setState({
+    var logged = sessionStorage.getItem("logged");
+    var agent = sessionStorage.getItem("agent");
+    var self = this;
+    if (logged == "true" && agent !== "ADMIN") {
+      axios.get("http://localhost:4000/" + agent).then(response => {
+        self.setState({
           logged: true,
+          admin: false,
           agent: response.data
         });
       });
-    } else if (
-      sessionStorage.getItem("logged") == null ||
-      sessionStorage.getItem("logged") == "false"
-    ) {
-      {
-        this.setState({
-          logged: false
-        });
-      }
+    } else if (agent == "ADMIN") {
+      self.setState({
+        logged: true,
+        admin: true
+      });
     }
   }
 
   render() {
-    // return (
-    //   <div>
-    //     <JSONtoExcel />
-    //   </div>
-    // );
-
     if (this.state.admin) {
       return (
         <LocaleProvider locale={enUS}>
@@ -160,6 +146,11 @@ class App extends Component {
             <Input
               onChange={e => this.handleFieldChange(e)}
               placeholder="Enter FON Code"
+            />
+            <br />
+            <Input
+              onChange={e => this.handlePasswordChange(e)}
+              placeholder="Enter Your Password"
             />
           </div>
 
