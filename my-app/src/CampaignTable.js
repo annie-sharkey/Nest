@@ -7,6 +7,7 @@ import { Table, Input, Icon, Popconfirm } from "antd";
 import { Button } from "semantic-ui-react";
 import { Confirm } from "semantic-ui-react";
 import moment from "moment";
+import { Menu, Dropdown, message } from "antd";
 
 export default class CampaignTable extends React.Component {
   constructor(props) {
@@ -21,33 +22,27 @@ export default class CampaignTable extends React.Component {
       clientsToSave: [],
       agentCode: this.props.agentCode,
       confirm: false,
-      searchText: "",
+      leftSearchText: "",
       leftSearchData: [],
-      leftFiltered: false
+      leftFiltered: false,
+
+      rightSearchText: "",
+      rightSearchData: [],
+      rightFiltered: false,
+      agentPastCampaigns: this.props.agent.pastCampaigns,
+      pastCampaignObjects: []
     };
   }
 
-  getNoCurrentAndNoPreviousData(
-    left,
-    campaigns,
-    name,
-    columns,
-    id,
-    currentClientIds
-  ) {
-    this.setState({
-      leftData: left,
-      rightData: [],
-      campaigns: campaigns,
-      currentCampaign: name,
-      columns: columns,
-      campaignId: id,
-      clientsToSave: currentClientIds
-    });
-    console.log("annie");
-  }
-
   componentWillMount() {
+    
+    // if (this.state.agentPastCampaigns.includes(campaignName))
+    // for (var i = 0; i < this.state.campaigns.length; i++) {
+    //   var campaign = this.state.campaigns[i]
+    //   if (this.state.campaigns._id.includes(campaign) {
+    //     this.state.pastCampaignObjects.push()
+    //   })
+    // }
     //Cases:
     // 1) Agent already has clients in current Campaign
     // 2) Agent doesn't have clients in current campaign but had some in previous campaign
@@ -63,117 +58,127 @@ export default class CampaignTable extends React.Component {
 
     var self = this;
     axios.get("http://localhost:4000/api/campaigns").then(res => {
-      if (res.data.length == 1) {
+      var lastIndex = res.data.length - 1;
+      var currentCampaign = res.data[lastIndex];
+      var currentClientIds = res.data[lastIndex].clients;
+      var previousClientsIds = res.data[lastIndex - 1].clients;
+
+      var agentClientsPrevious = [];
+      masterClients.forEach(function(client) {
+        if (previousClientsIds.includes(client._id)) {
+          agentClientsPrevious.push(client);
+        }
+      });
+
+      masterClients.forEach(function(client) {
+        if (currentClientIds.includes(client._id)) {
+          included.push(client);
+        }
+      });
+
+      if (included.length == 0 && agentClientsPrevious.length == 0) {
         self.setState({
           leftData: self.props.dataSource,
           rightData: [],
           campaigns: res.data,
-          currentCampaign: res.data[0].campaignName,
-          columns: res.data[0].campaignColumns,
-          campaignId: res.data[0]._id,
-          clientsToSave: []
+          currentCampaign: currentCampaign.campaignName,
+          columns: currentCampaign.campaignColumns,
+          campaignId: currentCampaign._id,
+          clientsToSave: currentClientIds
         });
+        self.getCampaignObjects(res.data)
       }
-      if (res.data.length > 1) {
-        var lastIndex = res.data.length - 1;
-        var currentCampaign = res.data[lastIndex];
-        var previousCampaign = res.data[lastIndex - 1];
-        var currentClientIds = res.data[lastIndex].clients;
-        var previousClientsIds = res.data[lastIndex - 1].clients;
 
-        var agentClientsPrevious = [];
+      //Case 1
+      if (included.length > 0) {
         masterClients.forEach(function(client) {
-          if (previousClientsIds.includes(client._id)) {
-            agentClientsPrevious.push(client);
+          if (!included.includes(client)) {
+            notIncluded.push(client);
+          }
+        });
+
+        self.setState({
+          leftData: notIncluded,
+          rightData: included,
+          campaigns: res.data,
+          currentCampaign: currentCampaign.campaignName,
+          columns: currentCampaign.campaignColumns,
+          campaignId: currentCampaign._id,
+          clientsToSave: currentClientIds
+        });
+        self.getCampaignObjects(res.data)
+      } else if (included.length == 0 && agentClientsPrevious.length > 0) {
+        //Case 2
+        console.log("agent has clients from previous campaign but not current");
+        agentClientsPrevious.forEach(function(client) {
+          included.push(client);
+        });
+
+        var previousCampaignTime = moment(currentCampaign.endDate)
+          .toDate()
+          .getTime();
+
+        masterClients.forEach(function(client) {
+          var editTime = moment(client.lastEdited).toDate().getTime();
+
+          if (previousCampaignTime < editTime) {
+            if (!included.includes(client)) {
+              included.push(client);
+            }
           }
         });
 
         masterClients.forEach(function(client) {
-          if (currentClientIds.includes(client._id)) {
-            included.push(client);
+          if (!included.includes(client)) {
+            notIncluded.push(client);
           }
         });
 
-        if (included.length == 0 && agentClientsPrevious.length == 0) {
-          this.getNoCurrentAndNoPreviousData(
-            self.props.dataSource,
-            res.data,
-            currentCampaign.campaignName,
-            currentCampaign.campaignColumns,
-            currentCampaign._id,
-            currentClientIds
-          );
-        }
+        var includedIds = [];
+        included.forEach(function(client) {
+          includedIds.push(client._id);
+        });
 
-        //Case 1
-        if (included.length > 0) {
-          console.log("agent has clients in current campaign");
-          masterClients.forEach(function(client) {
-            if (!included.includes(client)) {
-              notIncluded.push(client);
-            }
-          });
-
-          self.setState({
-            leftData: notIncluded,
-            rightData: included,
-            campaigns: res.data,
-            currentCampaign: currentCampaign.campaignName,
-            columns: currentCampaign.campaignColumns,
-            campaignId: currentCampaign._id,
-            clientsToSave: currentClientIds
-          });
-        } else if (included.length == 0 && agentClientsPrevious.length > 0) {
-          //Case 2
-          console.log(
-            "agent has clients from previous campaign but not current"
-          );
-          agentClientsPrevious.forEach(function(client) {
-            included.push(client);
-          });
-
-          console.log("Previous Clients", included);
-
-          var previousCampaignTime = moment(previousCampaign.endDate)
-            .toDate()
-            .getTime();
-
-          masterClients.forEach(function(client) {
-            var editTime = moment(client.lastEdited).toDate().getTime();
-            console.log(
-              moment(client.lastEdited).toDate(),
-              moment(previousCampaign.endDate).toDate()
-            );
-            if (previousCampaignTime < editTime) {
-              if (!included.includes(client)) {
-                included.push(client);
-              }
-            }
-          });
-
-          masterClients.forEach(function(client) {
-            if (!included.includes(client)) {
-              notIncluded.push(client);
-            }
-          });
-
-          var includedIds = [];
-          included.forEach(function(client) {
-            includedIds.push(client._id);
-          });
-
-          self.setState({
-            leftData: notIncluded,
-            rightData: included,
-            campaigns: res.data,
-            currentCampaign: currentCampaign.campaignName,
-            columns: currentCampaign.campaignColumns,
-            campaignId: currentCampaign._id,
-            clientsToSave: includedIds
-          });
-        }
+        self.setState({
+          leftData: notIncluded,
+          rightData: included,
+          campaigns: res.data,
+          currentCampaign: currentCampaign.campaignName,
+          columns: currentCampaign.campaignColumns,
+          campaignId: currentCampaign._id,
+          clientsToSave: includedIds
+        });
+        self.getCampaignObjects(res.data)
       }
     });
+
+    // console.log("this.state.campaigns:", this.state.campaigns);
+    // console.log(
+    //   "this.state.agentPastCampaigns:",
+    //   this.state.agentPastCampaigns
+    // );
+  }
+  //end component will mount
+
+  getCampaignObjects(campaigns){
+    
+for (var i = 0; i < campaigns.length; i++) {
+      
+      var campaignID = campaigns[i]._id;
+      console.log("campaign ID:", campaignID);
+      // var campaign = this.state.agentPastCampaigns[i]
+      if (this.state.agentPastCampaigns.includes(campaignID)) {
+        var campaign = this.state.campaigns[i];
+        console.log("campaign before past:", campaign)
+        var past = this.state.pastCampaignObjects
+        
+        past.push(campaign)
+        console.log("past:", past)
+        this.setState({
+          pastCampaignObjects: past
+        })
+      }
+    }
   }
 
   compareByAlph(a, b) {
@@ -203,13 +208,29 @@ export default class CampaignTable extends React.Component {
     }
 
     notIncluded.splice(index, 1);
+
+    if (this.state.leftFiltered) {
+      var search = this.state.leftSearchData;
+      var index = 0;
+      for (var i = 0; i < search.length; i++) {
+        var client = search[i];
+        if (client._id == text._id) {
+          index = i;
+        }
+      }
+      search.splice(index, 1);
+    }
+
     this.setState({
       rightData: included,
       leftData: notIncluded,
-      clientsToSave: clients
+      clientsToSave: clients,
+      leftSearchData: search
     });
+    // console.log("left search data:", this.state.leftSearchData)
   }
 
+  //add if left filtered true, also remove item from that list when included
   moveBack(text) {
     var client_ids = this.state.clientsToSave;
     var x = 0;
@@ -232,10 +253,23 @@ export default class CampaignTable extends React.Component {
       }
     }
     included.splice(index, 1);
+
+    if (this.state.rightFiltered) {
+      var search = this.state.rightSearchData;
+      var index = 0;
+      for (var i = 0; i < search.length; i++) {
+        var client = search[i];
+        if (client._id == text._id) {
+          index = i;
+        }
+      }
+      search.splice(index, 1);
+    }
     this.setState({
       rightData: included,
       leftData: notIncluded,
-      clientsToSave: client_ids
+      clientsToSave: client_ids,
+      rightSearchData: search
     });
   }
 
@@ -266,16 +300,29 @@ export default class CampaignTable extends React.Component {
     });
   }
 
+  handleClearSearch() {
+    this.setState({
+      leftFiltered: false,
+      leftSearchText: ""
+    });
+  }
+
+  handleRightClearSearch() {
+    this.setState({
+      rightFiltered: false,
+      rightSearchText: ""
+    });
+  }
   //search functions
   onInputChange(e) {
-    this.setState({ searchText: e.target.value });
+    this.setState({ leftSearchText: e.target.value });
   }
   onSearch() {
-    const { searchText } = this.state;
-    const reg = new RegExp(searchText, "gi");
+    const { leftSearchText } = this.state;
+    const reg = new RegExp(leftSearchText, "gi");
     this.setState({
-      filterDropdownVisible: false,
-      leftFiltered: !!searchText,
+      filterLeftDropdownVisible: false,
+      leftFiltered: !!leftSearchText,
       leftSearchData: this.state.leftData
         .map(record => {
           const match = record.clientName.match(reg);
@@ -306,7 +353,65 @@ export default class CampaignTable extends React.Component {
   }
   //end search functions
 
+  //right search functions
+  onRightInputChange(e) {
+    this.setState({ rightSearchText: e.target.value });
+  }
+  onRightSearch() {
+    const { rightSearchText } = this.state;
+    const reg = new RegExp(rightSearchText, "gi");
+    this.setState({
+      filterDropdownVisible: false,
+      rightFiltered: !!rightSearchText,
+      rightSearchData: this.state.rightData
+        .map(record => {
+          const match = record.clientName.match(reg);
+          if (!match) {
+            return null;
+          }
+          return {
+            ...record,
+            name: (
+              <span>
+                {record.clientName.split(reg).map(
+                  (text, i) =>
+                    i > 0
+                      ? [
+                          <span className="highlight">
+                            {match[0]}
+                          </span>,
+                          text
+                        ]
+                      : text
+                )}
+              </span>
+            )
+          };
+        })
+        .filter(record => !!record)
+    });
+  }
+  //end right search functions
+
+  onClick({ key }) {
+    message.info(key);
+  }
+
   render() {
+    console.log("past campaign objects:", this.state.pastCampaignObjects)
+    const menu = (
+      
+      <Menu onClick={this.onClick}>
+        {this.state.pastCampaignObjects.map(campaign => {
+          return (
+            <Menu.Item key={campaign.campaignName}>
+              {campaign.campaignName}
+            </Menu.Item>
+          );
+        })}
+      </Menu>
+    );
+
     var leftColumns = [
       {
         title: "Client Name",
@@ -321,7 +426,7 @@ export default class CampaignTable extends React.Component {
             <Input
               ref={ele => (this.searchInput = ele)}
               placeholder="Search name"
-              value={this.state.searchText}
+              value={this.state.leftSearchText}
               onChange={e => this.onInputChange(e)}
               onPressEnter={() => this.onSearch()}
             />
@@ -336,11 +441,11 @@ export default class CampaignTable extends React.Component {
             style={{ color: this.state.leftFiltered ? "#108ee9" : "#aaa" }}
           />
         ),
-        filterDropdownVisible: this.state.filterDropdownVisible,
-        onFilterDropdownVisibleChange: visible => {
+        filterLeftDropdownVisible: this.state.filterLeftDropdownVisible,
+        onFilterLeftDropdownVisibleChange: visible => {
           this.setState(
             {
-              filterDropdownVisible: visible
+              filterLeftDropdownVisible: visible
             },
             () => this.searchInput.focus()
           );
@@ -400,6 +505,35 @@ export default class CampaignTable extends React.Component {
         width: "20%",
         sorter: (a, b) => {
           return this.compareByAlph(a.clientName, b.clientName);
+        },
+        filterDropdown: (
+          <div className="custom-filter-dropdown">
+            <Input
+              ref={ele => (this.searchRightInput = ele)}
+              placeholder="Search name"
+              value={this.state.rightSearchText}
+              onChange={e => this.onRightInputChange(e)}
+              onPressEnter={() => this.onRightSearch()}
+            />
+            <Button type="primary" onClick={() => this.onRightSearch()}>
+              Search
+            </Button>
+          </div>
+        ),
+        filterIcon: (
+          <Icon
+            type="search"
+            style={{ color: this.state.rightFiltered ? "#108ee9" : "#aaa" }}
+          />
+        ),
+        filterDropdownVisible: this.state.filterDropdownVisible,
+        onFilterDropdownVisibleChange: visible => {
+          this.setState(
+            {
+              filterDropdownVisible: visible
+            },
+            () => this.searchRightInput.focus()
+          );
         }
       },
       {
@@ -447,8 +581,7 @@ export default class CampaignTable extends React.Component {
         }
       }
     ];
-    console.log("left search data:", this.state.leftSearchData);
-    console.log("search text:", this.state.searchText);
+
     return (
       <div className="campaignPage">
         <h2 className="campaign-title">
@@ -462,6 +595,14 @@ export default class CampaignTable extends React.Component {
                 Not Included
               </h3>
             </div>
+            <Dropdown overlay={menu}>
+              <a className="ant-dropdown-link" href="#">
+                Select Campaign <Icon type="down" />
+              </a>
+            </Dropdown>
+            <Button onClick={event => this.handleClearSearch(event)}>
+              Clear Search
+            </Button>
             <Table
               bordered
               dataSource={
@@ -479,9 +620,16 @@ export default class CampaignTable extends React.Component {
           <div className="rightTable">
             <br />
             <h3 style={{ "font-family": "Cantarell" }}> Included </h3>
+            <Button onClick={event => this.handleRightClearSearch(event)}>
+              Clear Search
+            </Button>
             <Table
               bordered
-              dataSource={this.state.rightData}
+              dataSource={
+                this.state.rightFiltered
+                  ? this.state.rightSearchData
+                  : this.state.rightData
+              }
               columns={rightColumns}
               pagination={false}
               scroll={{ y: 350 }}

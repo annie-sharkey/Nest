@@ -10,6 +10,7 @@ export default class AdminHome extends Component {
     var path = {
       path: e.target.value
     };
+    console.log(e.target.value)
     axios.post("http://localhost:4000/api/upload", path);
   }
   render() {

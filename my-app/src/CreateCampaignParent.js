@@ -30,9 +30,11 @@ const plainOptions = [
   "Asheville",
   "Charlottesville",
   "Fredericksburg",
+  "Lake Norman",
   "New River Valley",
   "Richmond",
   "Shenandoah Valley",
+  "The Triangle",
   "Wilmington"
 ];
 const defaultCheckedList = [];
@@ -49,8 +51,18 @@ export default class CreateCampaignParent extends Component {
       checkedList: defaultCheckedList,
       indeterminate: true,
       checkAll: false,
-      done: false
+      done: false,
+      agentData: [],
+      campaignID: ""
     };
+  }
+
+  componentWillMount() {
+    axios.get("http://localhost:4000/api/agents/").then(res => {
+      this.setState({
+        agentData: res.data
+      });
+    });
   }
 
   handleCampaignTitle(event) {
@@ -64,7 +76,7 @@ export default class CreateCampaignParent extends Component {
       ...this.state,
       startDate: date._d.toISOString()
     });
-    console.log("start date date._d:", date._d);
+    // console.log("start date date._d:", date._d);
   }
 
   handleEndDate(date) {
@@ -73,7 +85,7 @@ export default class CreateCampaignParent extends Component {
       ...this.state,
       endDate: date._d.toISOString()
     });
-    console.log("end date:", this.state.endDate);
+    // console.log("end date:", this.state.endDate);
   }
 
   updateColumnState(columns) {
@@ -92,10 +104,11 @@ export default class CreateCampaignParent extends Component {
   }
 
   WritetoDatabase() {
+    // var self = this;
+    var id = ""
     this.setState({
       done: true
     });
-    console.log("entered");
     axios
       .post("http://localhost:4000/api/campaign/", {
         campaignName: this.state.campaignTitle,
@@ -107,9 +120,50 @@ export default class CreateCampaignParent extends Component {
         officesIncludedinCampaign: this.state.checkedList
       })
       .then(res => {
-        // console.log(res.data);
+        
+        id = res.data._id
+      for (var i = 0; i < this.state.agentData.length; i++) {
+      if (
+        this.state.checkedList.includes(this.state.agentData[i].agentOffice)
+      ) {
+        // console.log("past campaign:", this.state.agentData[i].pastCampaigns)
+        var agentCode = this.state.agentData[i].agentCode;
+        var agent = this.state.agentData[i];
+        agent.pastCampaigns.push(
+          id
+        );
+        axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
+      }
+    }
+        console.log("res.data._id:", res.data._id)
+        // console.log("campaign ID:", this.state.campaignID)
       });
+      
+
+
+   
   }
+
+  // PuttoDatabase(id) {
+  //   console.log('entered put to database')
+  //   console.log("id:", id)
+  //     for (var i = 0; i < this.state.agentData.length; i++) {
+  //     if (
+  //       this.state.checkedList.includes(this.state.agentData[i].agentOffice)
+  //     ) {
+  //       // console.log("past campaign:", this.state.agentData[i].pastCampaigns)
+  //       var agentCode = this.state.agentData[i].agentCode;
+  //       var agent = this.state.agentData[i];
+  //       agent.pastCampaigns = this.state.agentData[i].pastCampaigns.push(
+  //         id
+  //       );
+  //       console.log("campaign ID put to database:", id)
+  //       console.log("agent", agent)
+        
+  //       axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
+  //     }
+  //   }
+  // }
 
   onChange(checkedList) {
     this.setState({
@@ -129,6 +183,8 @@ export default class CreateCampaignParent extends Component {
   }
 
   render() {
+    // console.log("checked list:", this.state.checkedList);
+    // console.log("agent data:", this.state.agentData);
     message.config({
       top: 100
     });
