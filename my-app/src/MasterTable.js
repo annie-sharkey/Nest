@@ -173,6 +173,13 @@ export default class MasterTable extends React.Component {
   }
   //end search functions
 
+  handleClearSearch(event) {
+    this.setState({
+      filtered: false,
+      searchText: ""
+    });
+  }
+
   render() {
     var modal;
     if (this.state.modal) {
@@ -319,6 +326,9 @@ export default class MasterTable extends React.Component {
       <div className="master">
         <div className="master-title">
           <h2 style={{ margin: "auto" }}>Your List of Clients</h2>
+          <Button onClick={event => this.handleClearSearch(event)}>
+            Clear Search
+          </Button>
           <div className="editable-add-btn">
             <Button
               onClick={() => this.handleOpenModal()}

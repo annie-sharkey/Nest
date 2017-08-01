@@ -109,12 +109,14 @@ router.put("/agent/:id", function(req, res, next) {
       throw err;
     }
 
+console.log(agent)
     agent.agentName = req.body.agentName || agent.agentName;
     agent.agentEmail = req.body.agentEmail || agent.agentEmail;
     agent.agentPhoneNumber =
       req.body.agentPhoneNumber || agent.agentPhoneNumber;
     agent.agentTitle = req.body.agentTitle || agent.agentTitle;
     agent.agentOffice = req.body.agentOffice || agent.agentOffice;
+    agent.pastCampaigns = req.body.pastCampaigns || agent.pastCampaigns
 
     agent.save(function(err, agent) {
       if (err) {
@@ -177,6 +179,7 @@ router.put("/clients/:id", function(req, res, next) {
     });
   });
 });
+
 
 router.put("/campaigns/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
