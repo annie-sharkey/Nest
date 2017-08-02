@@ -14,8 +14,10 @@ export default class AgentForm extends React.Component {
       currentCode: "",
       currentName: "",
       currentEmail: "",
+      currentEmail2: "",
       currentTitle: "",
       currentPhoneNumber: "",
+      currentPhoneNumber2: "",
       currentAgentOffice: "",
       currentPassword: "",
       confirm: false
@@ -40,6 +42,12 @@ export default class AgentForm extends React.Component {
     });
   }
 
+  handleEmail2Change(e) {
+    this.setState({
+      currentEmail2: e.target.value
+    });
+  }
+
   handleCodeChange(e) {
     this.setState({
       currentCode: e.target.value
@@ -48,6 +56,12 @@ export default class AgentForm extends React.Component {
   handlePhoneNumberChange(e) {
     this.setState({
       currentPhoneNumber: e.target.value
+    });
+  }
+
+  handlePhoneNumber2Change(e) {
+    this.setState({
+      currentPhoneNumber2: e.target.value
     });
   }
 
@@ -70,18 +84,32 @@ export default class AgentForm extends React.Component {
   handleAdd() {
     var name = this.state.currentName;
     var email = this.state.currentEmail;
+    var email2 = this.state.currentEmail2;
     var title = this.state.currentTitle;
     var code = this.state.currentCode;
     var phone = this.state.currentPhoneNumber;
+    var phone2 = this.state.currentPhoneNumber2;
     var office = this.state.currentAgentOffice;
     var password = this.state.currentPassword;
-    this.props.onOk(code, name, email, title, phone, office, password);
+    this.props.onOk(
+      code,
+      name,
+      email,
+      email2,
+      title,
+      phone,
+      phone2,
+      office,
+      password
+    );
     this.setState({
       currentName: "",
       currentEmail: "",
+      currentEmail2: "",
       currentTitle: "",
       currentCode: "",
       currentPhoneNumber: "",
+      currentPhoneNumber2: "",
       currentAgentOffice: "",
       currentPassword: "",
       confirm: false
@@ -120,11 +148,17 @@ export default class AgentForm extends React.Component {
           <FormItem label="Email">
             <Input onChange={e => this.handleEmailChange(e)} />
           </FormItem>
+          <FormItem label="Email 2">
+            <Input onChange={e => this.handleEmail2Change(e)} />
+          </FormItem>
           <FormItem label="Title">
             <Input onChange={e => this.handleTitleChange(e)} />
           </FormItem>
           <FormItem label="Phone Number">
             <Input onChange={e => this.handlePhoneNumberChange(e)} />
+          </FormItem>
+          <FormItem label="Phone Number 2">
+            <Input onChange={e => this.handlePhoneNumber2Change(e)} />
           </FormItem>
           <FormItem label="Agent Office">
             <Input onChange={e => this.handleAgentOfficeChange(e)} />

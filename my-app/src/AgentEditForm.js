@@ -13,8 +13,11 @@ export default class AgentEditForm extends React.Component {
       currentCode: "",
       currentName: "",
       currentEmail: "",
+      currentEmail2: "",
       currentPhoneNumber: "",
-      currentAgentOffice: ""
+      currentPhoneNumber2: "",
+      currentAgentOffice: "",
+      currentPassword: ""
     };
   }
 
@@ -30,6 +33,12 @@ export default class AgentEditForm extends React.Component {
     });
   }
 
+  handleEmail2Change(e) {
+    this.setState({
+      currentEmail2: e.target.value
+    });
+  }
+
   handleCodeChange(e) {
     this.setState({
       currentCode: e.target.value
@@ -38,6 +47,12 @@ export default class AgentEditForm extends React.Component {
   handlePhoneNumberChange(e) {
     this.setState({
       currentPhoneNumber: e.target.value
+    });
+  }
+
+  handlePhoneNumber2Change(e) {
+    this.setState({
+      currentPhoneNumber2: e.target.value
     });
   }
 
@@ -51,19 +66,31 @@ export default class AgentEditForm extends React.Component {
     this.props.onCancel();
   }
 
+  handlePasswordChange(e) {
+    this.setState({
+      currentPassword: e.target.value
+    });
+  }
+
   handleUpdate() {
     var name = this.state.currentName;
     var email = this.state.currentEmail;
+    var email2 = this.state.currentEmail2;
     var code = this.state.currentCode;
     var phone = this.state.currentPhoneNumber;
+    var phone2 = this.state.currentPhoneNumber2;
     var office = this.state.currentAgentOffice;
-    this.props.onOk(code,name, email,phone,office);
+    var password = this.state.currentPassword;
+    this.props.onOk(code, name, email, email2, phone, phone2, office, password);
     this.setState({
       currentName: "",
       currentEmail: "",
+      currentEmail2: "",
       currentCode: "",
       currentPhoneNumber: "",
-      currentAgentOffice: ""
+      currentPhoneNumber2: "",
+      currentAgentOffice: "",
+      currentPassword: ""
     });
   }
 
@@ -72,7 +99,7 @@ export default class AgentEditForm extends React.Component {
   }
 
   render() {
-      console.log("agent:", this.state.agent)
+    console.log("agent:", this.state.agent);
     return (
       <Modal
         visible={this.state.visible}
@@ -101,16 +128,34 @@ export default class AgentEditForm extends React.Component {
               defaultValue={this.state.agent.agentEmail}
             />
           </FormItem>
+          <FormItem label="Email 2">
+            <Input
+              onChange={e => this.handleEmail2Change(e)}
+              defaultValue={this.state.agent.agentEmail2}
+            />
+          </FormItem>
           <FormItem label="Phone Number">
             <Input
               onChange={e => this.handlePhoneNumberChange(e)}
               defaultValue={this.state.agent.agentPhoneNumber}
             />
           </FormItem>
+          <FormItem label="Phone Number 2">
+            <Input
+              onChange={e => this.handlePhoneNumber2Change(e)}
+              defaultValue={this.state.agent.agentPhoneNumber2}
+            />
+          </FormItem>
           <FormItem label="Agent Office">
             <Input
               onChange={e => this.handleAgentOfficeChange(e)}
               defaultValue={this.state.agent.agentOffice}
+            />
+          </FormItem>
+          <FormItem label="Password">
+            <Input
+              onChange={e => this.handlePasswordChange(e)}
+              placeholder={"Change Password"}
             />
           </FormItem>
 

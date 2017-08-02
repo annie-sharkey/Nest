@@ -35,28 +35,21 @@ export default class CampaignTable extends React.Component {
   }
 
   componentWillMount() {
-    // if (this.state.agentPastCampaigns.includes(campaignName))
-    // for (var i = 0; i < this.state.campaigns.length; i++) {
-    //   var campaign = this.state.campaigns[i]
-    //   if (this.state.campaigns._id.includes(campaign) {
-    //     this.state.pastCampaignObjects.push()
-    //   })
-    // }
     //Cases:
     // 1) Agent already has clients in current Campaign
     // 2) Agent doesn't have clients in current campaign but had some in previous campaign
     // 3) Agent doesn't have clients in this campaign or previous campaign
-    var notIncluded = [];
-    var included = [];
-    var campaigns = [];
-    var currentCampaign = "";
-    var columns = [];
-    var campaignId = "";
-    var clientsToSave = [];
-    var masterClients = this.props.dataSource;
 
     var self = this;
     axios.get("http://localhost:4000/api/campaigns").then(res => {
+      var notIncluded = [];
+      var included = [];
+      var campaigns = [];
+      var currentCampaign = "";
+      var columns = [];
+      var campaignId = "";
+      var clientsToSave = [];
+      var masterClients = this.props.dataSource;
       if (res.data.length > 1) {
         var lastIndex = res.data.length - 1;
         var currentCampaign = res.data[lastIndex];
@@ -77,7 +70,7 @@ export default class CampaignTable extends React.Component {
         });
         //no clients right now and no clients in the previous campaign
         if (included.length == 0 && agentClientsPrevious.length == 0) {
-          console.log("no clients right now or before entered")
+          console.log("no clients right now or before entered");
           self.setState({
             leftData: self.props.dataSource,
             rightData: [],
@@ -117,7 +110,8 @@ export default class CampaignTable extends React.Component {
             included.push(client);
           });
 
-          var previousCampaignTime = moment(currentCampaign.endDate)
+          var previousCampaign = res.data[lastIndex - 1];
+          var previousCampaignTime = moment(previousCampaign.endDate)
             .toDate()
             .getTime();
 
@@ -154,14 +148,14 @@ export default class CampaignTable extends React.Component {
           self.getCampaignObjects(res.data);
         }
       } else {
-        console.log("else entered")
-        console.log("res.data:", res.data[0].clients)
-        var included = []
-        this.props.dataSource.forEach(function(client){
-          if(res.data[0].clients.includes(client._id)){
-            included.push(client)
+        console.log("else entered");
+        console.log("res.data:", res.data[0].clients);
+        var included = [];
+        this.props.dataSource.forEach(function(client) {
+          if (res.data[0].clients.includes(client._id)) {
+            included.push(client);
           }
-        })
+        });
         self.setState({
           leftData: this.props.dataSource,
           rightData: included,
@@ -173,27 +167,21 @@ export default class CampaignTable extends React.Component {
         });
       }
     });
-
-    // console.log("this.state.campaigns:", this.state.campaigns);
-    // console.log(
-    //   "this.state.agentPastCampaigns:",
-    //   this.state.agentPastCampaigns
-    // );
   }
   //end component will mount
 
   getCampaignObjects(campaigns) {
     for (var i = 0; i < campaigns.length; i++) {
       var campaignID = campaigns[i]._id;
-      console.log("campaign ID:", campaignID);
+
       // var campaign = this.state.agentPastCampaigns[i]
       if (this.state.agentPastCampaigns.includes(campaignID)) {
         var campaign = this.state.campaigns[i];
-        console.log("campaign before past:", campaign);
+
         var past = this.state.pastCampaignObjects;
 
         past.push(campaign);
-        console.log("past:", past);
+
         this.setState({
           pastCampaignObjects: past
         });
@@ -418,7 +406,6 @@ export default class CampaignTable extends React.Component {
   }
 
   render() {
-    console.log("past campaign objects:", this.state.pastCampaignObjects);
     const menu = (
       <Menu onClick={this.onClick}>
         {this.state.pastCampaignObjects.map(campaign => {

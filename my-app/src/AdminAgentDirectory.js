@@ -103,26 +103,35 @@ export default class AdminAgentDirectory extends Component {
     });
   }
 
-  updateAgent(agentCode, agentName, agentEmail, agentPhoneNumber, agentOffice) {
-    console.log(
-      agentCode,
-      agentName,
-      agentEmail,
-      agentPhoneNumber,
-      agentOffice
-    );
+  updateAgent(
+    agentCode,
+    agentName,
+    agentEmail,
+    agentEmail2,
+    agentPhoneNumber,
+    agentPhoneNumber2,
+    agentOffice,
+    password
+  ) {
     var agentId = this.state.selectedAgent._id;
-    console.log("id:", agentId);
-    axios.put(
-      "http://localhost:4000/api/agent/" + this.state.selectedAgent.agentCode,
-      {
-        // agentCode: agentCode,
-        agentName: agentName,
-        agentEmail: agentEmail,
-        agentPhoneNumber: agentPhoneNumber,
-        agentOffice: agentOffice
-      }
-    );
+
+    axios
+      .put(
+        "http://localhost:4000/api/agent/" + this.state.selectedAgent.agentCode,
+        {
+          // agentCode: agentCode,
+          agentName: agentName,
+          agentEmail: agentEmail,
+          agentEmail2: agentEmail2,
+          agentPhoneNumber: agentPhoneNumber,
+          agentPhoneNumber2: agentPhoneNumber2,
+          agentOffice: agentOffice,
+          password: password
+        }
+      )
+      .then(res => {
+        console.log("Updated", res.data);
+      });
     this.closeEditModal();
   }
 
@@ -145,17 +154,21 @@ export default class AdminAgentDirectory extends Component {
     agentCode,
     agentName,
     agentEmail,
+    agentEmail2,
     agentTitle,
     agentPhoneNumber,
+    agentPhoneNumber2,
     agentOffice,
     password
   ) {
     var data = {
       agentCode: agentCode,
       agentEmail: agentEmail,
+      agentEmail2: agentEmail2,
       agentName: agentName,
       agentTitle: agentTitle,
       agentPhoneNumber: agentPhoneNumber,
+      agentPhoneNumber2: agentPhoneNumber2,
       agentOffice: agentOffice,
       password: password
     };
@@ -188,8 +201,10 @@ export default class AdminAgentDirectory extends Component {
             agentCode,
             agentName,
             agentEmail,
+            agentEmail2,
             agentTitle,
             agentPhoneNumber,
+            agentPhoneNumber2,
             agentOffice,
             password
           ) =>
@@ -197,8 +212,10 @@ export default class AdminAgentDirectory extends Component {
               agentCode,
               agentName,
               agentEmail,
+              agentEmail2,
               agentTitle,
               agentPhoneNumber,
+              agentPhoneNumber2,
               agentOffice,
               password
             )}
@@ -216,15 +233,21 @@ export default class AdminAgentDirectory extends Component {
             agentCode,
             agentName,
             agentEmail,
+            agentEmail2,
             agentPhoneNumber,
-            agentOffice
+            agentPhoneNumber2,
+            agentOffice,
+            password
           ) =>
             this.updateAgent(
               agentCode,
               agentName,
               agentEmail,
+              agentEmail2,
               agentPhoneNumber,
-              agentOffice
+              agentPhoneNumber2,
+              agentOffice,
+              password
             )}
           selectedAgent={this.state.selectedAgent}
           deleteAgent={() => {
