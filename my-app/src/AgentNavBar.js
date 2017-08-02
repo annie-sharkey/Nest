@@ -15,7 +15,8 @@ export default class AgentNavBar extends Component {
     this.state = {
       dataSource: [],
       current: "contacts",
-      update: false
+      update: false,
+      allClients: []
     };
   }
 
@@ -30,10 +31,11 @@ export default class AgentNavBar extends Component {
     axios
       .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
       .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         this.setState({
           dataSource: response.data,
-          current: current
+          current: current,
+          allClients: response.data
         });
       });
   }
@@ -62,7 +64,7 @@ export default class AgentNavBar extends Component {
     });
   }
   render() {
-    console.log(this.state.dataSource);
+    // console.log(this.state.dataSource);
     return (
       <Router ref="nav">
         <div>
@@ -118,6 +120,7 @@ export default class AgentNavBar extends Component {
                 agentCode={this.props.agent.agentCode}
                 agentID={this.props.agent._id}
                 agent={this.props.agent}
+                //allClients={this.state.dataSource}
               />}
           />
         </div>

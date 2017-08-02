@@ -244,6 +244,7 @@ export default class ManageCampaigns extends Component {
                           defaultValue={moment(
                             this.state.selectedCampaign.startDate
                           )}
+                          
                         />
                         <DatePicker
                           placeholder="End date"
