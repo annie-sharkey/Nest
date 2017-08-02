@@ -57,6 +57,14 @@ export default class CampaignTable extends React.Component {
 
     var self = this;
     axios.get("http://localhost:4000/api/campaigns").then(res => {
+      var notIncluded = [];
+      var included = [];
+      var campaigns = [];
+      var currentCampaign = "";
+      var columns = [];
+      var campaignId = "";
+      var clientsToSave = [];
+      var masterClients = this.props.dataSource;
       if (res.data.length > 1) {
         var lastIndex = res.data.length - 1;
         var currentCampaign = res.data[lastIndex];
@@ -77,7 +85,7 @@ export default class CampaignTable extends React.Component {
         });
         //no clients right now and no clients in the previous campaign
         if (included.length == 0 && agentClientsPrevious.length == 0) {
-          console.log("no clients right now or before entered")
+          console.log("no clients right now or before entered");
           self.setState({
             leftData: self.props.dataSource,
             rightData: [],
@@ -154,14 +162,14 @@ export default class CampaignTable extends React.Component {
           self.getCampaignObjects(res.data);
         }
       } else {
-        console.log("else entered")
-        console.log("res.data:", res.data[0].clients)
-        var included = []
-        this.props.dataSource.forEach(function(client){
-          if(res.data[0].clients.includes(client._id)){
-            included.push(client)
+        console.log("else entered");
+        console.log("res.data:", res.data[0].clients);
+        var included = [];
+        this.props.dataSource.forEach(function(client) {
+          if (res.data[0].clients.includes(client._id)) {
+            included.push(client);
           }
-        })
+        });
         self.setState({
           leftData: this.props.dataSource,
           rightData: included,
@@ -185,15 +193,15 @@ export default class CampaignTable extends React.Component {
   getCampaignObjects(campaigns) {
     for (var i = 0; i < campaigns.length; i++) {
       var campaignID = campaigns[i]._id;
-      console.log("campaign ID:", campaignID);
+      // console.log("campaign ID:", campaignID);
       // var campaign = this.state.agentPastCampaigns[i]
       if (this.state.agentPastCampaigns.includes(campaignID)) {
         var campaign = this.state.campaigns[i];
-        console.log("campaign before past:", campaign);
+        // console.log("campaign before past:", campaign);
         var past = this.state.pastCampaignObjects;
 
         past.push(campaign);
-        console.log("past:", past);
+        // console.log("past:", past);
         this.setState({
           pastCampaignObjects: past
         });
@@ -414,16 +422,50 @@ export default class CampaignTable extends React.Component {
   //end right search functions
 
   onClick({ key }) {
-    message.info(key);
+    var selectedCampaignClientIDs = []
+    {
+      this.state.pastCampaignObjects.map(campaign => {
+        if (campaign._id == key) {
+          campaign.clients.map(clientID => {
+            return selectedCampaignClientIDs.push(clientID);
+
+          })
+          
+        }
+      });
+    }
+    var oldCampaignDataObjects = []
+    var selectedClients = []
+    this.props.dataSource.map(client => {
+      if (selectedCampaignClientIDs.includes(client._id)) {
+        selectedClients.push(client)
+      }
+      })
+    console.log(selectedClients)
+    var filtered = []
+    var self = this;
+    selectedClients.forEach(function(client){
+      if(!self.state.rightData.includes(client)){
+        filtered.push(client)
+      }
+    })
+    console.log(filtered)
+    this.setState({
+      leftData: filtered
+    })
+    console.log("old campaign data objects:", oldCampaignDataObjects)
+    console.log("selected campaign client ids:", selectedCampaignClientIDs);
+
   }
 
   render() {
-    console.log("past campaign objects:", this.state.pastCampaignObjects);
+    console.log("right data:", this.state.rightData)
+    // console.log("past campaign objects:", this.state.pastCampaignObjects);
     const menu = (
-      <Menu onClick={this.onClick}>
+      <Menu onClick={key => this.onClick(key)}>
         {this.state.pastCampaignObjects.map(campaign => {
           return (
-            <Menu.Item key={campaign.campaignName}>
+            <Menu.Item key={campaign._id}>
               {campaign.campaignName}
             </Menu.Item>
           );
