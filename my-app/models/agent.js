@@ -12,7 +12,9 @@ var AgentSchema = new Schema({
   agentName: String,
   agentTitle: String,
   agentEmail: String,
+  agentEmail2: String,
   agentPhoneNumber: String,
+  agentPhoneNumber2: String,
   agentOffice: String,
   pastCampaigns: [String],
   password: String

@@ -36,25 +36,10 @@ export default class CampaignTable extends React.Component {
   }
 
   componentWillMount() {
-    // if (this.state.agentPastCampaigns.includes(campaignName))
-    // for (var i = 0; i < this.state.campaigns.length; i++) {
-    //   var campaign = this.state.campaigns[i]
-    //   if (this.state.campaigns._id.includes(campaign) {
-    //     this.state.pastCampaignObjects.push()
-    //   })
-    // }
     //Cases:
     // 1) Agent already has clients in current Campaign
     // 2) Agent doesn't have clients in current campaign but had some in previous campaign
     // 3) Agent doesn't have clients in this campaign or previous campaign
-    var notIncluded = [];
-    var included = [];
-    var campaigns = [];
-    var currentCampaign = "";
-    var columns = [];
-    var campaignId = "";
-    var clientsToSave = [];
-    var masterClients = this.props.dataSource;
 
     var self = this;
     axios.get("http://localhost:4000/api/campaigns").then(res => {
@@ -130,7 +115,8 @@ export default class CampaignTable extends React.Component {
             included.push(client);
           });
 
-          var previousCampaignTime = moment(currentCampaign.endDate)
+          var previousCampaign = res.data[lastIndex - 1];
+          var previousCampaignTime = moment(previousCampaign.endDate)
             .toDate()
             .getTime();
 
@@ -188,18 +174,13 @@ export default class CampaignTable extends React.Component {
         });
       }
     });
-
-    // console.log("this.state.campaigns:", this.state.campaigns);
-    // console.log(
-    //   "this.state.agentPastCampaigns:",
-    //   this.state.agentPastCampaigns
-    // );
   }
   //end component will mount
 
   getCampaignObjects(campaigns) {
     for (var i = 0; i < campaigns.length; i++) {
       var campaignID = campaigns[i]._id;
+
       // console.log("campaign ID:", campaignID);
       // var campaign = this.state.agentPastCampaigns[i]
       if (this.state.agentPastCampaigns.includes(campaignID)) {
@@ -209,6 +190,7 @@ export default class CampaignTable extends React.Component {
 
         past.push(campaign);
         // console.log("past:", past);
+
         this.setState({
           pastCampaignObjects: past
         });
@@ -483,8 +465,10 @@ export default class CampaignTable extends React.Component {
   }
 
   render() {
+
     console.log("right data:", this.state.rightData);
     // console.log("past campaign objects:", this.state.pastCampaignObjects);
+
     const menu = (
       <Menu onClick={key => this.onClick(key)}>
         {this.state.pastCampaignObjects.map(campaign => {

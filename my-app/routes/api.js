@@ -109,14 +109,17 @@ router.put("/agent/:id", function(req, res, next) {
       throw err;
     }
 
-console.log(agent)
     agent.agentName = req.body.agentName || agent.agentName;
     agent.agentEmail = req.body.agentEmail || agent.agentEmail;
+    agent.agentEmail2 = req.body.agentEmail2 || agent.agentEmail2;
     agent.agentPhoneNumber =
       req.body.agentPhoneNumber || agent.agentPhoneNumber;
+    agent.agentPhoneNumber2 =
+      req.body.agentPhoneNumber2 || agent.agentPhoneNumber2;
     agent.agentTitle = req.body.agentTitle || agent.agentTitle;
     agent.agentOffice = req.body.agentOffice || agent.agentOffice;
-    agent.pastCampaigns = req.body.pastCampaigns || agent.pastCampaigns
+    agent.pastCampaigns = req.body.pastCampaigns || agent.pastCampaigns;
+    agent.password = req.body.password || agent.password;
 
     agent.save(function(err, agent) {
       if (err) {
@@ -133,7 +136,9 @@ router.post("/agent/new", function(req, res, next) {
     agentName: req.body.agentName,
     agentTitle: req.body.agentTitle,
     agentEmail: req.body.agentEmail,
+    agentEmail2: req.body.agentEmail2,
     agentPhoneNumber: req.body.agentPhoneNumber,
+    agentPhoneNumber2: req.body.agentPhoneNumber2,
     agentOffice: req.body.agentOffice,
     pastCampaigns: [],
     password: req.body.password
@@ -179,7 +184,6 @@ router.put("/clients/:id", function(req, res, next) {
     });
   });
 });
-
 
 router.put("/campaigns/:id", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {

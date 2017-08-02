@@ -11,8 +11,10 @@ export default class EditProfileForm extends React.Component {
       visible: this.props.editModal,
       name: null,
       email: null,
+      email2: null,
       title: null,
       phone: null,
+      phone2: null,
       office: null,
       agent: this.props.agent,
       confirm: false
@@ -30,6 +32,11 @@ export default class EditProfileForm extends React.Component {
       email: e.target.value
     });
   }
+  handleEmail2Change(e) {
+    this.setState({
+      email2: e.target.value
+    });
+  }
 
   handleTitleChange(e) {
     this.setState({
@@ -40,6 +47,11 @@ export default class EditProfileForm extends React.Component {
   handlePhoneChange(e) {
     this.setState({
       phone: e.target.value
+    });
+  }
+  handlePhone2Change(e) {
+    this.setState({
+      phone2: e.target.value
     });
   }
 
@@ -54,7 +66,9 @@ export default class EditProfileForm extends React.Component {
     console.log(agent);
     agent.agentName = this.state.name || agent.agentName;
     agent.agentEmail = this.state.email || agent.agentEmail;
+    agent.agentEmail2 = this.state.email2 || agent.agentEmail2;
     agent.agentPhoneNumber = this.state.phone || agent.agentPhoneNumber;
+    agent.agentPhoneNumber2 = this.state.phone2 || agent.agentPhoneNumber2;
     agent.agentTitle = this.state.title || agent.agentTitle;
     agent.agentOffice = this.state.office || agent.agentOffice;
     this.props.onOk(agent);
@@ -96,10 +110,22 @@ export default class EditProfileForm extends React.Component {
               defaultValue={this.state.agent.agentEmail}
             />
           </FormItem>
+          <FormItem label="Email 2">
+            <Input
+              onChange={e => this.handleEmail2Change(e)}
+              defaultValue={this.state.agent.agentEmail2}
+            />
+          </FormItem>
           <FormItem label="Phone Number">
             <Input
               onChange={e => this.handlePhoneChange(e)}
               defaultValue={this.state.agent.agentPhoneNumber}
+            />
+          </FormItem>
+          <FormItem label="Phone Number 2">
+            <Input
+              onChange={e => this.handlePhone2Change(e)}
+              defaultValue={this.state.agent.agentPhoneNumber2}
             />
           </FormItem>
           <FormItem label="Title">

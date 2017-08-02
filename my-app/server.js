@@ -144,3 +144,40 @@ app.listen(port, function() {
 //   })
 
 // });
+
+// convertExcel("./agents.xlsx", null, null, function(err, data) {
+//   var agentsWithCodes = [];
+//   var agentWithoutCodes = [];
+//   data.forEach(function(agent) {
+//     var new_agent = Agent({
+//       agentCode: "",
+//       agentName: "",
+//       agentTitle: "",
+//       agentEmail: "",
+//       agentPhoneNumber: "",
+//       agentOffice: "",
+//       pastCampaigns: [],
+//       password: ""
+//     });
+//     var password;
+//     if (agent["AGENT CODE"] !== "") {
+//       new_agent.agentCode = agent["AGENT CODE"];
+//       new_agent.agentName = agent["AGENT NAME"];
+//       new_agent.agentTitle = agent["AGENT TITLE"];
+//       new_agent.agentEmail = agent["AGENT EMAIL"];
+//       new_agent.agentPhoneNumber = agent["AGENT PHONE NUMBER"];
+//       new_agent.agentOffice = agent["AGENT OFFICE"];
+//       agentsWithCodes.push(new_agent);
+//       console.log("");
+//       console.log(agent["AGENT EMAIL"]);
+//     } else {
+//       new_agent.agentCode = agent["AGENT NAME"];
+//       new_agent.agentName = agent["AGENT NAME"];
+//       new_agent.agentTitle = agent["AGENT TITLE"];
+//       new_agent.agentEmail = agent["AGENT EMAIL"];
+//       new_agent.agentPhoneNumber = agent["AGENT PHONE NUMBER"];
+//       new_agent.agentOffice = agent["AGENT OFFICE"];
+//       agentWithoutCodes.push(new_agent);
+//     }
+//   });
+// });
