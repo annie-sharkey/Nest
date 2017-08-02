@@ -105,7 +105,7 @@ export default class CreateCampaignParent extends Component {
 
   WritetoDatabase() {
     // var self = this;
-    var id = ""
+    var id = "";
     this.setState({
       done: true
     });
@@ -120,26 +120,19 @@ export default class CreateCampaignParent extends Component {
         officesIncludedinCampaign: this.state.checkedList
       })
       .then(res => {
-        
-        id = res.data._id
-      for (var i = 0; i < this.state.agentData.length; i++) {
-      if (
-        this.state.checkedList.includes(this.state.agentData[i].agentOffice)
-      ) {
-        // console.log("past campaign:", this.state.agentData[i].pastCampaigns)
-        var agentCode = this.state.agentData[i].agentCode;
-        var agent = this.state.agentData[i];
-        agent.pastCampaigns.push(
-          id
-        );
-        axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
-      }
-    }
-        console.log("res.data._id:", res.data._id)
-        // console.log("campaign ID:", this.state.campaignID)
+        id = res.data._id;
+        for (var i = 0; i < this.state.agentData.length; i++) {
+          if (
+            this.state.checkedList.includes(this.state.agentData[i].agentOffice)
+          ) {
+            var agentCode = this.state.agentData[i].agentCode;
+            var agent = this.state.agentData[i];
+            agent.pastCampaigns.push(id);
+            axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
+          }
+        }
       });
   }
-
 
   onChange(checkedList) {
     this.setState({
@@ -200,6 +193,7 @@ export default class CreateCampaignParent extends Component {
                         placeholder="Start date"
                         format="MM/DD/YYYY"
                         onChange={event => this.handleStartDate(event)}
+                        //required={true}
                       />
                       <DatePicker
                         placeholder="End date"
@@ -240,18 +234,30 @@ export default class CreateCampaignParent extends Component {
                   updateUploadState={uploads => this.updateUploadState(uploads)}
                 />
               </Form>
-
               <br />
               <br />
-              <Popconfirm
-                title="Are you sure you're finished creating the campaign？"
-                okText="Yes"
-                cancelText="Keep Editing"
-                onConfirm={event => this.WritetoDatabase()}
-              >
-                <Button type="danger">Finish Creating Campaign</Button>
-              </Popconfirm>
-              {/*</Card>*/}
+              <div>
+              {(this.state.endDate || this.state.startDate) == "" &&
+                <Popconfirm
+                  title="Please check that you have entered a start and end date for your campaign."
+                  okText="Ok"
+                  //cancelText="a"
+                >
+                  <Button type="danger">Finish Creating Campaign</Button>
+                </Popconfirm>}
+                </div>
+                <div>
+              {this.state.startDate &&
+                this.state.endDate != "" &&
+                <Popconfirm
+                  title="Are you sure you're finished creating the campaign？"
+                  okText="Yes"
+                  cancelText="Keep Editing"
+                  onConfirm={event => this.WritetoDatabase()}
+                >
+                  <Button type="danger">Finish Creating Campaign</Button>
+                </Popconfirm>}
+                </div>
             </div>}
           {this.state.done &&
             <div className="successText">
