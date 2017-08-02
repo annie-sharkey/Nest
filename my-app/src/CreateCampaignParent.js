@@ -45,7 +45,7 @@ export default class CreateCampaignParent extends Component {
     this.state = {
       startDate: "",
       endDate: "",
-      writeColumns: [],
+      writeColumns: ["Name", "City", "State"],
       writeUploads: [],
       campaignTitle: "",
       checkedList: defaultCheckedList,
@@ -138,32 +138,8 @@ export default class CreateCampaignParent extends Component {
         console.log("res.data._id:", res.data._id)
         // console.log("campaign ID:", this.state.campaignID)
       });
-      
-
-
-   
   }
 
-  // PuttoDatabase(id) {
-  //   console.log('entered put to database')
-  //   console.log("id:", id)
-  //     for (var i = 0; i < this.state.agentData.length; i++) {
-  //     if (
-  //       this.state.checkedList.includes(this.state.agentData[i].agentOffice)
-  //     ) {
-  //       // console.log("past campaign:", this.state.agentData[i].pastCampaigns)
-  //       var agentCode = this.state.agentData[i].agentCode;
-  //       var agent = this.state.agentData[i];
-  //       agent.pastCampaigns = this.state.agentData[i].pastCampaigns.push(
-  //         id
-  //       );
-  //       console.log("campaign ID put to database:", id)
-  //       console.log("agent", agent)
-        
-  //       axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
-  //     }
-  //   }
-  // }
 
   onChange(checkedList) {
     this.setState({
@@ -183,8 +159,6 @@ export default class CreateCampaignParent extends Component {
   }
 
   render() {
-    // console.log("checked list:", this.state.checkedList);
-    // console.log("agent data:", this.state.agentData);
     message.config({
       top: 100
     });

@@ -35,7 +35,6 @@ export default class CampaignTable extends React.Component {
   }
 
   componentWillMount() {
-    
     // if (this.state.agentPastCampaigns.includes(campaignName))
     // for (var i = 0; i < this.state.campaigns.length; i++) {
     //   var campaign = this.state.campaigns[i]
@@ -58,97 +57,120 @@ export default class CampaignTable extends React.Component {
 
     var self = this;
     axios.get("http://localhost:4000/api/campaigns").then(res => {
-      var lastIndex = res.data.length - 1;
-      var currentCampaign = res.data[lastIndex];
-      var currentClientIds = res.data[lastIndex].clients;
-      var previousClientsIds = res.data[lastIndex - 1].clients;
+      if (res.data.length > 1) {
+        var lastIndex = res.data.length - 1;
+        var currentCampaign = res.data[lastIndex];
+        var currentClientIds = res.data[lastIndex].clients;
+        var previousClientsIds = res.data[lastIndex - 1].clients;
 
-      var agentClientsPrevious = [];
-      masterClients.forEach(function(client) {
-        if (previousClientsIds.includes(client._id)) {
-          agentClientsPrevious.push(client);
-        }
-      });
-
-      masterClients.forEach(function(client) {
-        if (currentClientIds.includes(client._id)) {
-          included.push(client);
-        }
-      });
-
-      if (included.length == 0 && agentClientsPrevious.length == 0) {
-        self.setState({
-          leftData: self.props.dataSource,
-          rightData: [],
-          campaigns: res.data,
-          currentCampaign: currentCampaign.campaignName,
-          columns: currentCampaign.campaignColumns,
-          campaignId: currentCampaign._id,
-          clientsToSave: currentClientIds
-        });
-        self.getCampaignObjects(res.data)
-      }
-
-      //Case 1
-      if (included.length > 0) {
+        var agentClientsPrevious = [];
         masterClients.forEach(function(client) {
-          if (!included.includes(client)) {
-            notIncluded.push(client);
+          if (previousClientsIds.includes(client._id)) {
+            agentClientsPrevious.push(client);
           }
         });
 
-        self.setState({
-          leftData: notIncluded,
-          rightData: included,
-          campaigns: res.data,
-          currentCampaign: currentCampaign.campaignName,
-          columns: currentCampaign.campaignColumns,
-          campaignId: currentCampaign._id,
-          clientsToSave: currentClientIds
-        });
-        self.getCampaignObjects(res.data)
-      } else if (included.length == 0 && agentClientsPrevious.length > 0) {
-        //Case 2
-        console.log("agent has clients from previous campaign but not current");
-        agentClientsPrevious.forEach(function(client) {
-          included.push(client);
-        });
-
-        var previousCampaignTime = moment(currentCampaign.endDate)
-          .toDate()
-          .getTime();
-
         masterClients.forEach(function(client) {
-          var editTime = moment(client.lastEdited).toDate().getTime();
+          if (currentClientIds.includes(client._id)) {
+            included.push(client);
+          }
+        });
+        //no clients right now and no clients in the previous campaign
+        if (included.length == 0 && agentClientsPrevious.length == 0) {
+          console.log("no clients right now or before entered")
+          self.setState({
+            leftData: self.props.dataSource,
+            rightData: [],
+            campaigns: res.data,
+            currentCampaign: currentCampaign.campaignName,
+            columns: currentCampaign.campaignColumns,
+            campaignId: currentCampaign._id,
+            clientsToSave: currentClientIds
+          });
+          self.getCampaignObjects(res.data);
+        }
 
-          if (previousCampaignTime < editTime) {
+        //Case 1
+        if (included.length > 0) {
+          masterClients.forEach(function(client) {
             if (!included.includes(client)) {
-              included.push(client);
+              notIncluded.push(client);
             }
+          });
+
+          self.setState({
+            leftData: notIncluded,
+            rightData: included,
+            campaigns: res.data,
+            currentCampaign: currentCampaign.campaignName,
+            columns: currentCampaign.campaignColumns,
+            campaignId: currentCampaign._id,
+            clientsToSave: currentClientIds
+          });
+          self.getCampaignObjects(res.data);
+        } else if (included.length == 0 && agentClientsPrevious.length > 0) {
+          //Case 2
+          console.log(
+            "agent has clients from previous campaign but not current"
+          );
+          agentClientsPrevious.forEach(function(client) {
+            included.push(client);
+          });
+
+          var previousCampaignTime = moment(currentCampaign.endDate)
+            .toDate()
+            .getTime();
+
+          masterClients.forEach(function(client) {
+            var editTime = moment(client.lastEdited).toDate().getTime();
+
+            if (previousCampaignTime < editTime) {
+              if (!included.includes(client)) {
+                included.push(client);
+              }
+            }
+          });
+
+          masterClients.forEach(function(client) {
+            if (!included.includes(client)) {
+              notIncluded.push(client);
+            }
+          });
+
+          var includedIds = [];
+          included.forEach(function(client) {
+            includedIds.push(client._id);
+          });
+
+          self.setState({
+            leftData: notIncluded,
+            rightData: included,
+            campaigns: res.data,
+            currentCampaign: currentCampaign.campaignName,
+            columns: currentCampaign.campaignColumns,
+            campaignId: currentCampaign._id,
+            clientsToSave: includedIds
+          });
+          self.getCampaignObjects(res.data);
+        }
+      } else {
+        console.log("else entered")
+        console.log("res.data:", res.data[0].clients)
+        var included = []
+        this.props.dataSource.forEach(function(client){
+          if(res.data[0].clients.includes(client._id)){
+            included.push(client)
           }
-        });
-
-        masterClients.forEach(function(client) {
-          if (!included.includes(client)) {
-            notIncluded.push(client);
-          }
-        });
-
-        var includedIds = [];
-        included.forEach(function(client) {
-          includedIds.push(client._id);
-        });
-
+        })
         self.setState({
-          leftData: notIncluded,
+          leftData: this.props.dataSource,
           rightData: included,
-          campaigns: res.data,
-          currentCampaign: currentCampaign.campaignName,
-          columns: currentCampaign.campaignColumns,
-          campaignId: currentCampaign._id,
-          clientsToSave: includedIds
+          campaign: res.data,
+          currentCampaign: res.data[0].campaignName,
+          columns: res.data[0].campaignColumns,
+          campaignId: res.data[0]._id,
+          clientsToSave: res.data[0].clients
         });
-        self.getCampaignObjects(res.data)
       }
     });
 
@@ -160,23 +182,21 @@ export default class CampaignTable extends React.Component {
   }
   //end component will mount
 
-  getCampaignObjects(campaigns){
-    
-for (var i = 0; i < campaigns.length; i++) {
-      
+  getCampaignObjects(campaigns) {
+    for (var i = 0; i < campaigns.length; i++) {
       var campaignID = campaigns[i]._id;
       console.log("campaign ID:", campaignID);
       // var campaign = this.state.agentPastCampaigns[i]
       if (this.state.agentPastCampaigns.includes(campaignID)) {
         var campaign = this.state.campaigns[i];
-        console.log("campaign before past:", campaign)
-        var past = this.state.pastCampaignObjects
-        
-        past.push(campaign)
-        console.log("past:", past)
+        console.log("campaign before past:", campaign);
+        var past = this.state.pastCampaignObjects;
+
+        past.push(campaign);
+        console.log("past:", past);
         this.setState({
           pastCampaignObjects: past
-        })
+        });
       }
     }
   }
@@ -398,9 +418,8 @@ for (var i = 0; i < campaigns.length; i++) {
   }
 
   render() {
-    console.log("past campaign objects:", this.state.pastCampaignObjects)
+    console.log("past campaign objects:", this.state.pastCampaignObjects);
     const menu = (
-      
       <Menu onClick={this.onClick}>
         {this.state.pastCampaignObjects.map(campaign => {
           return (
