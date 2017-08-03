@@ -19,6 +19,7 @@ import AdminHome from "./AdminHome";
 import AdminClientDirectory from "./AdminClientDirectory";
 import AdminAgentDirectory from "./AdminAgentDirectory";
 import ManageCampaigns from "./ManageCampaigns";
+import CampaignTable2 from './CampaignTable2';
 
 // import JSONtoExcel from "./JSONtoExcel";
 
@@ -142,6 +143,7 @@ class App extends Component {
       return (
         <div className="login">
           <h1 className="title">NEST PORTAL</h1>
+          <br />
           <div className="login-field">
             <Input
               onChange={e => this.handleFieldChange(e)}

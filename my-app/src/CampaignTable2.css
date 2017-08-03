@@ -1,0 +1,26 @@
+.campaign-page{
+    display: flex;
+    flex-direction: column
+}
+
+.campaign-title{
+    
+}
+
+.tables {
+    display: flex;
+    flex-direction: row
+}
+
+.included-table{
+    width: 48%
+}
+
+.middle{
+width: 4%
+}
+
+.not-table{
+width: 48%
+}
+

@@ -223,6 +223,7 @@ router.put("/campaign/:id", function(req, res, next) {
     }
 
     campaign.clients = req.body.clients || campaign.clients;
+    console.log(req.body.clients);
 
     campaign.save(function(err, campaign) {
       if (err) {

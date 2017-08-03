@@ -1,13 +1,12 @@
 import React from "react";
-// import { Table } from "semantic-ui-react";
 import "./App.css";
-// import { Dropdown, Menu, Icon } from "semantic-ui-react";
 import axios from "axios";
 import { Table, Input, Icon, Popconfirm } from "antd";
 import { Button } from "semantic-ui-react";
 import { Confirm } from "semantic-ui-react";
 import moment from "moment";
 import { Menu, Dropdown, message } from "antd";
+import "antd/dist/antd.css";
 
 export default class CampaignTable extends React.Component {
   constructor(props) {
@@ -52,7 +51,6 @@ export default class CampaignTable extends React.Component {
       var clientsToSave = [];
       var masterClients = this.props.dataSource;
       if (res.data.length > 1) {
-
         var lastIndex = res.data.length - 1;
         var currentCampaign = res.data[lastIndex];
         var currentClientIds = res.data[lastIndex].clients;
@@ -71,8 +69,31 @@ export default class CampaignTable extends React.Component {
           }
         });
         //no clients right now and no clients in the previous campaign
+
         if (included.length == 0 && agentClientsPrevious.length == 0) {
           console.log("no clients right now or before entered");
+          var previousCampaign = res.data[lastIndex - 1];
+          var previousCampaignTime = moment(previousCampaign.endDate)
+            .toDate()
+            .getTime();
+
+          console.log(moment(previousCampaign.endDate).toDate());
+
+          masterClients.forEach(function(client) {
+            var editTime = moment(client.lastEdited).toDate().getTime();
+
+            if (previousCampaignTime < editTime) {
+              if (!included.includes(client)) {
+                included.push(client);
+              }
+            }
+          });
+
+          masterClients.forEach(function(client) {
+            if (!included.includes(client)) {
+              notIncluded.push(client);
+            }
+          });
           self.setState({
             leftData: self.props.dataSource,
             rightData: [],
@@ -104,7 +125,7 @@ export default class CampaignTable extends React.Component {
             clientsToSave: currentClientIds,
             masterListData: self.props.dataSource
           });
-          
+
           self.getCampaignObjects(res.data);
         } else if (included.length == 0 && agentClientsPrevious.length > 0) {
           //Case 2
@@ -260,11 +281,11 @@ export default class CampaignTable extends React.Component {
 
     var self = this;
     var notIncluded = [];
-    this.state.masterListData.forEach(function(client){
-        if(!self.state.rightData.includes(client)){
-          notIncluded.push(client)
-        }
-    })
+    this.state.masterListData.forEach(function(client) {
+      if (!self.state.rightData.includes(client)) {
+        notIncluded.push(client);
+      }
+    });
     notIncluded.push(text);
 
     var included = this.state.rightData;
@@ -294,6 +315,8 @@ export default class CampaignTable extends React.Component {
       clientsToSave: client_ids,
       rightSearchData: search
     });
+  //   var key = "MasterList"
+  //  this.onClick(key)
   }
 
   saveClients(clients) {
@@ -420,11 +443,11 @@ export default class CampaignTable extends React.Component {
     if (key == "MasterList") {
       var self = this;
       var notIncluded = [];
-      this.state.masterListData.forEach(function(client){
-        if(!self.state.rightData.includes(client)){
+      this.state.masterListData.forEach(function(client) {
+        if (!self.state.rightData.includes(client)) {
           notIncluded.push(client);
         }
-      })
+      });
       this.setState({
         leftData: notIncluded
       });
@@ -465,7 +488,6 @@ export default class CampaignTable extends React.Component {
   }
 
   render() {
-
     console.log("right data:", this.state.rightData);
     // console.log("past campaign objects:", this.state.pastCampaignObjects);
 
@@ -667,7 +689,7 @@ export default class CampaignTable extends React.Component {
                 Not Included
               </h3>
             </div>
-            <Dropdown overlay={menu}>
+            <Dropdown overlay={menu} trigger={['click']} default="MasterList">
               <a className="ant-dropdown-link" href="#">
                 Select Campaign <Icon type="down" />
               </a>

@@ -8,7 +8,7 @@ var Schema = mongoose.Schema;
 var CampaignSchema = new Schema({
   campaignName: String,
   campaignColumns: [String],
-  clients: [String],
+  clients: [],
   campaignUploads: [String],
   startDate: String,
   endDate: String,

@@ -5,6 +5,9 @@ import { HashRouter as Router, Route, Link } from "react-router-dom";
 import MasterTable from "./MasterTable";
 import CampaignTable from "./CampaignTable";
 import axios from "axios";
+import './AgentNavBar.css'
+
+import CampaignTable2 from './CampaignTable2';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -66,6 +69,12 @@ export default class AgentNavBar extends Component {
   render() {
     // console.log(this.state.dataSource);
     return (
+      // <div>
+      //   <ul>
+      //     <li>Master List</li>
+      //     <li>Build a Campaign</li>
+      //     </ul>
+      //   </div>
       <Router ref="nav">
         <div>
           <Menu
@@ -115,7 +124,7 @@ export default class AgentNavBar extends Component {
           <Route
             path="/managelists/campaigns"
             component={() =>
-              <CampaignTable
+              <CampaignTable2
                 dataSource={this.state.dataSource.reverse()}
                 agentCode={this.props.agent.agentCode}
                 agentID={this.props.agent._id}
