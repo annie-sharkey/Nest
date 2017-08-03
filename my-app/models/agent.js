@@ -43,6 +43,8 @@ AgentSchema.pre("save", function(next) {
 
 AgentSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+    console.log("candidate", candidatePassword);
+    console.log("Actual", this.password);
     if (err) return cb(err);
     cb(null, isMatch);
   });

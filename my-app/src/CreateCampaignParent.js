@@ -105,10 +105,22 @@ export default class CreateCampaignParent extends Component {
 
   WritetoDatabase() {
     // var self = this;
+    var clients = {};
+    axios.get("http://localhost:4000/api/agents").then(res => {
+      var agents = res.data;
+      agents.map(agent => {
+        if (this.state.checkedList.includes(agent.agentOffice)) {
+          clients[agent.agentCode.toString()] = [];
+        }
+      });
+    });
+
     var id = "";
     this.setState({
       done: true
     });
+
+    console.log(clients.stringify);
     axios
       .post("http://localhost:4000/api/campaign/", {
         campaignName: this.state.campaignTitle,
@@ -237,27 +249,27 @@ export default class CreateCampaignParent extends Component {
               <br />
               <br />
               <div>
-              {(this.state.endDate || this.state.startDate) == "" &&
-                <Popconfirm
-                  title="Please check that you have entered a start and end date for your campaign."
-                  okText="Ok"
-                  //cancelText="a"
-                >
-                  <Button type="danger">Finish Creating Campaign</Button>
-                </Popconfirm>}
-                </div>
-                <div>
-              {this.state.startDate &&
-                this.state.endDate != "" &&
-                <Popconfirm
-                  title="Are you sure you're finished creating the campaign？"
-                  okText="Yes"
-                  cancelText="Keep Editing"
-                  onConfirm={event => this.WritetoDatabase()}
-                >
-                  <Button type="danger">Finish Creating Campaign</Button>
-                </Popconfirm>}
-                </div>
+                {(this.state.endDate || this.state.startDate) == "" &&
+                  <Popconfirm
+                    title="Please check that you have entered a start and end date for your campaign."
+                    okText="Ok"
+                    //cancelText="a"
+                  >
+                    <Button type="danger">Finish Creating Campaign</Button>
+                  </Popconfirm>}
+              </div>
+              <div>
+                {this.state.startDate &&
+                  this.state.endDate != "" &&
+                  <Popconfirm
+                    title="Are you sure you're finished creating the campaign？"
+                    okText="Yes"
+                    cancelText="Keep Editing"
+                    onConfirm={event => this.WritetoDatabase()}
+                  >
+                    <Button type="danger">Finish Creating Campaign</Button>
+                  </Popconfirm>}
+              </div>
             </div>}
           {this.state.done &&
             <div className="successText">

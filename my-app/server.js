@@ -160,24 +160,68 @@ app.listen(port, function() {
 //       password: ""
 //     });
 //     var password;
+//     var email1 = "";
+//     var email2 = "none";
+//     var phone1 = "";
+//     var phone2 = "none";
+
+//     var emailIndex = agent["AGENT EMAIL"].indexOf(".com");
+//     var lastEmailIndex = agent["AGENT EMAIL"].lastIndexOf(".com");
+//     if (emailIndex == lastEmailIndex) {
+//       email1 = agent["AGENT EMAIL"];
+//     } else {
+//       email1 = agent["AGENT EMAIL"].slice(0, emailIndex + 4);
+//       email2 = agent["AGENT EMAIL"].slice(
+//         emailIndex + 5,
+//         agent["AGENT EMAIL"].length
+//       );
+//     }
+
+//     var phoneIndex = agent["AGENT PHONE NUMBER"].indexOf("/");
+//     if (phoneIndex == -1) {
+//       phone1 = agent["AGENT PHONE NUMBER"].slice(0, phoneIndex);
+//       phone2 = agent["AGENT PHONE NUMBER"].slice(
+//         phoneIndex + 1,
+//         agent["AGENT PHONE NUMBER"].length
+//       );
+//     }
+
 //     if (agent["AGENT CODE"] !== "") {
 //       new_agent.agentCode = agent["AGENT CODE"];
 //       new_agent.agentName = agent["AGENT NAME"];
 //       new_agent.agentTitle = agent["AGENT TITLE"];
-//       new_agent.agentEmail = agent["AGENT EMAIL"];
-//       new_agent.agentPhoneNumber = agent["AGENT PHONE NUMBER"];
+//       new_agent.agentEmail = email1;
+//       new_agent.agentEmail2 = email2;
+//       new_agent.agentPhoneNumber = phone1;
+//       new_agent.agentPhoneNumber2 = phone2;
 //       new_agent.agentOffice = agent["AGENT OFFICE"];
+//       new_agent.password = agent["AGENT CODE"].toLowerCase();
 //       agentsWithCodes.push(new_agent);
-//       console.log("");
-//       console.log(agent["AGENT EMAIL"]);
 //     } else {
 //       new_agent.agentCode = agent["AGENT NAME"];
 //       new_agent.agentName = agent["AGENT NAME"];
 //       new_agent.agentTitle = agent["AGENT TITLE"];
-//       new_agent.agentEmail = agent["AGENT EMAIL"];
+//       new_agent.agentEmail = email1;
+//       new_agent.agentEmail2 = email2;
+//       new_agent.password = agent["AGENT CODE"].toLowerCase();
 //       new_agent.agentPhoneNumber = agent["AGENT PHONE NUMBER"];
+//       new_agent.agentPhoneNumber2 = phone2;
 //       new_agent.agentOffice = agent["AGENT OFFICE"];
 //       agentWithoutCodes.push(new_agent);
 //     }
+//   });
+//   agentsWithCodes.forEach(function(agent) {
+//     agent.save(function(err) {
+//       if (err) {
+//         throw err;
+//       }
+//     });
+//   });
+//   agentWithoutCodes.forEach(function(agent) {
+//     agent.save(function(err) {
+//       if (err) {
+//         throw err;
+//       }
+//     });
 //   });
 // });

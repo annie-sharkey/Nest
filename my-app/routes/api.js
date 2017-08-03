@@ -74,6 +74,7 @@ router.post("/campaign/", function(req, res, next) {
     endDate: req.body.endDate,
     officesIncludedinCampaign: req.body.officesIncludedinCampaign
   });
+  console.log(req.body.clients);
   campaign.save(function(err) {
     if (err) {
       throw err;
@@ -119,7 +120,6 @@ router.put("/agent/:id", function(req, res, next) {
     agent.agentTitle = req.body.agentTitle || agent.agentTitle;
     agent.agentOffice = req.body.agentOffice || agent.agentOffice;
     agent.pastCampaigns = req.body.pastCampaigns || agent.pastCampaigns;
-    agent.password = req.body.password || agent.password;
 
     agent.save(function(err, agent) {
       if (err) {
@@ -216,13 +216,14 @@ router.put("/campaigns/:id", function(req, res, next) {
   });
 });
 
-router.put("/campaign/:id", function(req, res, next) {
+router.put("/campaign/:id/:code", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
     if (err) {
       throw err;
     }
 
-    campaign.clients = req.body.clients || campaign.clients;
+    campaign.clients[req.params.code] =
+      req.body.clients || campaign.clients.req.params.code;
     console.log(req.body.clients);
 
     campaign.save(function(err, campaign) {
