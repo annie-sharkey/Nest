@@ -1,9 +1,17 @@
 ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 15;
+  list-style-type: none;
+  margin: 0;
+  background: #598787;
+  /*padding: 15;*/
 }
 
 li {
-    display: inline-block
+  display: inline-block;
+  padding: 20px;
+}
+h3 {
+  color: white;
+  font-weight: bold;
+  /*font: gotham;*/
+  font-size: 120%;
 }
