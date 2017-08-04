@@ -105,45 +105,45 @@ export default class CreateCampaignParent extends Component {
 
   WritetoDatabase() {
     // var self = this;
-    var clients = {};
-    axios.get("http://localhost:4000/api/agents").then(res => {
-      var agents = res.data;
-      agents.map(agent => {
-        if (this.state.checkedList.includes(agent.agentOffice)) {
-          clients[agent.agentCode.toString()] = [];
-        }
-      });
-    });
+    // var clients = {};
+    // axios.get("http://localhost:4000/api/agents").then(res => {
+    //   var agents = res.data;
+    //   agents.map(agent => {
+    //     if (this.state.checkedList.includes(agent.agentOffice)) {
+    //       clients[agent.agentCode.toString()] = "";
+    //     }
+    //   });
+    // });
 
     var id = "";
     this.setState({
       done: true
     });
 
-    console.log(clients.stringify);
-    axios
-      .post("http://localhost:4000/api/campaign/", {
+    axios({
+      method: "post",
+      url: "http://localhost:4000/api/campaign/",
+      data: {
         campaignName: this.state.campaignTitle,
         campaignColumns: this.state.writeColumns,
-        clients: [],
         campaignUploads: this.state.writeUploads,
         startDate: this.state.startDate,
         endDate: this.state.endDate,
         officesIncludedinCampaign: this.state.checkedList
-      })
-      .then(res => {
-        id = res.data._id;
-        for (var i = 0; i < this.state.agentData.length; i++) {
-          if (
-            this.state.checkedList.includes(this.state.agentData[i].agentOffice)
-          ) {
-            var agentCode = this.state.agentData[i].agentCode;
-            var agent = this.state.agentData[i];
-            agent.pastCampaigns.push(id);
-            axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
-          }
+      }
+    }).then(res => {
+      id = res.data._id;
+      for (var i = 0; i < this.state.agentData.length; i++) {
+        if (
+          this.state.checkedList.includes(this.state.agentData[i].agentOffice)
+        ) {
+          var agentCode = this.state.agentData[i].agentCode;
+          var agent = this.state.agentData[i];
+          agent.pastCampaigns.push(id);
+          axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
         }
-      });
+      }
+    });
   }
 
   onChange(checkedList) {

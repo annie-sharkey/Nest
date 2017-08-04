@@ -68,13 +68,13 @@ router.post("/campaign/", function(req, res, next) {
   var campaign = new Campaign({
     campaignName: req.body.campaignName,
     campaignColumns: req.body.campaignColumns,
-    clients: req.body.clients,
+    clients: {},
     campaignUploads: req.body.campaignUploads,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
     officesIncludedinCampaign: req.body.officesIncludedinCampaign
   });
-  console.log(req.body.clients);
+
   campaign.save(function(err) {
     if (err) {
       throw err;
@@ -185,7 +185,7 @@ router.put("/clients/:id", function(req, res, next) {
   });
 });
 
-router.put("/campaigns/:id", function(req, res, next) {
+router.put("/campaigns/:id/", function(req, res, next) {
   Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
     if (err) {
       throw err;
@@ -222,9 +222,7 @@ router.put("/campaign/:id/:code", function(req, res, next) {
       throw err;
     }
 
-    campaign.clients[req.params.code] =
-      req.body.clients || campaign.clients.req.params.code;
-    console.log(req.body.clients);
+    campaign.clients[req.params.code] = req.body.clients;
 
     campaign.save(function(err, campaign) {
       if (err) {
