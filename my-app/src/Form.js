@@ -11,6 +11,8 @@ export default class ClientForm extends React.Component {
       visible: this.props.modal,
       confirm: false,
       name: "",
+      firstName: "",
+      lastName: "",
       address: "",
       city: "",
       email: "",
@@ -23,6 +25,18 @@ export default class ClientForm extends React.Component {
   handleNameChange(e) {
     this.setState({
       name: e.target.value
+    });
+  }
+
+  handleFirstChange(e) {
+    this.setState({
+      firstName: e.target.value
+    });
+  }
+
+  handleLastChange(e) {
+    this.setState({
+      lastName: e.target.value
     });
   }
 
@@ -67,14 +81,24 @@ export default class ClientForm extends React.Component {
   }
 
   handleAdd() {
-    var name = this.state.name;
+    var first = this.state.firstName;
+    var last = this.state.lastName;
     var address = this.state.address;
     var city = this.state.city;
     var email = this.state.email;
     var state = this.state.state;
     var birthday = this.state.birthday;
     var anniversary = this.state.anniversary;
-    this.props.onOk(name, address, city, email, state, birthday, anniversary);
+    this.props.onOk(
+      first,
+      last,
+      address,
+      city,
+      email,
+      state,
+      birthday,
+      anniversary
+    );
   }
 
   handleEmailChange(e) {
@@ -118,8 +142,11 @@ export default class ClientForm extends React.Component {
         onOk={() => this.showConfirm()}
       >
         <Form layout="vertical">
-          <FormItem label="Client Name">
-            <Input onChange={e => this.handleNameChange(e)} />
+          <FormItem label="Client First Name">
+            <Input onChange={e => this.handleFirstChange(e)} />
+          </FormItem>
+          <FormItem label="Client Last Name">
+            <Input onChange={e => this.handleLastChange(e)} />
           </FormItem>
           <FormItem label="Client Address">
             <Input onChange={e => this.handleAddressChange(e)} />

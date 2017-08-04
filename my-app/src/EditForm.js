@@ -11,13 +11,15 @@ export default class EditForm extends React.Component {
       visible: this.props.editModal,
       //fields: this.props.fields
       client: this.props.selectedClient,
-      currentName: "",
-      currentAddress: "",
-      currentCity: "",
-      currentEmail: "",
-      currentState: "",
-      currentBirthday: "",
-      currentAnniversary: "",
+      currentName: this.props.selectedClient.clientName,
+      currentFirst: this.props.selectedClient.firstName,
+      currentLast: this.props.selectedClient.lastName,
+      currentAddress: this.props.selectedClient.clientAddress,
+      currentCity: this.props.selectedClient.clientCity,
+      currentEmail: this.props.selectedClient.clientEmail,
+      currentState: this.props.selectedClient.clientState,
+      currentBirthday: this.props.selectedClient.clientBirthday,
+      currentAnniversary: this.props.selectedClient.homeAnniversary,
       confirm: false,
       deleteConfirm: false
     };
@@ -26,6 +28,18 @@ export default class EditForm extends React.Component {
   handleNameChange(e) {
     this.setState({
       currentName: e.target.value
+    });
+  }
+
+  handleFirstChange(e) {
+    this.setState({
+      currentFirst: e.target.value
+    });
+  }
+
+  handleLastChange(e) {
+    this.setState({
+      currentLast: e.target.value
     });
   }
 
@@ -68,16 +82,28 @@ export default class EditForm extends React.Component {
   }
 
   handleUpdate() {
-    var name = this.state.currentName;
+    var first = this.state.currentFirst;
+    var last = this.state.currentLast;
     var address = this.state.currentAddress;
     var city = this.state.currentCity;
     var birthday = this.state.currentBirthday;
     var email = this.state.currentEmail;
     var state = this.state.currentState;
     var anniversary = this.state.currentAnniversary;
-    this.props.onOk(name, address, city, email, state, birthday, anniversary);
+    this.props.onOk(
+      first,
+      last,
+      address,
+      city,
+      email,
+      state,
+      birthday,
+      anniversary
+    );
     this.setState({
       currentName: "",
+      currentFirst: "",
+      currentLast: "",
       currentAddress: "",
       currentCity: "",
       currentEmail: "",
@@ -126,10 +152,16 @@ export default class EditForm extends React.Component {
         onOk={() => this.showConfirm()}
       >
         <Form layout="vertical">
-          <FormItem label="Name">
+          <FormItem label="First Name">
             <Input
-              onChange={e => this.handleNameChange(e)}
-              defaultValue={this.state.client.clientName}
+              onChange={e => this.handleFirstChange(e)}
+              defaultValue={this.state.client.firstName}
+            />
+          </FormItem>
+          <FormItem label="Last Name">
+            <Input
+              onChange={e => this.handleLastChange(e)}
+              defaultValue={this.state.client.lastName}
             />
           </FormItem>
           <FormItem label="Address">
