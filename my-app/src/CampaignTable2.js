@@ -69,13 +69,18 @@ export default class CampaignTable2 extends Component {
 
       var code = this.state.agent.agentCode;
       var savedClients = [];
-      currentCampaign[0].clients.forEach(function(agent) {
-        if (agent.agentCode == code) {
-          if (agent.savedClients.length>0) {
-            savedClients = agent.saveClients;
-          }
+      // currentCampaign[0].clients.forEach(function(agent) {
+      //   if (agent.agentCode == code) {
+      //     if (agent.savedClients.length>0) {
+      //       savedClients = agent.saveClients;
+      //     }
+      //   }
+      // });
+      for(var agent in currentCampaign[0].clients){
+        if(agent == code){
+          savedClients.push(currentCampaign[0].clients[agent])
         }
-      });
+      }
 
       console.log("Saved Clients", savedClients);
       console.log("Previous Campaign", previousCampaign);

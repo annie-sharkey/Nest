@@ -65,11 +65,12 @@ router.post("/clients", function(req, res) {
 });
 
 router.post("/campaign/", function(req, res, next) {
-  var clients = [];
+  var clients = {};
   Agent.find({})
     .then(function(agents) {
       for (var i = 0; i < agents.length; i++) {
-        clients.push({ agentCode: agents[i].agentCode, savedClients: [] });
+        var code = agents[i].agentCode
+        clients[code] = [];
       }
     })
     .then(function() {
@@ -231,22 +232,14 @@ router.put("/campaign/:id/:code", function(req, res, next) {
       throw err;
     }
     
-
-    campaign.clients.map(agent => {
-      agent.savedClients = [];
-      if (req.params.code == agent.agentCode) {
-        req.body.clients.forEach(function(client){
-          agent.savedClients.push(client);
-        })
-      }
-    });
+    campaign.clients[req.params.code] = req.body.clients
 
     campaign.save(function(err, response) {
-      console.log(campaign.clients[70])
+      
       if (err) {
         throw err;
       }
-      console.log(response.clients[70])
+      console.log(response.clients[req.params.code])
       res.json(response);
     });
   });

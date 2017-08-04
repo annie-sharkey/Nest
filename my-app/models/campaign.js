@@ -9,7 +9,7 @@ var CampaignSchema = new Schema(
   {
     campaignName: String,
     campaignColumns: [String],
-    clients: [],
+    clients: {},
     campaignUploads: [String],
     startDate: String,
     endDate: String,
