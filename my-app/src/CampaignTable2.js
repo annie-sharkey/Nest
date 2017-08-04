@@ -37,6 +37,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
+
       var currentCampaign = agentCampaigns.filter(campaign => {
         var start = moment(campaign.startDate).toDate().getTime();
         var end = moment(campaign.endDate).toDate().getTime();
@@ -45,10 +46,6 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
-      // var allOtherClients = currentCampaign[0].clients.filter(client => {
-      //     console.log("client.agentCode:", client.agentCode)
-      //   return client.agentCode != this.state.agent.agentCode;
-      // });
 
       var index = 0;
       for (var i = 0; i < agentCampaigns.length; i++) {
@@ -72,10 +69,14 @@ export default class CampaignTable2 extends Component {
 
       var code = this.state.agent.agentCode;
       var savedClients = [];
-      console.log(currentCampaign[0]);
-      if (currentCampaign[0].clients.hasOwnProperty(code)) {
-        var savedClients = currentCampaign[0].clients.code;
-      }
+      currentCampaign[0].clients.forEach(function(agent) {
+        if (agent.agentCode == code) {
+          if (agent.savedClients.length>0) {
+            savedClients = agent.saveClients;
+          }
+        }
+      });
+
       console.log("Saved Clients", savedClients);
       console.log("Previous Campaign", previousCampaign);
 
@@ -116,9 +117,11 @@ export default class CampaignTable2 extends Component {
           });
         }
       } else {
+        console.log("Case Final");
         included = [];
         notIncluded = this.state.masterList;
       }
+      console.log("Setting current", currentCampaign[0]);
       self.setState({
         included: included,
         notIncluded: notIncluded,
@@ -159,9 +162,12 @@ export default class CampaignTable2 extends Component {
   }
 
   saveClients(included) {
+    console.log("new included", included);
+    console.log("to campaign", this.state.currentCampaign);
     var data = {
       clients: included
     };
+    console.log(this.state.currentCampaign._id);
     axios
       .put(
         "http://localhost:4000/api/campaign/" +
@@ -169,10 +175,9 @@ export default class CampaignTable2 extends Component {
           "/" +
           this.state.agent.agentCode,
         data
-      )
-      .then(res => {
-        console.log(res.data.clients);
-      });
+      ).then(res=>{
+        console.log(res.data)
+      })
   }
 
   render() {

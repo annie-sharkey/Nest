@@ -5,9 +5,9 @@ import { HashRouter as Router, Route, Link } from "react-router-dom";
 import MasterTable from "./MasterTable";
 import CampaignTable from "./CampaignTable";
 import axios from "axios";
-import './AgentNavBar.css'
+import "./AgentNavBar.css";
 
-import CampaignTable2 from './CampaignTable2';
+import CampaignTable2 from "./CampaignTable2";
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -69,13 +69,23 @@ export default class AgentNavBar extends Component {
   render() {
     // console.log(this.state.dataSource);
     return (
-      // <div>
-      //   <ul>
-      //     <li>Master List</li>
-      //     <li>Build a Campaign</li>
-      //     </ul>
-      //   </div>
-      <Router ref="nav">
+      <Router>
+        <div>
+          <div>
+            <ul>
+              <li>
+                <Link to="/"><h3>Home</h3></Link>
+              </li>
+              <li>
+                <Link to="managelists"><h3>Master List</h3></Link>
+              </li>
+              <li>
+                <Link to="/managelists/campaigns"><h3>Build a Campaign</h3></Link>
+              </li>
+            </ul>
+          </div>
+
+          {/*<Router ref="nav">
         <div>
           <Menu
             onClick={e => this.handleClick(e)}
@@ -108,7 +118,7 @@ export default class AgentNavBar extends Component {
                 Build a Campaign
               </Link>
             </Menu.Item>
-          </Menu>
+          </Menu>*/}
 
           <Route
             exact
