@@ -7,7 +7,9 @@ import axios from "axios";
 import FileInput from "react-file-input";
 
 export default class AdminHome extends Component {
-  handleChange(e) {}
+  handleChange(e) {
+    axios.post("http://localhost:4000/api/upload", e.target.value);
+  }
   render() {
     return (
       <Router>
@@ -39,8 +41,12 @@ export default class AdminHome extends Component {
               </Link>
               <div className="inputFile">
                 <form>
-                  Select an image to upload:
-                  <input type="file" name="image" />
+                  Select an to upload:
+                  <input
+                    type="file"
+                    name="image"
+                    onChange={e => this.handleChange(e)}
+                  />
                   <input type="submit" value="Upload Image" />
                 </form>
               </div>

@@ -254,7 +254,7 @@ router.put("/campaign/:id/:code", function(req, res, next) {
 
 router.post("/upload", function(req, res, next) {
   console.log(req.body);
-  res.send(200);
+  res.sendStatus(200);
 });
 
 module.exports = router;
