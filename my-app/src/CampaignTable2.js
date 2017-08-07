@@ -274,6 +274,20 @@ notIncludedFiltered: !!notIncludedSearchText,
 
   }
   //end search functions not included
+    handleIncludedClearSearch(event) {
+    this.setState({
+      includedFiltered: false,
+      includedSearchText: ""
+    });
+  }
+
+  handleNotIncludedClearSearch(event) {
+    this.setState({
+      notIncludedFiltered: false,
+      notIncludedSearchText: ""
+    });
+  }
+
 
   render() {
     var notIncludedColumns = [
@@ -283,7 +297,7 @@ notIncludedFiltered: !!notIncludedSearchText,
         key: "clientName",
         width: "20%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientName, b.clientName);
+          return this.compareByAlph(b.clientName, a.clientName);
         }
       },
       {
@@ -298,7 +312,7 @@ notIncludedFiltered: !!notIncludedSearchText,
         key: "clientCity",
         width: "17%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientCity, b.clientCity);
+          return this.compareByAlph(b.clientCity, a.clientCity);
         }
       },
       {
@@ -307,7 +321,7 @@ notIncludedFiltered: !!notIncludedSearchText,
         key: "clientState",
         width: "12%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientState, b.clientState);
+          return this.compareByAlph(b.clientState, a.clientState);
         }
       },
 
@@ -340,7 +354,7 @@ notIncludedFiltered: !!notIncludedSearchText,
         key: "clientName",
         width: "20%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientName, b.clientName);
+          return this.compareByAlph(b.clientName, a.clientName);
         }
       },
       {
@@ -355,7 +369,7 @@ notIncludedFiltered: !!notIncludedSearchText,
         key: "clientCity",
         width: "17%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientCity, b.clientCity);
+          return this.compareByAlph(b.clientCity, a.clientCity);
         }
       },
       {
@@ -364,7 +378,7 @@ notIncludedFiltered: !!notIncludedSearchText,
         key: "clientState",
         width: "12%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientState, b.clientState);
+          return this.compareByAlph(b.clientState, a.clientState);
         }
       },
 
@@ -398,6 +412,8 @@ notIncludedFiltered: !!notIncludedSearchText,
 
         <div className="tables">
           <div className="included-table">
+            <h2 className="tableTitles">Included Clients</h2>
+            <div className="search">
             <Input
               ref={ele => (this.includedSearchInput = ele)}
               placeholder="Search included list by name, address, city, or state"
@@ -408,6 +424,10 @@ notIncludedFiltered: !!notIncludedSearchText,
             <Button type="primary" onClick={() => this.onIncludedSearch()}>
               Search
             </Button>
+            <Button onClick={event => this.handleIncludedClearSearch(event)}>
+              Clear Included Search
+            </Button>
+            </div>
             <Table
               bordered
               dataSource={
@@ -423,6 +443,8 @@ notIncludedFiltered: !!notIncludedSearchText,
           </div>
           <div className="middle" />
           <div className="not-table">
+            <h2 className="tableTitles">Not Included Clients</h2>
+            <div className="search">
             <Input
               ref={ele => (this.notIncludedSearchInput = ele)}
               placeholder="Search not included list by name, address, city, or state"
@@ -433,6 +455,10 @@ notIncludedFiltered: !!notIncludedSearchText,
             <Button type="primary" onClick={() => this.onNotIncludedSearch()}>
               Search
             </Button>
+            <Button onClick={event => this.handleNotIncludedClearSearch(event)}>
+              Clear Not Included Search
+            </Button>
+            </div>
             <Table
               bordered
               dataSource={this.state.notIncludedFiltered
