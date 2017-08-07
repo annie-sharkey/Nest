@@ -1,26 +1,34 @@
-.campaign-page{
-    display: flex;
-    flex-direction: column
+.campaign-page {
+  display: flex;
+  flex-direction: column;
 }
 
-.campaign-title{
-    
+.campaign-title {
 }
 
 .tables {
-    display: flex;
-    flex-direction: row
+  display: flex;
+  flex-direction: row;
 }
 
-.included-table{
-    width: 48%
+.included-table {
+  width: 48%;
 }
 
-.middle{
-width: 4%
+.middle {
+  width: 4%;
 }
 
-.not-table{
-width: 48%
+.not-table {
+  width: 48%;
 }
 
+.search-bar {
+  display: flex;
+  flex-direction: row;
+}
+
+.dropdown {
+  width: 50%;
+  margin: auto;
+}
