@@ -39,6 +39,7 @@ export default class JSONtoExcel extends Component {
       if (this.state.selectedCampaignClients[key].length > 0) {
         this.state.selectedCampaignClients[key].filter(client => {
           if (client.office == this.state.office) {
+            
             return data.push(client);
           }
         });

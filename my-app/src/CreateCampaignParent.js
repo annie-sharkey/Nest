@@ -174,7 +174,7 @@ export default class CreateCampaignParent extends Component {
             <Link to="/">
               <Icon
                 type="arrow-left"
-                style={{ fontSize: 30 }}
+                style={{ fontSize: 30, color: 'white' }}
                 onClick={message.destroy()}
               />
             </Link>
@@ -217,7 +217,7 @@ export default class CreateCampaignParent extends Component {
                 </Grid.Row>
               </Grid>
               <div>
-                <h3>Select Offices to Include</h3>
+                <h3 >Select Offices to Include</h3>
                 <br />
                 <div style={{ borderBottom: "1px solid #E9E9E9" }}>
                   {/*<Checkbox
@@ -242,9 +242,9 @@ export default class CreateCampaignParent extends Component {
                   updateColumnState={columns => this.updateColumnState(columns)}
                 />
 
-                <CreateCampaignUpload
+                {/*<CreateCampaignUpload
                   updateUploadState={uploads => this.updateUploadState(uploads)}
-                />
+                />*/}
               </Form>
               <br />
               <br />
