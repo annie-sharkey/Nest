@@ -6,13 +6,13 @@ var Schema = mongoose.Schema;
 //create new instance of the mongoose.schema. the schema takes an object that shows
 //the shape of your database entries.
 var ClientSchema = new Schema({
-  clientName: String,
-  firstName: String,
-  lastName: String,
-  clientAddress: String,
-  clientEmail: String,
-  clientCity: String,
-  clientState: String,
+  clientName: {type:String,default:"None"},
+  firstName: {type:String,default:""},
+  lastName: {type:String,default:""},
+  clientAddress: {type:String,default:"None"},
+  clientEmail: {type:String,default:"None"},
+  clientCity: {type:String,default:"None"},
+  clientState: {type:String,default:"None"},
   category: {
     type: String,
     default: "buyer"
@@ -21,13 +21,13 @@ var ClientSchema = new Schema({
   homeAnniversary: { type: String, default: "None" },
   campaigns: { type: [String], default: ["None"] },
   childrenNames: { type: [String], default: ["None"] },
-  lastEdited: String,
-  office: String,
-  agentCode: String,
-  agentName: String,
-  agentEmail: String,
-  agentTitle: String,
-  agentPhone: String
+  lastEdited: {type:String,default:"None"},
+  office: {type:String,default:"None"},
+  agentCode: {type:String,default:"None"},
+  agentName: {type:String,default:"None"},
+  agentEmail: {type:String,default:"None"},
+  agentTitle: {type:String,default:"None"},
+  agentPhone: {type:String,default:"None"}
 });
 
 //export our module to use in server.js
