@@ -25,7 +25,7 @@ import axios from "axios";
 import { Grid } from "semantic-ui-react";
 import moment from "moment";
 import EditBuildTable from "./EditBuildTable";
-import EditUploadTable from "./EditUploadTable";
+// import EditUploadTable from "./EditUploadTable";
 import JSONtoExcel from './JSONtoExcel';
 
 const FormItem = Form.Item;
@@ -288,11 +288,11 @@ export default class ManageCampaigns extends Component {
                     selectedCampaign={this.state.selectedCampaign}
                   />
 
-                  <EditUploadTable
+                  {/*<EditUploadTable
                     updateUploadState={uploads =>
                       this.updateUploadState(uploads)}
                     selectedCampaign={this.state.selectedCampaign}
-                  />
+                  />*/}
                 </Form>
               </div>
             </Modal>

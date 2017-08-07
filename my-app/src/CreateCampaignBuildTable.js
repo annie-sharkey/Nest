@@ -142,7 +142,7 @@ export default class CreateCampaignBuildTable extends Component {
                   </Button>}
               </div>
             </FormItem>}
-{this.state.columns.length < 1 && <div>No Custom Fields</div>}
+{this.state.columns.length == undefined && <div>No Custom Fields</div>}
           {this.state.columns.map(column => {
             return (
               <div>

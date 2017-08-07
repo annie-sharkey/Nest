@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Table, Input, Icon, Popconfirm } from "antd";
+import { Table, Input, Icon, Popconfirm, Modal, LocaleProvider } from "antd";
 import { Button, Dropdown } from "semantic-ui-react";
 import { Confirm } from "semantic-ui-react";
 import moment from "moment";
 import { Menu, message } from "antd";
 import "antd/dist/antd.css";
 import "./CampaignTable2.css";
+import enUS from "antd/lib/locale-provider/en_US";
 
 export default class CampaignTable2 extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ export default class CampaignTable2 extends Component {
       notIncludedSearchData: [],
 
       currentCampaign: {},
-      allOtherClients: []
+      allOtherClients: [],
+      openModal: false
     };
   }
 
@@ -165,7 +167,7 @@ export default class CampaignTable2 extends Component {
     );
 
     var new_notIncluded = this.state.notIncluded.filter(notClient => {
-      console.log("entered")
+      console.log("entered");
       return client._id != notClient._id;
     });
 
@@ -182,7 +184,7 @@ export default class CampaignTable2 extends Component {
     var new_notIncluded = this.state.notIncluded;
     new_notIncluded.push(client);
 
-        var newIncludedSearchData = this.state.includedSearchData.filter(
+    var newIncludedSearchData = this.state.includedSearchData.filter(
       notClient => {
         return client != notClient;
       }
@@ -297,6 +299,18 @@ export default class CampaignTable2 extends Component {
     this.setState({
       notIncludedFiltered: false,
       notIncludedSearchText: ""
+    });
+  }
+
+  handleOpenModal() {
+    this.setState({
+      openModal: true
+    });
+  }
+
+  handleCancel() {
+    this.setState({
+      openModal: false
     });
   }
 
@@ -426,7 +440,6 @@ export default class CampaignTable2 extends Component {
         </div>
         <div className="tables">
           <div className="included-table">
-
             <h2 className="tableTitles">Included</h2>
 
             <div className="search-bar">
@@ -472,9 +485,7 @@ export default class CampaignTable2 extends Component {
           </div>
           <div className="middle" />
           <div className="not-table">
-
             <h2 className="tableTitles">Not Included</h2>
-
 
             <div className="search-bar">
               <div style={{ width: "70%" }}>
@@ -517,6 +528,45 @@ export default class CampaignTable2 extends Component {
               scroll={{ y: 350 }}
               rowKey="uid"
             />
+            <div>
+              {this.state.currentCampaign.campaignCustomization != "" &&
+                <Button onClick={event => this.handleOpenModal()}>
+                  Customize Campaign
+                </Button>}
+            </div>
+            {this.state.openModal &&
+              <LocaleProvider locale={enUS}>
+                <Modal
+                  visible={true}
+                  onCancel={event => this.handleCancel(event)}
+                  okText="Done"
+                  onOk={event => this.handleCancel(event)}
+                >
+                  {/*<h2>{this.state.currentCampaign.campaignCustomization}</h2>*/}
+                  {this.state.currentCampaign.campaignCustomization.map(
+                    field => {
+                      return (
+                        <div>
+                          <h2>
+                            {field}
+                          </h2>
+                          {this.state.included.map(client => {
+                            return (
+                              <div>
+                                {client.clientName}
+                                {"  "}
+
+                                <input />
+                                <br />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    }
+                  )}
+                </Modal>
+              </LocaleProvider>}
           </div>
         </div>
       </div>

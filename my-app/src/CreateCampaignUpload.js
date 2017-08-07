@@ -141,8 +141,7 @@ export default class CreateCampaignUpload extends Component {
                   </Button>}
               </div>
             </FormItem>}
-          {/*{this.state.done &&*/}
-          {this.state.uploads.length < 1 && <div>No Uploads</div>}
+          {this.state.uploads.length == undefined && <div>No Uploads</div>}
 
           {this.state.uploads.map(upload => {
             return (
