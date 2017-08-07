@@ -26,7 +26,7 @@ export default class CreateCampaignBuildTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: ["Name", "City", "State"],
+      columns: [],
       // { title: "First Name", dataIndex: "First Name", key: "First Name" },
       // { title: "Last Name", dataIndex: "Last Name", key: "Last Name" },
       // { title: "City", dataIndex: "City", key: "City" },
@@ -117,12 +117,12 @@ export default class CreateCampaignBuildTable extends Component {
     return (
       <div>
         <Form>
-          <h3>Columns</h3>
+          <h3>Campaign Customization</h3>
 
           {!this.state.done &&
-            <FormItem label="Create a column:" style={{ width: 150 }}>
+            <FormItem label="Create a custom field:" style={{ width: 150 }}>
               <Input
-                placeholder="Column Title"
+                placeholder="Title"
                 value={this.state.columnName}
                 onChange={event => this.handleInput(event)}
                 onPressEnter={event =>
@@ -142,7 +142,7 @@ export default class CreateCampaignBuildTable extends Component {
                   </Button>}
               </div>
             </FormItem>}
-{this.state.columns.length < 1 && <div>No Columns</div>}
+{this.state.columns.length < 1 && <div>No Custom Fields</div>}
           {this.state.columns.map(column => {
             return (
               <div>

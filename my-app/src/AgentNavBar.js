@@ -73,7 +73,7 @@ export default class AgentNavBar extends Component {
             <ul>
               <li>
                 <Link to="/">
-                  <h3>Home</h3>
+                  <Icon type="left" color="white" style={{ fontSize: 20, color: 'white' }}/>
                 </Link>
               </li>
               <li>

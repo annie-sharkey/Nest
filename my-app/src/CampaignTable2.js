@@ -158,28 +158,43 @@ export default class CampaignTable2 extends Component {
     var new_included = this.state.included;
     new_included.push(client);
 
+    var newNotIncludedSearchData = this.state.notIncludedSearchData.filter(
+      notClient => {
+        return client != notClient;
+      }
+    );
+
     var new_notIncluded = this.state.notIncluded.filter(notClient => {
-      return client != notClient;
+      console.log("entered")
+      return client._id != notClient._id;
     });
 
     this.setState({
       included: new_included,
-      notIncluded: new_notIncluded
+      notIncluded: new_notIncluded,
+      notIncludedSearchData: newNotIncludedSearchData
     });
     this.saveClients(new_included);
+    console.log("client:", client);
   }
 
   remove(client) {
     var new_notIncluded = this.state.notIncluded;
     new_notIncluded.push(client);
 
+        var newIncludedSearchData = this.state.includedSearchData.filter(
+      notClient => {
+        return client != notClient;
+      }
+    );
     var new_included = this.state.included.filter(notClient => {
-      return client != notClient;
+      return client._id != notClient._id;
     });
 
     this.setState({
       included: new_included,
-      notIncluded: new_notIncluded
+      notIncluded: new_notIncluded,
+      includedSearchData: newIncludedSearchData
     });
 
     this.saveClients(new_included);
@@ -225,7 +240,7 @@ export default class CampaignTable2 extends Component {
       includedFiltered: !!includedSearchText,
       includedSearchData: this.state.included
         .map(record => {
-          console.log("record", record);
+          // console.log("record", record);
           const match =
             record.clientName.match(reg) ||
             record.clientCity.match(reg) ||
@@ -255,7 +270,6 @@ export default class CampaignTable2 extends Component {
       notIncludedFiltered: !!notIncludedSearchText,
       notIncludedSearchData: this.state.notIncluded
         .map(record => {
-          console.log("record", record);
           const match =
             record.clientName.match(reg) ||
             record.clientCity.match(reg) ||
@@ -272,7 +286,7 @@ export default class CampaignTable2 extends Component {
     });
   }
   //end search functions not included
-    handleIncludedClearSearch(event) {
+  handleIncludedClearSearch(event) {
     this.setState({
       includedFiltered: false,
       includedSearchText: ""
@@ -285,7 +299,6 @@ export default class CampaignTable2 extends Component {
       notIncludedSearchText: ""
     });
   }
-
 
   render() {
     var notIncludedColumns = [
@@ -412,7 +425,6 @@ export default class CampaignTable2 extends Component {
         </div>
         <div className="tables">
           <div className="included-table">
-
             <br />
             <div className="search-bar">
               <Input
@@ -447,7 +459,6 @@ export default class CampaignTable2 extends Component {
           </div>
           <div className="middle" />
           <div className="not-table">
-
             <br />
             <div className="search-bar">
               <Input
