@@ -84,6 +84,10 @@ export default class EditForm extends React.Component {
   handleUpdate() {
     var first = this.state.currentFirst;
     var last = this.state.currentLast;
+    if (first == undefined && last == undefined) {
+      first = this.state.currentName;
+      last = "";
+    }
     var address = this.state.currentAddress;
     var city = this.state.currentCity;
     var birthday = this.state.currentBirthday;

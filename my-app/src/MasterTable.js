@@ -66,6 +66,21 @@ export default class MasterTable extends React.Component {
     clientAnniversary
   ) {
     var clientId = this.state.selectedClient._id;
+    var data = this.state.dataSource;
+    var self = this;
+    data.map(client => {
+      if (client == self.state.selectedClient) {
+        client.firstName = firstName;
+        client.lastName = lastName;
+        client.clientAddress = clientAddress;
+        client.clientCity = clientCity;
+        client.clientEmail = clientEmail;
+        client.clientState = clientState;
+        client.clientBirthday = clientBirthday;
+        client.clientAnniversary = clientAnniversary;
+        client.clientName = firstName + " " + lastName;
+      }
+    });
     axios.put("http://localhost:4000/api/clients/" + clientId, {
       firstName: firstName,
       lastName: lastName,
@@ -78,6 +93,7 @@ export default class MasterTable extends React.Component {
       office: this.props.agent.agentOffice,
       agent: this.props.agent
     });
+    this.props.updateClients(data);
     this.closeEditModal();
   }
 
@@ -108,6 +124,24 @@ export default class MasterTable extends React.Component {
       agentTitle: this.props.agent.agentTitle,
       agentPhone: this.props.agent.agentPhoneNumber
     });
+    data.push({
+      clientName: firstName + " " + lastName,
+      firstName: firstName,
+      lastName: lastName,
+      clientAddress: clientAddress,
+      clientCity: clientCity,
+      clientEmail: clientEmail,
+      clientState: clientState,
+      clientBirthday: clientBirthday,
+      homeAnniversary: clientAnniversary,
+      agentCode: this.props.agentCode,
+      office: this.props.agent.agentOffice,
+      agentName: this.props.agent.agentName,
+      agentEmail: this.props.agent.agentEmail,
+      agentTitle: this.props.agent.agentTitle,
+      agentPhone: this.props.agent.agentPhoneNumber
+    });
+    this.props.updateClients(data);
     this.handleCloseModal();
   }
 
@@ -115,11 +149,11 @@ export default class MasterTable extends React.Component {
     axios.delete(
       "http://localhost:4000/api/clients/" + this.state.selectedClient._id
     );
+    var data = this.state.dataSource;
 
     this.setState({
       editModal: false
     });
-    window.location.reload();
   }
 
   compareByAlph(a, b) {

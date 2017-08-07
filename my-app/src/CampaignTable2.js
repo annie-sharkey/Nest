@@ -94,9 +94,17 @@ export default class CampaignTable2 extends Component {
           savedClients.length == 0 &&
           previousCampaignSavedClients.length == 0
         ) {
-          console.log("case two");
           included = [];
           notIncluded = this.state.masterList;
+          notIncluded.map(client => {
+            var campaignEndTime = moment(currentCampaign[0].endDate)
+              .toDate()
+              .getTime();
+            var lastEditedTime = moment(client.lastEdited).toDate().getTime();
+            if (lastEditedTime > campaignEndTime) {
+              included.push(client);
+            }
+          });
         }
 
         //Case 3
@@ -108,6 +116,15 @@ export default class CampaignTable2 extends Component {
           notIncluded = this.state.masterList.filter(client => {
             if (!included.includes(client)) {
               return client;
+            }
+          });
+          notIncluded.map(client => {
+            var campaignEndTime = moment(currentCampaign[0].endDate)
+              .toDate()
+              .getTime();
+            var lastEditedTime = moment(client.lastEdited).toDate().getTime();
+            if (lastEditedTime > campaignEndTime) {
+              included.push(client);
             }
           });
         }
@@ -131,7 +148,7 @@ export default class CampaignTable2 extends Component {
     var new_notIncluded = this.state.notIncluded.filter(notClient => {
       return client != notClient;
     });
-    console.log("new_notIncluded:", new_notIncluded);
+
     this.setState({
       included: new_included,
       notIncluded: new_notIncluded
@@ -156,8 +173,6 @@ export default class CampaignTable2 extends Component {
   }
 
   saveClients(included) {
-    console.log("new included", included);
-    console.log("to campaign", this.state.currentCampaign);
     var data = {
       clients: included
     };
