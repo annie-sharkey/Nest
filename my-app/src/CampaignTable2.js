@@ -91,8 +91,11 @@ export default class CampaignTable2 extends Component {
       if (savedClients.length > 0) {
         console.log("case one");
         included = savedClients;
+        var includedIds = included.map(client => {
+          return client._id;
+        });
         notIncluded = this.state.masterList.filter(client => {
-          if (!included.includes(client)) {
+          if (!includedIds.includes(client._id)) {
             return client;
           }
         });
@@ -121,8 +124,11 @@ export default class CampaignTable2 extends Component {
           previousCampaignSavedClients.length > 0
         ) {
           included = previousCampaignSavedClients;
+          var includedIds = included.map(client => {
+            return client._id;
+          });
           notIncluded = this.state.masterList.filter(client => {
-            if (!included.includes(client)) {
+            if (!includedIds.includes(client._id)) {
               return client;
             }
           });
@@ -137,7 +143,6 @@ export default class CampaignTable2 extends Component {
           });
         }
       } else {
-        console.log("Case Final");
         included = [];
         notIncluded = this.state.masterList;
       }
@@ -198,6 +203,17 @@ export default class CampaignTable2 extends Component {
       });
   }
 
+
+  compareByAlph(a, b) {
+    if (a > b) {
+      return -1;
+    }
+    if (a < b) {
+      return 1;
+    }
+    return 0;
+  }
+
   //search functions Included
   onIncludedInputChange(e) {
     this.setState({ includedSearchText: e.target.value });
@@ -255,6 +271,7 @@ notIncludedFiltered: !!notIncludedSearchText,
         })
         .filter(record => !!record)
     });
+
   }
   //end search functions not included
 

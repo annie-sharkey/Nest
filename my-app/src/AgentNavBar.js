@@ -24,29 +24,27 @@ export default class AgentNavBar extends Component {
   }
 
   componentWillMount() {
-    var current = "";
-    if (window.location.href.includes("campaigns")) {
-      current = "database";
-    }
-    if (!window.location.href.includes("campaigns")) {
-      current = "contacts";
-    }
     axios
       .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
       .then(response => {
         // console.log(response.data);
         this.setState({
           dataSource: response.data,
-          current: current,
           allClients: response.data
         });
       });
   }
 
   updateClients(clients) {
-    this.setState({
-      dataSource: clients
-    });
+    axios
+      .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
+      .then(response => {
+        // console.log(response.data);
+        this.setState({
+          dataSource: response.data,
+          allClients: response.data
+        });
+      });
   }
 
   handleClick(e) {
