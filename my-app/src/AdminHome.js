@@ -4,14 +4,11 @@ import Nest from "./Nest.png";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import { Button, Icon } from "semantic-ui-react";
 import axios from "axios";
+import FileInput from "react-file-input";
 
 export default class AdminHome extends Component {
-  handleFileUpload(e) {
-    var path = {
-      path: e.target.value
-    };
-    console.log(e.target.value)
-    axios.post("http://localhost:4000/api/upload", path);
+  handleChange(e) {
+    axios.post("http://localhost:4000/api/upload", e.target.value);
   }
   render() {
     return (
@@ -43,11 +40,15 @@ export default class AdminHome extends Component {
                 </div>
               </Link>
               <div className="inputFile">
-                <input
-                  type="file"
-                  accept=".xlsx, .xlx"
-                  onChange={e => this.handleFileUpload(e)}
-                />
+                <form>
+                  Select an to upload:
+                  <input
+                    type="file"
+                    name="image"
+                    onChange={e => this.handleChange(e)}
+                  />
+                  <input type="submit" value="Upload Image" />
+                </form>
               </div>
             </div>
           </div>

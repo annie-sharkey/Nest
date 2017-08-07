@@ -40,8 +40,11 @@ router.get("/campaigns", function(req, res, next) {
 });
 
 router.post("/clients", function(req, res) {
+  var clientName = req.body.firstName + " " + req.body.lastName;
   var client = new Client({
-    clientName: req.body.clientName,
+    clientName: clientName,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
     clientAddress: req.body.clientAddress,
     clientCity: req.body.clientCity,
     clientState: req.body.clientState,
@@ -69,7 +72,7 @@ router.post("/campaign/", function(req, res, next) {
   Agent.find({})
     .then(function(agents) {
       for (var i = 0; i < agents.length; i++) {
-        var code = agents[i].agentCode
+        var code = agents[i].agentCode;
         clients[code] = [];
       }
     })
@@ -172,11 +175,16 @@ router.get("/campaigns", function(req, res, next) {
 });
 
 router.put("/clients/:id", function(req, res, next) {
+  var clientName = req.body.firstName + " " + req.body.lastName;
+  console.log(clientName);
+  console.log(req.body.firstName);
   Client.findById(req.params.id, function(err, client) {
     if (err) {
       throw err;
     }
-    client.clientName = req.body.clientName || client.clientName;
+    client.clientName = clientName;
+    client.firstName = req.body.firstName || client.firstName;
+    client.lastName = req.body.lastName || client.lastName;
     client.clientAddress = req.body.clientAddress || client.clientAddress;
     client.clientCity = req.body.clientCity || client.clientCity;
     client.clientState = req.body.clientState || client.clientState;
@@ -231,22 +239,22 @@ router.put("/campaign/:id/:code", function(req, res, next) {
     if (err) {
       throw err;
     }
-    
-    campaign.clients[req.params.code] = req.body.clients
 
+    campaign.clients[req.params.code] = req.body.clients;
+    campaign.markModified("clients");
     campaign.save(function(err, response) {
-      
       if (err) {
         throw err;
       }
-      console.log(response.clients[req.params.code])
+      console.log(response.clients[req.params.code]);
       res.json(response);
     });
   });
 });
 
 router.post("/upload", function(req, res, next) {
-  console.log(req.body.path);
+  console.log(req.body);
+  res.sendStatus(200);
 });
 
 module.exports = router;

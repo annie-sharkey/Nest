@@ -37,6 +37,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
+      console.log(agentCampaigns)
 
       var currentCampaign = agentCampaigns.filter(campaign => {
         var start = moment(campaign.startDate).toDate().getTime();
@@ -46,6 +47,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
+      console.log("Current campaign:", currentCampaign[0])
 
       var index = 0;
       for (var i = 0; i < agentCampaigns.length; i++) {
@@ -56,36 +58,28 @@ export default class CampaignTable2 extends Component {
 
       var previousCampaign = agentCampaigns[index - 1];
 
+      var code = this.state.agent.agentCode;
+
+      console.log("Previous", previousCampaign);
       var previousCampaignSavedClients = [];
       if (previousCampaign != null) {
-        previousCampaignSavedClients = previousCampaign.clients.filter(
-          client => {
-            if (client.agentCode == this.state.agent.agentCode) {
-              return client;
-            }
+        for (var agent in previousCampaign.clients) {
+          if (agent == code && previousCampaign.clients[agent].length != 0) {
+            previousCampaignSavedClients = previousCampaign.clients[agent];
           }
-        );
+        }
       }
 
-      var code = this.state.agent.agentCode;
       var savedClients = [];
-      // currentCampaign[0].clients.forEach(function(agent) {
-      //   if (agent.agentCode == code) {
-      //     if (agent.savedClients.length>0) {
-      //       savedClients = agent.saveClients;
-      //     }
-      //   }
-      // });
-      for(var agent in currentCampaign[0].clients){
-        if(agent == code){
-          savedClients.push(currentCampaign[0].clients[agent])
+
+      for (var agent in currentCampaign[0].clients) {
+        if (agent == code && currentCampaign[0].clients[agent].length != 0) {
+          savedClients = currentCampaign[0].clients[agent];
         }
       }
 
       console.log("Saved Clients", savedClients);
       console.log("Previous Campaign", previousCampaign);
-
-      var previousSavedClients = [];
 
       //Case 1
       if (savedClients.length > 0) {
@@ -112,9 +106,7 @@ export default class CampaignTable2 extends Component {
           savedClients.length == 0 &&
           previousCampaignSavedClients.length > 0
         ) {
-          console.log("case three");
           included = previousCampaignSavedClients;
-          console.log("included");
           notIncluded = this.state.masterList.filter(client => {
             if (!included.includes(client)) {
               return client;
@@ -126,7 +118,6 @@ export default class CampaignTable2 extends Component {
         included = [];
         notIncluded = this.state.masterList;
       }
-      console.log("Setting current", currentCampaign[0]);
       self.setState({
         included: included,
         notIncluded: notIncluded,
@@ -180,12 +171,16 @@ export default class CampaignTable2 extends Component {
           "/" +
           this.state.agent.agentCode,
         data
-      ).then(res=>{
-        console.log(res.data)
-      })
+      )
+      .then(res => {
+        console.log(res.data);
+      });
+
+      
   }
 
   render() {
+    
     var notIncludedColumns = [
       {
         title: "Client Name",

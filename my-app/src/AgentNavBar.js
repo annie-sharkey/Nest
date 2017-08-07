@@ -74,13 +74,19 @@ export default class AgentNavBar extends Component {
           <div>
             <ul>
               <li>
-                <Link to="/"><h3>Home</h3></Link>
+                <Link to="/">
+                  <h3>Home</h3>
+                </Link>
               </li>
               <li>
-                <Link to="managelists"><h3>Master List</h3></Link>
+                <Link to="/managelists">
+                  <h3>Master List</h3>
+                </Link>
               </li>
               <li>
-                <Link to="/managelists/campaigns"><h3>Build a Campaign</h3></Link>
+                <Link to="/managelists/campaigns">
+                  <h3>Build a Campaign</h3>
+                </Link>
               </li>
             </ul>
           </div>

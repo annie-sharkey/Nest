@@ -23,10 +23,6 @@ export default class MasterTable extends React.Component {
     };
   }
 
-  componentWillMount() {
-    console.log(this.props.agent);
-  }
-
   handleOpenModal() {
     this.setState({
       modal: true
@@ -40,7 +36,6 @@ export default class MasterTable extends React.Component {
   }
 
   openEditModal(text) {
-    console.log(text);
     this.setState({
       editModal: true,
       selectedClient: text
@@ -61,7 +56,8 @@ export default class MasterTable extends React.Component {
   }
 
   updateClient(
-    clientName,
+    firstName,
+    lastName,
     clientAddress,
     clientCity,
     clientEmail,
@@ -71,7 +67,8 @@ export default class MasterTable extends React.Component {
   ) {
     var clientId = this.state.selectedClient._id;
     axios.put("http://localhost:4000/api/clients/" + clientId, {
-      clientName: clientName,
+      firstName: firstName,
+      lastName: lastName,
       clientAddress: clientAddress,
       clientCity: clientCity,
       clientEmail: clientEmail,
@@ -85,7 +82,8 @@ export default class MasterTable extends React.Component {
   }
 
   handleAdd(
-    clientName,
+    firstName,
+    lastName,
     clientAddress,
     clientCity,
     clientEmail,
@@ -95,7 +93,8 @@ export default class MasterTable extends React.Component {
   ) {
     var data = this.state.dataSource;
     axios.post("http://localhost:4000/api/clients", {
-      clientName: clientName,
+      firstName: firstName,
+      lastName: lastName,
       clientAddress: clientAddress,
       clientCity: clientCity,
       clientEmail: clientEmail,
@@ -190,7 +189,8 @@ export default class MasterTable extends React.Component {
             this.handleCloseModal();
           }}
           onOk={(
-            clientName,
+            firstName,
+            lastName,
             clientAddress,
             clientCity,
             clientEmail,
@@ -199,7 +199,8 @@ export default class MasterTable extends React.Component {
             clientAnniversary
           ) =>
             this.handleAdd(
-              clientName,
+              firstName,
+              lastName,
               clientAddress,
               clientCity,
               clientEmail,
@@ -220,6 +221,8 @@ export default class MasterTable extends React.Component {
           onCancel={() => this.cancelEditModal()}
           onOk={(
             clientName,
+            firstName,
+            lastName,
             clientAddress,
             clientCity,
             clientEmail,
@@ -229,6 +232,8 @@ export default class MasterTable extends React.Component {
           ) =>
             this.updateClient(
               clientName,
+              firstName,
+              lastName,
               clientAddress,
               clientCity,
               clientEmail,
