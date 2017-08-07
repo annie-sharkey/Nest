@@ -37,7 +37,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
-      console.log(agentCampaigns)
+      console.log(agentCampaigns);
 
       var currentCampaign = agentCampaigns.filter(campaign => {
         var start = moment(campaign.startDate).toDate().getTime();
@@ -47,7 +47,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
-      console.log("Current campaign:", currentCampaign[0])
+      console.log("Current campaign:", currentCampaign[0]);
 
       var index = 0;
       for (var i = 0; i < agentCampaigns.length; i++) {
@@ -85,8 +85,11 @@ export default class CampaignTable2 extends Component {
       if (savedClients.length > 0) {
         console.log("case one");
         included = savedClients;
+        var includedIds = included.map(client => {
+          return client._id;
+        });
         notIncluded = this.state.masterList.filter(client => {
-          if (!included.includes(client)) {
+          if (!includedIds.includes(client._id)) {
             return client;
           }
         });
@@ -115,8 +118,11 @@ export default class CampaignTable2 extends Component {
           previousCampaignSavedClients.length > 0
         ) {
           included = previousCampaignSavedClients;
+          var includedIds = included.map(client => {
+            return client._id;
+          });
           notIncluded = this.state.masterList.filter(client => {
-            if (!included.includes(client)) {
+            if (!includedIds.includes(client._id)) {
               return client;
             }
           });
@@ -131,7 +137,6 @@ export default class CampaignTable2 extends Component {
           });
         }
       } else {
-        console.log("Case Final");
         included = [];
         notIncluded = this.state.masterList;
       }
@@ -190,12 +195,19 @@ export default class CampaignTable2 extends Component {
       .then(res => {
         console.log(res.data);
       });
+  }
 
-      
+  compareByAlph(a, b) {
+    if (a > b) {
+      return -1;
+    }
+    if (a < b) {
+      return 1;
+    }
+    return 0;
   }
 
   render() {
-    
     var notIncludedColumns = [
       {
         title: "Client Name",
