@@ -272,7 +272,7 @@ export default class CampaignTable2 extends Component {
     });
   }
   //end search functions not included
-    handleIncludedClearSearch(event) {
+  handleIncludedClearSearch(event) {
     this.setState({
       includedFiltered: false,
       includedSearchText: ""
@@ -285,7 +285,6 @@ export default class CampaignTable2 extends Component {
       notIncludedSearchText: ""
     });
   }
-
 
   render() {
     var notIncludedColumns = [
@@ -403,6 +402,7 @@ export default class CampaignTable2 extends Component {
     ];
     return (
       <div className="campaignPage">
+        <br />
         <h2>
           {" Current Campaign: "}
           {this.state.currentCampaign.campaignName}{" "}
@@ -412,22 +412,31 @@ export default class CampaignTable2 extends Component {
         </div>
         <div className="tables">
           <div className="included-table">
-
-            <br />
+            <h2 className="tableTitles">Not Included</h2>
             <div className="search-bar">
-              <Input
-                ref={ele => (this.includedSearchInput = ele)}
-                placeholder="Search included list by name, address, city, or state"
-                value={this.state.includedSearchText}
-                onChange={e => this.onIncludedInputChange(e)}
-                onPressEnter={() => this.onIncludedSearch()}
-              />
+              <div style={{ width: "70%" }}>
+                <Input
+                  ref={ele => (this.includedSearchInput = ele)}
+                  placeholder="Search included list by name, address, city, or state"
+                  value={this.state.includedSearchText}
+                  onChange={e => this.onIncludedInputChange(e)}
+                  onPressEnter={() => this.onIncludedSearch()}
+                />
+              </div>
               <Button
                 type="primary"
                 size="mini"
                 onClick={() => this.onIncludedSearch()}
+                style={{ marginLeft: "1%" }}
               >
                 Search
+              </Button>
+              <Button
+                type="primary"
+                size="mini"
+                onClick={e => this.handleIncludedClearSearch(e)}
+              >
+                Clear Search
               </Button>
             </div>
             <br />
@@ -447,23 +456,32 @@ export default class CampaignTable2 extends Component {
           </div>
           <div className="middle" />
           <div className="not-table">
-
-            <br />
+            <h2 className="tableTitles">Not Included</h2>
             <div className="search-bar">
-              <Input
-                ref={ele => (this.notIncludedSearchInput = ele)}
-                placeholder="Search not included list by name, address, city, or state"
-                value={this.state.notIncludedSearchText}
-                onChange={e => this.onNotIncludedInputChange(e)}
-                onPressEnter={() => this.onNotIncludedSearch()}
-                size="mini"
-              />
+              <div style={{ width: "70%" }}>
+                <Input
+                  ref={ele => (this.notIncludedSearchInput = ele)}
+                  placeholder="Search not included list by name, address, city, or state"
+                  value={this.state.notIncludedSearchText}
+                  onChange={e => this.onNotIncludedInputChange(e)}
+                  onPressEnter={() => this.onNotIncludedSearch()}
+                  size="mini"
+                />
+              </div>
               <Button
                 type="primary"
                 size="mini"
                 onClick={() => this.onNotIncludedSearch()}
+                style={{ marginLeft: "1%" }}
               >
                 Search
+              </Button>
+              <Button
+                type="primary"
+                size="mini"
+                onClick={e => this.handleNotIncludedClearSearch(e)}
+              >
+                Clear Search
               </Button>
             </div>
             <br />
