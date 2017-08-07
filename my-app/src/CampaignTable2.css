@@ -3,8 +3,10 @@
   flex-direction: column;
 }
 
+
 h2 {
   color: #46797b;
+
 }
 
 .tables {
@@ -24,6 +26,16 @@ h2 {
   width: 48%;
 }
 
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+}
+
+.dropdown {
+  width: 50%;
+  margin: auto;
+
 .tableTitles {
   color: gray;
 }
@@ -31,4 +43,5 @@ h2 {
 .search {
   display: flex;
   flex-direction: row;
+
 }

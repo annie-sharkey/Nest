@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Table, Input, Icon, Popconfirm } from "antd";
-import { Button } from "semantic-ui-react";
+import { Button, Dropdown } from "semantic-ui-react";
 import { Confirm } from "semantic-ui-react";
 import moment from "moment";
-import { Menu, Dropdown, message } from "antd";
+import { Menu, message } from "antd";
 import "antd/dist/antd.css";
 import "./CampaignTable2.css";
 
@@ -22,7 +22,7 @@ export default class CampaignTable2 extends Component {
       notIncluded: this.props.dataSource,
       notIncludedSearchText: "",
       notIncludedSearchData: [],
-      
+
       currentCampaign: {},
       allOtherClients: []
     };
@@ -43,7 +43,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
-      console.log(agentCampaigns);
+      console.log("agent campaigns", agentCampaigns);
 
       var currentCampaign = agentCampaigns.filter(campaign => {
         var start = moment(campaign.startDate).toDate().getTime();
@@ -203,7 +203,6 @@ export default class CampaignTable2 extends Component {
       });
   }
 
-
   compareByAlph(a, b) {
     if (a > b) {
       return -1;
@@ -244,7 +243,7 @@ export default class CampaignTable2 extends Component {
   }
   //end search functions Included
 
-    //search functions not included
+  //search functions not included
   onNotIncludedInputChange(e) {
     this.setState({ notIncludedSearchText: e.target.value });
   }
@@ -253,7 +252,7 @@ export default class CampaignTable2 extends Component {
     const reg = new RegExp(notIncludedSearchText, "gi");
     this.setState({
       filterDropdownVisible: false,
-notIncludedFiltered: !!notIncludedSearchText,
+      notIncludedFiltered: !!notIncludedSearchText,
       notIncludedSearchData: this.state.notIncluded
         .map(record => {
           console.log("record", record);
@@ -271,7 +270,6 @@ notIncludedFiltered: !!notIncludedSearchText,
         })
         .filter(record => !!record)
     });
-
   }
   //end search functions not included
     handleIncludedClearSearch(event) {
@@ -409,25 +407,31 @@ notIncludedFiltered: !!notIncludedSearchText,
           {" Current Campaign: "}
           {this.state.currentCampaign.campaignName}{" "}
         </h2>
-
+        <div className="dropdown">
+          <Dropdown placeholder="Select Friend" fluid selection />
+        </div>
         <div className="tables">
           <div className="included-table">
-            <h2 className="tableTitles">Included Clients</h2>
-            <div className="search">
-            <Input
-              ref={ele => (this.includedSearchInput = ele)}
-              placeholder="Search included list by name, address, city, or state"
-              value={this.state.includedSearchText}
-              onChange={e => this.onIncludedInputChange(e)}
-              onPressEnter={() => this.onIncludedSearch()}
-            />
-            <Button type="primary" onClick={() => this.onIncludedSearch()}>
-              Search
-            </Button>
-            <Button onClick={event => this.handleIncludedClearSearch(event)}>
-              Clear Included Search
-            </Button>
+
+            <br />
+            <div className="search-bar">
+              <Input
+                ref={ele => (this.includedSearchInput = ele)}
+                placeholder="Search included list by name, address, city, or state"
+                value={this.state.includedSearchText}
+                onChange={e => this.onIncludedInputChange(e)}
+                onPressEnter={() => this.onIncludedSearch()}
+              />
+              <Button
+                type="primary"
+                size="mini"
+                onClick={() => this.onIncludedSearch()}
+              >
+                Search
+              </Button>
             </div>
+            <br />
+
             <Table
               bordered
               dataSource={
@@ -443,27 +447,34 @@ notIncludedFiltered: !!notIncludedSearchText,
           </div>
           <div className="middle" />
           <div className="not-table">
-            <h2 className="tableTitles">Not Included Clients</h2>
-            <div className="search">
-            <Input
-              ref={ele => (this.notIncludedSearchInput = ele)}
-              placeholder="Search not included list by name, address, city, or state"
-              value={this.state.notIncludedSearchText}
-              onChange={e => this.onNotIncludedInputChange(e)}
-              onPressEnter={() => this.onNotIncludedSearch()}
-            />
-            <Button type="primary" onClick={() => this.onNotIncludedSearch()}>
-              Search
-            </Button>
-            <Button onClick={event => this.handleNotIncludedClearSearch(event)}>
-              Clear Not Included Search
-            </Button>
+
+            <br />
+            <div className="search-bar">
+              <Input
+                ref={ele => (this.notIncludedSearchInput = ele)}
+                placeholder="Search not included list by name, address, city, or state"
+                value={this.state.notIncludedSearchText}
+                onChange={e => this.onNotIncludedInputChange(e)}
+                onPressEnter={() => this.onNotIncludedSearch()}
+                size="mini"
+              />
+              <Button
+                type="primary"
+                size="mini"
+                onClick={() => this.onNotIncludedSearch()}
+              >
+                Search
+              </Button>
             </div>
+            <br />
+
             <Table
               bordered
-              dataSource={this.state.notIncludedFiltered
+              dataSource={
+                this.state.notIncludedFiltered
                   ? this.state.notIncludedSearchData
-                  : this.state.notIncluded}
+                  : this.state.notIncluded
+              }
               columns={notIncludedColumns}
               pagination={false}
               scroll={{ y: 350 }}

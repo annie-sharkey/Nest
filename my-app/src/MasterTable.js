@@ -335,7 +335,6 @@ export default class MasterTable extends React.Component {
               onChange={e => this.onInputChange(e)}
               onPressEnter={() => this.onSearch()}
               width="10"
-
             />
             <Button type="primary" onClick={() => this.onSearch()}>
               Search
@@ -366,6 +365,7 @@ export default class MasterTable extends React.Component {
               }
               columns={columns}
               pagination={false}
+              scroll={{ y: 500 }}
             />
           </LocaleProvider>
         </div>
