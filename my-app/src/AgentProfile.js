@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Form, Input, Button } from "semantic-ui-react";
 import "./App.css";
+import Nest from "./Nest.png";
 import axios from "axios";
 import { Icon, List, Grid } from "semantic-ui-react";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
@@ -53,15 +54,9 @@ class AgentProfile extends Component {
             <Icon name="home" color="positive" size="huge" />
           </a>
         </Link>
-        <div
-          className="profile-pic"
-          style={{
-            "border-radius": "50%",
-            width: "80px",
-            height: "80px",
-            backgroundColor: "black"
-          }}
-        />
+        <div className="profile-pic">
+          <img src={Nest} width={75} />
+        </div>
         <div className="form-container">
           <Grid columns={3} textAlign={"center"}>
             <Grid.Row>

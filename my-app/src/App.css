@@ -84,7 +84,7 @@
 }
 
 .profile-pic {
-  margin: auto;
+  margin-left: 47%;
 }
 
 .edit-button {
@@ -186,5 +186,5 @@
 }
 
 .title {
-  color: #46797b
+  color: #46797b;
 }
