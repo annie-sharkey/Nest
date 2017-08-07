@@ -37,6 +37,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
+      console.log(agentCampaigns)
 
       var currentCampaign = agentCampaigns.filter(campaign => {
         var start = moment(campaign.startDate).toDate().getTime();
@@ -46,6 +47,7 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
+      console.log("Current campaign:", currentCampaign[0])
 
       var index = 0;
       for (var i = 0; i < agentCampaigns.length; i++) {
@@ -188,9 +190,12 @@ export default class CampaignTable2 extends Component {
       .then(res => {
         console.log(res.data);
       });
+
+      
   }
 
   render() {
+    
     var notIncludedColumns = [
       {
         title: "Client Name",

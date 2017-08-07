@@ -305,7 +305,7 @@ export default class ManageCampaigns extends Component {
                 return (
                   <div>
                     {office}
-                    <JSONtoExcel office={office} campaignName={this.state.selectedCampaign.campaignName} selectedCampaignClientIDs={this.state.selectedCampaign.clients}/>
+                    <JSONtoExcel office={office} campaignName={this.state.selectedCampaign.campaignName} selectedCampaignObject={this.state.selectedCampaign}/>
                     
                   </div>
                 );

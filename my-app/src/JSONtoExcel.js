@@ -11,38 +11,40 @@ export default class JSONtoExcel extends Component {
       // data: [],
       campaignName: this.props.campaignName,
       office: this.props.office,
-      selectedCampaignClientIDs: this.props.selectedCampaignClientIDs,
-      allClients: [],
-      selectedCampaignObjects: []
+      selectedCampaignClients: this.props.selectedCampaignObject.clients
+      // allClients: []
       // exportData: []
       // officeIDs: []
     };
   }
 
-  componentWillMount() {
-    axios.get("http://localhost:4000/api/clients").then(res => {
-      this.setState({
-        allClients: res.data
-      });
-    });
-    // var selectedCampaignObjects = this.state.allClients.forEach(client => {
-    //   this.state.selectedCampaignClientIDs.forEach(ID => {
-    //     return ID === client._id;
-    //   });
-    // });
-    // var OfficeObjects = this.state.allClients.map(client).filter(client => )
-    // var selectedCampaignObjects = this.state.allClients.filter(client => {
-    //   return client === this.state.selectedCampaignClientIDs;
-    // });
+  // componentWillMount() {
+  //   axios.get("http://localhost:4000/api/clients").then(res => {
+  //     this.setState({
+  //       allClients: res.data
+  //     });
+  //     console.log(
+  //       "selected campaign object:",
+  //       this.state.selectedCampaignClients
+  //     );
+  //   });
+  // }
 
-    // console.log("selected campaign objects:", selectedCampaignObjects);
-  }
-
+  
   handleClick(event) {
-    var selectiveData = this.state.selectedCampaignObjects.filter(data => {
-      return data.office == this.state.office;
+    var data = [];
+    var selectiveData = Object.keys(
+      this.state.selectedCampaignClients
+    ).filter(key => {
+      if (this.state.selectedCampaignClients[key].length > 0) {
+        this.state.selectedCampaignClients[key].filter(client => {
+          if (client.office == this.state.office) {
+            return data.push(client);
+          }
+        });
+      }
     });
-    var data = selectiveData;
+
     if (data == "") return;
 
     this.JSONToCSVConvertor(
@@ -130,17 +132,19 @@ export default class JSONtoExcel extends Component {
 
     // console.log("all clients:", this.state.allClients);
 
-    var self = this;
-    this.state.allClients.forEach(function(client) {
-      if (self.state.selectedCampaignClientIDs.includes(client._id)) {
-        self.state.selectedCampaignObjects.push(client);
-      }
-    });
+    // var self = this;
+    // this.state.allClients.forEach(function(client) {
+    //   if (self.state.selectedCampaignClientIDs.includes(client._id)) {
+    //     self.state.selectedCampaignObjects.push(client);
+    //   }
+    // });
 
-    console.log(
-      "selected campaign objects:",
-      this.state.selectedCampaignObjects
-    );
+    // console.log(
+    //   "selected campaign objects:",
+    //   this.state.selectedCampaignObjects
+    // );
+    console.log("campaign object:", this.state.selectedCampaignObject);
+    console.log("office:", this.state.office);
 
     return (
       <div className="mydiv">
