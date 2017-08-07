@@ -16,7 +16,13 @@ export default class CampaignTable2 extends Component {
       agent: this.props.agent,
       agentCampaigns: [],
       included: [],
+      includedSearchText: "",
+      includedSearchData: [],
+
       notIncluded: this.props.dataSource,
+      notIncludedSearchText: "",
+      notIncludedSearchData: [],
+      
       currentCampaign: {},
       allOtherClients: []
     };
@@ -197,6 +203,7 @@ export default class CampaignTable2 extends Component {
       });
   }
 
+
   compareByAlph(a, b) {
     if (a > b) {
       return -1;
@@ -207,6 +214,67 @@ export default class CampaignTable2 extends Component {
     return 0;
   }
 
+  //search functions Included
+  onIncludedInputChange(e) {
+    this.setState({ includedSearchText: e.target.value });
+  }
+  onIncludedSearch() {
+    const { includedSearchText } = this.state;
+    const reg = new RegExp(includedSearchText, "gi");
+    this.setState({
+      filterDropdownVisible: false,
+      includedFiltered: !!includedSearchText,
+      includedSearchData: this.state.included
+        .map(record => {
+          console.log("record", record);
+          const match =
+            record.clientName.match(reg) ||
+            record.clientCity.match(reg) ||
+            record.clientAddress.match(reg) ||
+            record.clientState.match(reg);
+          if (!match) {
+            return null;
+          }
+          return {
+            ...record
+          };
+        })
+        .filter(record => !!record)
+    });
+  }
+  //end search functions Included
+
+    //search functions not included
+  onNotIncludedInputChange(e) {
+    this.setState({ notIncludedSearchText: e.target.value });
+  }
+  onNotIncludedSearch() {
+    const { notIncludedSearchText } = this.state;
+    const reg = new RegExp(notIncludedSearchText, "gi");
+    this.setState({
+      filterDropdownVisible: false,
+notIncludedFiltered: !!notIncludedSearchText,
+      notIncludedSearchData: this.state.notIncluded
+        .map(record => {
+          console.log("record", record);
+          const match =
+            record.clientName.match(reg) ||
+            record.clientCity.match(reg) ||
+            record.clientAddress.match(reg) ||
+            record.clientState.match(reg);
+          if (!match) {
+            return null;
+          }
+          return {
+            ...record
+          };
+        })
+        .filter(record => !!record)
+    });
+
+  }
+  //end search functions not included
+
   render() {
     var notIncludedColumns = [
       {
@@ -216,35 +284,6 @@ export default class CampaignTable2 extends Component {
         width: "20%",
         sorter: (a, b) => {
           return this.compareByAlph(a.clientName, b.clientName);
-        },
-        filterDropdown: (
-          <div className="custom-filter-dropdown">
-            <Input
-              ref={ele => (this.searchInput = ele)}
-              placeholder="Search name"
-              value={this.state.leftSearchText}
-              onChange={e => this.onInputChange(e)}
-              onPressEnter={() => this.onSearch()}
-            />
-            <Button type="primary" onClick={() => this.onSearch()}>
-              Search
-            </Button>
-          </div>
-        ),
-        filterIcon: (
-          <Icon
-            type="search"
-            style={{ color: this.state.leftFiltered ? "#108ee9" : "#aaa" }}
-          />
-        ),
-        filterLeftDropdownVisible: this.state.filterLeftDropdownVisible,
-        onFilterLeftDropdownVisibleChange: visible => {
-          this.setState(
-            {
-              filterLeftDropdownVisible: visible
-            },
-            () => this.searchInput.focus()
-          );
         }
       },
       {
@@ -252,15 +291,6 @@ export default class CampaignTable2 extends Component {
         dataIndex: "clientAddress",
         key: "clientAddress",
         width: "20%"
-      },
-      {
-        title: "Client State",
-        dataIndex: "clientState",
-        key: "clientState",
-        width: "12%",
-        sorter: (a, b) => {
-          return this.compareByAlph(a.clientState, b.clientState);
-        }
       },
       {
         title: "Client City",
@@ -271,6 +301,16 @@ export default class CampaignTable2 extends Component {
           return this.compareByAlph(a.clientCity, b.clientCity);
         }
       },
+      {
+        title: "Client State",
+        dataIndex: "clientState",
+        key: "clientState",
+        width: "12%",
+        sorter: (a, b) => {
+          return this.compareByAlph(a.clientState, b.clientState);
+        }
+      },
+
       {
         title: "Move",
         dataIndex: "_id",
@@ -301,35 +341,6 @@ export default class CampaignTable2 extends Component {
         width: "20%",
         sorter: (a, b) => {
           return this.compareByAlph(a.clientName, b.clientName);
-        },
-        filterDropdown: (
-          <div className="custom-filter-dropdown">
-            <Input
-              ref={ele => (this.searchRightInput = ele)}
-              placeholder="Search name"
-              value={this.state.rightSearchText}
-              onChange={e => this.onRightInputChange(e)}
-              onPressEnter={() => this.onRightSearch()}
-            />
-            <Button type="primary" onClick={() => this.onRightSearch()}>
-              Search
-            </Button>
-          </div>
-        ),
-        filterIcon: (
-          <Icon
-            type="search"
-            style={{ color: this.state.rightFiltered ? "#108ee9" : "#aaa" }}
-          />
-        ),
-        filterDropdownVisible: this.state.filterDropdownVisible,
-        onFilterDropdownVisibleChange: visible => {
-          this.setState(
-            {
-              filterDropdownVisible: visible
-            },
-            () => this.searchRightInput.focus()
-          );
         }
       },
       {
@@ -337,15 +348,6 @@ export default class CampaignTable2 extends Component {
         dataIndex: "clientAddress",
         key: "clientAddress",
         width: "20%"
-      },
-      {
-        title: "Client State",
-        dataIndex: "clientState",
-        key: "clientState",
-        width: "12%",
-        sorter: (a, b) => {
-          return this.compareByAlph(a.clientState, b.clientState);
-        }
       },
       {
         title: "Client City",
@@ -356,6 +358,16 @@ export default class CampaignTable2 extends Component {
           return this.compareByAlph(a.clientCity, b.clientCity);
         }
       },
+      {
+        title: "Client State",
+        dataIndex: "clientState",
+        key: "clientState",
+        width: "12%",
+        sorter: (a, b) => {
+          return this.compareByAlph(a.clientState, b.clientState);
+        }
+      },
+
       {
         title: "Move Back",
         dataIndex: "_id",
@@ -386,9 +398,23 @@ export default class CampaignTable2 extends Component {
 
         <div className="tables">
           <div className="included-table">
+            <Input
+              ref={ele => (this.includedSearchInput = ele)}
+              placeholder="Search included list by name, address, city, or state"
+              value={this.state.includedSearchText}
+              onChange={e => this.onIncludedInputChange(e)}
+              onPressEnter={() => this.onIncludedSearch()}
+            />
+            <Button type="primary" onClick={() => this.onIncludedSearch()}>
+              Search
+            </Button>
             <Table
               bordered
-              dataSource={this.state.included}
+              dataSource={
+                this.state.includedFiltered
+                  ? this.state.includedSearchData
+                  : this.state.included
+              }
               columns={IncludedColumns}
               pagination={false}
               scroll={{ y: 350 }}
@@ -397,9 +423,21 @@ export default class CampaignTable2 extends Component {
           </div>
           <div className="middle" />
           <div className="not-table">
+            <Input
+              ref={ele => (this.notIncludedSearchInput = ele)}
+              placeholder="Search not included list by name, address, city, or state"
+              value={this.state.notIncludedSearchText}
+              onChange={e => this.onNotIncludedInputChange(e)}
+              onPressEnter={() => this.onNotIncludedSearch()}
+            />
+            <Button type="primary" onClick={() => this.onNotIncludedSearch()}>
+              Search
+            </Button>
             <Table
               bordered
-              dataSource={this.state.notIncluded}
+              dataSource={this.state.notIncludedFiltered
+                  ? this.state.notIncludedSearchData
+                  : this.state.notIncluded}
               columns={notIncludedColumns}
               pagination={false}
               scroll={{ y: 350 }}

@@ -315,8 +315,8 @@ export default class CampaignTable extends React.Component {
       clientsToSave: client_ids,
       rightSearchData: search
     });
-  //   var key = "MasterList"
-  //  this.onClick(key)
+    //   var key = "MasterList"
+    //  this.onClick(key)
   }
 
   saveClients(clients) {
@@ -529,12 +529,7 @@ export default class CampaignTable extends React.Component {
             </Button>
           </div>
         ),
-        filterIcon: (
-          <Icon
-            type="search"
-            style={{ color: this.state.leftFiltered ? "#108ee9" : "#aaa" }}
-          />
-        ),
+        filterIcon: <Button>Search</Button>,
         filterLeftDropdownVisible: this.state.filterLeftDropdownVisible,
         onFilterLeftDropdownVisibleChange: visible => {
           this.setState(
@@ -689,7 +684,7 @@ export default class CampaignTable extends React.Component {
                 Not Included
               </h3>
             </div>
-            <Dropdown overlay={menu} trigger={['click']} default="MasterList">
+            <Dropdown overlay={menu} trigger={["click"]} default="MasterList">
               <a className="ant-dropdown-link" href="#">
                 Select Campaign <Icon type="down" />
               </a>
