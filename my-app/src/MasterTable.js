@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import { Table, Input, Icon, Popconfirm } from "antd";
+import { Table, Input, Icon, Popconfirm, LocaleProvider } from "antd";
 import { Button } from "semantic-ui-react";
 import axios from "axios";
 // import data from './data';
 import ClientForm from "./Form";
 import EditForm from "./EditForm";
 import "./App.css";
+import enUS from "antd/lib/locale-provider/en_US";
 
 export default class MasterTable extends React.Component {
   constructor(props) {
@@ -178,27 +179,17 @@ export default class MasterTable extends React.Component {
       filtered: !!searchText,
       searchData: this.state.dataSource
         .map(record => {
-          const match = record.clientName.match(reg);
+          console.log("record", record);
+          const match =
+            record.clientName.match(reg) ||
+            record.clientCity.match(reg) ||
+            record.clientAddress.match(reg) ||
+            record.clientState.match(reg);
           if (!match) {
             return null;
           }
           return {
-            ...record,
-            name: (
-              <span>
-                {record.clientName.split(reg).map(
-                  (text, i) =>
-                    i > 0
-                      ? [
-                          <span className="highlight">
-                            {match[0]}
-                          </span>,
-                          text
-                        ]
-                      : text
-                )}
-              </span>
-            )
+            ...record
           };
         })
         .filter(record => !!record)
@@ -290,35 +281,6 @@ export default class MasterTable extends React.Component {
         width: "25%",
         sorter: (a, b) => {
           return this.compareByAlph(a.clientName, b.clientName);
-        },
-        filterDropdown: (
-          <div className="custom-filter-dropdown">
-            <Input
-              ref={ele => (this.searchInput = ele)}
-              placeholder="Search name"
-              value={this.state.searchText}
-              onChange={e => this.onInputChange(e)}
-              onPressEnter={() => this.onSearch()}
-            />
-            <Button type="primary" onClick={() => this.onSearch()}>
-              Search
-            </Button>
-          </div>
-        ),
-        filterIcon: (
-          <Icon
-            type="search"
-            style={{ color: this.state.filtered ? "#108ee9" : "#aaa" }}
-          />
-        ),
-        filterDropdownVisible: this.state.filterDropdownVisible,
-        onFilterDropdownVisibleChange: visible => {
-          this.setState(
-            {
-              filterDropdownVisible: visible
-            },
-            () => this.searchInput.focus()
-          );
         }
       },
       {
@@ -363,12 +325,25 @@ export default class MasterTable extends React.Component {
     ];
     return (
       <div className="master">
-        <div className="master-title">
+        <div>
           <h2 style={{ margin: "auto" }}>Your List of Clients</h2>
-          <Button onClick={event => this.handleClearSearch(event)}>
-            Clear Search
-          </Button>
-          <div className="editable-add-btn">
+          <div className="master-title">
+            <Input
+              ref={ele => (this.searchInput = ele)}
+              placeholder="Search by name, address, city, or state"
+              value={this.state.searchText}
+              onChange={e => this.onInputChange(e)}
+              onPressEnter={() => this.onSearch()}
+              width="10"
+
+            />
+            <Button type="primary" onClick={() => this.onSearch()}>
+              Search
+            </Button>
+            <Button onClick={event => this.handleClearSearch(event)}>
+              Clear Search
+            </Button>
+
             <Button
               onClick={() => this.handleOpenModal()}
               width="4"
@@ -381,16 +356,18 @@ export default class MasterTable extends React.Component {
         {modal}
         {editModal}
         <div className="master-table">
-          <Table
-            bordered
-            dataSource={
-              this.state.filtered
-                ? this.state.searchData
-                : this.state.dataSource
-            }
-            columns={columns}
-            pagination={false}
-          />
+          <LocaleProvider locale={enUS}>
+            <Table
+              bordered
+              dataSource={
+                this.state.filtered
+                  ? this.state.searchData
+                  : this.state.dataSource
+              }
+              columns={columns}
+              pagination={false}
+            />
+          </LocaleProvider>
         </div>
       </div>
     );
