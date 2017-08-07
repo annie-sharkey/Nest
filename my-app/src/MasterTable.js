@@ -325,32 +325,31 @@ export default class MasterTable extends React.Component {
     ];
     return (
       <div className="master">
-        <div>
-          <h2 style={{ margin: "auto" }}>Your List of Clients</h2>
-          <div className="master-title">
+        <h2 style={{ margin: "auto" }}>Your List of Clients</h2>
+        <div style={{ margin: "auto", marginTop: "1%" }}>
+          <Button onClick={() => this.handleOpenModal()} width="4" color="grey">
+            Add Client
+          </Button>
+        </div>
+        <br />
+        <div className="master-title">
+          <div style={{ margin: "auto", width: "40%" }}>
             <Input
               ref={ele => (this.searchInput = ele)}
               placeholder="Search by name, address, city, or state"
               value={this.state.searchText}
               onChange={e => this.onInputChange(e)}
               onPressEnter={() => this.onSearch()}
-              width="10"
             />
-            <Button type="primary" onClick={() => this.onSearch()}>
-              Search
-            </Button>
-            <Button onClick={event => this.handleClearSearch(event)}>
-              Clear Search
-            </Button>
-
-            <Button
-              onClick={() => this.handleOpenModal()}
-              width="4"
-              color="grey"
-            >
-              Add Client
-            </Button>
           </div>
+        </div>
+        <div style={{ margin: "auto" }}>
+          <Button type="primary" size="mini" onClick={() => this.onSearch()}>
+            Search
+          </Button>
+          <Button onClick={event => this.handleClearSearch(event)} size="mini">
+            Clear Search
+          </Button>
         </div>
         {modal}
         {editModal}
