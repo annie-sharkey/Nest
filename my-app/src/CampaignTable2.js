@@ -272,6 +272,20 @@ export default class CampaignTable2 extends Component {
     });
   }
   //end search functions not included
+    handleIncludedClearSearch(event) {
+    this.setState({
+      includedFiltered: false,
+      includedSearchText: ""
+    });
+  }
+
+  handleNotIncludedClearSearch(event) {
+    this.setState({
+      notIncludedFiltered: false,
+      notIncludedSearchText: ""
+    });
+  }
+
 
   render() {
     var notIncludedColumns = [
@@ -281,7 +295,7 @@ export default class CampaignTable2 extends Component {
         key: "clientName",
         width: "20%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientName, b.clientName);
+          return this.compareByAlph(b.clientName, a.clientName);
         }
       },
       {
@@ -296,7 +310,7 @@ export default class CampaignTable2 extends Component {
         key: "clientCity",
         width: "17%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientCity, b.clientCity);
+          return this.compareByAlph(b.clientCity, a.clientCity);
         }
       },
       {
@@ -305,7 +319,7 @@ export default class CampaignTable2 extends Component {
         key: "clientState",
         width: "12%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientState, b.clientState);
+          return this.compareByAlph(b.clientState, a.clientState);
         }
       },
 
@@ -338,7 +352,7 @@ export default class CampaignTable2 extends Component {
         key: "clientName",
         width: "20%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientName, b.clientName);
+          return this.compareByAlph(b.clientName, a.clientName);
         }
       },
       {
@@ -353,7 +367,7 @@ export default class CampaignTable2 extends Component {
         key: "clientCity",
         width: "17%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientCity, b.clientCity);
+          return this.compareByAlph(b.clientCity, a.clientCity);
         }
       },
       {
@@ -362,7 +376,7 @@ export default class CampaignTable2 extends Component {
         key: "clientState",
         width: "12%",
         sorter: (a, b) => {
-          return this.compareByAlph(a.clientState, b.clientState);
+          return this.compareByAlph(b.clientState, a.clientState);
         }
       },
 
@@ -398,6 +412,7 @@ export default class CampaignTable2 extends Component {
         </div>
         <div className="tables">
           <div className="included-table">
+
             <br />
             <div className="search-bar">
               <Input
@@ -416,6 +431,7 @@ export default class CampaignTable2 extends Component {
               </Button>
             </div>
             <br />
+
             <Table
               bordered
               dataSource={
@@ -431,6 +447,7 @@ export default class CampaignTable2 extends Component {
           </div>
           <div className="middle" />
           <div className="not-table">
+
             <br />
             <div className="search-bar">
               <Input
@@ -450,6 +467,7 @@ export default class CampaignTable2 extends Component {
               </Button>
             </div>
             <br />
+
             <Table
               bordered
               dataSource={
