@@ -82,19 +82,26 @@ export default class MasterTable extends React.Component {
         client.clientName = firstName + " " + lastName;
       }
     });
-    axios.put("http://localhost:4000/api/clients/" + clientId, {
-      firstName: firstName,
-      lastName: lastName,
-      clientAddress: clientAddress,
-      clientCity: clientCity,
-      clientEmail: clientEmail,
-      clientState: clientState,
-      clientBirthday: clientBirthday,
-      homeAnniversary: clientAnniversary,
-      office: this.props.agent.agentOffice,
-      agent: this.props.agent
-    });
-    this.props.updateClients(data);
+    axios
+      .put("http://localhost:4000/api/clients/" + clientId, {
+        firstName: firstName,
+        lastName: lastName,
+        clientAddress: clientAddress,
+        clientCity: clientCity,
+        clientEmail: clientEmail,
+        clientState: clientState,
+        clientBirthday: clientBirthday,
+        homeAnniversary: clientAnniversary,
+        office: this.props.agent.agentOffice,
+        agent: this.props.agent
+      })
+      .then(res => {
+        data.push(res.data);
+      })
+      .then(function() {
+        self.props.updateClients(data);
+      });
+
     this.closeEditModal();
   }
 
@@ -109,48 +116,54 @@ export default class MasterTable extends React.Component {
     clientAnniversary
   ) {
     var data = this.state.dataSource;
-    axios.post("http://localhost:4000/api/clients", {
-      firstName: firstName,
-      lastName: lastName,
-      clientAddress: clientAddress,
-      clientCity: clientCity,
-      clientEmail: clientEmail,
-      clientState: clientState,
-      clientBirthday: clientBirthday,
-      homeAnniversary: clientAnniversary,
-      agentCode: this.props.agentCode,
-      office: this.props.agent.agentOffice,
-      agentName: this.props.agent.agentName,
-      agentEmail: this.props.agent.agentEmail,
-      agentTitle: this.props.agent.agentTitle,
-      agentPhone: this.props.agent.agentPhoneNumber
-    });
-    data.push({
-      clientName: firstName + " " + lastName,
-      firstName: firstName,
-      lastName: lastName,
-      clientAddress: clientAddress,
-      clientCity: clientCity,
-      clientEmail: clientEmail,
-      clientState: clientState,
-      clientBirthday: clientBirthday,
-      homeAnniversary: clientAnniversary,
-      agentCode: this.props.agentCode,
-      office: this.props.agent.agentOffice,
-      agentName: this.props.agent.agentName,
-      agentEmail: this.props.agent.agentEmail,
-      agentTitle: this.props.agent.agentTitle,
-      agentPhone: this.props.agent.agentPhoneNumber
-    });
-    this.props.updateClients(data);
+    var self = this;
+    axios
+      .post("http://localhost:4000/api/clients", {
+        firstName: firstName,
+        lastName: lastName,
+        clientAddress: clientAddress,
+        clientCity: clientCity,
+        clientEmail: clientEmail,
+        clientState: clientState,
+        clientBirthday: clientBirthday,
+        homeAnniversary: clientAnniversary,
+        agentCode: this.props.agentCode,
+        office: this.props.agent.agentOffice,
+        agentName: this.props.agent.agentName,
+        agentEmail: this.props.agent.agentEmail,
+        agentTitle: this.props.agent.agentTitle,
+        agentPhone: this.props.agent.agentPhoneNumber
+      })
+      .then(res => {
+        data.push(res.data);
+      })
+      .then(function() {
+        self.props.updateClients(data);
+      });
     this.handleCloseModal();
   }
 
   deleteClient() {
-    axios.delete(
-      "http://localhost:4000/api/clients/" + this.state.selectedClient._id
-    );
     var data = this.state.dataSource;
+    var self = this;
+    var client;
+    axios
+      .delete(
+        "http://localhost:4000/api/clients/" + this.state.selectedClient._id
+      )
+      .then(res => {
+        client = res.data;
+        var index = 0;
+        for (var i = 0; i < data.length; i++) {
+          if (data[i] == client) {
+            index = i;
+          }
+        }
+        data.splice(index, 1);
+      })
+      .then(function() {
+        self.props.updateClients(data);
+      });
 
     this.setState({
       editModal: false
@@ -364,7 +377,7 @@ export default class MasterTable extends React.Component {
               }
               columns={columns}
               pagination={false}
-              scroll={{ y: 500 }}
+              scroll={{ y: 350 }}
             />
           </LocaleProvider>
         </div>

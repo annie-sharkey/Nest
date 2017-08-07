@@ -43,87 +43,61 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
-      console.log("agent campaigns", agentCampaigns);
+      console.log(agentCampaigns);
 
-      var currentCampaign = agentCampaigns.filter(campaign => {
-        var start = moment(campaign.startDate).toDate().getTime();
-        var end = moment(campaign.endDate).toDate().getTime();
-        var current = new Date().getTime();
-        if (current >= start && current <= end) {
-          return campaign;
-        }
-      });
-      console.log("Current campaign:", currentCampaign[0]);
-
-      var index = 0;
-      for (var i = 0; i < agentCampaigns.length; i++) {
-        if (agentCampaigns[i] == currentCampaign[0]) {
-          index = i;
-        }
-      }
-
-      var previousCampaign = agentCampaigns[index - 1];
-
-      var code = this.state.agent.agentCode;
-
-      console.log("Previous", previousCampaign);
-      var previousCampaignSavedClients = [];
-      if (previousCampaign != null) {
-        for (var agent in previousCampaign.clients) {
-          if (agent == code && previousCampaign.clients[agent].length != 0) {
-            previousCampaignSavedClients = previousCampaign.clients[agent];
-          }
-        }
-      }
-
-      var savedClients = [];
-
-      for (var agent in currentCampaign[0].clients) {
-        if (agent == code && currentCampaign[0].clients[agent].length != 0) {
-          savedClients = currentCampaign[0].clients[agent];
-        }
-      }
-
-      console.log("Saved Clients", savedClients);
-      console.log("Previous Campaign", previousCampaign);
-
-      //Case 1
-      if (savedClients.length > 0) {
-        console.log("case one");
-        included = savedClients;
-        var includedIds = included.map(client => {
-          return client._id;
-        });
-        notIncluded = this.state.masterList.filter(client => {
-          if (!includedIds.includes(client._id)) {
-            return client;
+      if (agentCampaigns.length > 0) {
+        var currentCampaign = agentCampaigns.filter(campaign => {
+          var start = moment(campaign.startDate).toDate().getTime();
+          var end = moment(campaign.endDate).toDate().getTime();
+          var current = new Date().getTime();
+          if (current >= start && current <= end) {
+            return campaign;
           }
         });
-      } else if (previousCampaign !== null) {
-        //Case 2
-        if (
-          savedClients.length == 0 &&
-          previousCampaignSavedClients.length == 0
-        ) {
-          included = [];
-          notIncluded = this.state.masterList;
-          notIncluded.map(client => {
-            var campaignEndTime = moment(currentCampaign[0].endDate)
-              .toDate()
-              .getTime();
-            var lastEditedTime = moment(client.lastEdited).toDate().getTime();
-            if (lastEditedTime > campaignEndTime) {
-              included.push(client);
+        agentCampaigns.sort(function(a, b) {
+          return (
+            moment(a.endDate).toDate().getTime() -
+            moment(b.endDate).toDate().getTime()
+          );
+        });
+        console.log("Sorted Agent Campaigns", agentCampaigns);
+
+        var index = 0;
+        for (var i = 0; i < agentCampaigns.length; i++) {
+          if (agentCampaigns[i] == currentCampaign[0]) {
+            index = i;
+          }
+        }
+
+        var previousCampaign = agentCampaigns[index - 1];
+
+        var code = this.state.agent.agentCode;
+
+        console.log("Previous", previousCampaign);
+        var previousCampaignSavedClients = [];
+        if (previousCampaign != null) {
+          for (var agent in previousCampaign.clients) {
+            if (agent == code && previousCampaign.clients[agent].length != 0) {
+              previousCampaignSavedClients = previousCampaign.clients[agent];
             }
-          });
+          }
         }
 
-        //Case 3
-        if (
-          savedClients.length == 0 &&
-          previousCampaignSavedClients.length > 0
-        ) {
-          included = previousCampaignSavedClients;
+        var savedClients = [];
+
+        for (var agent in currentCampaign[0].clients) {
+          if (agent == code && currentCampaign[0].clients[agent].length != 0) {
+            savedClients = currentCampaign[0].clients[agent];
+          }
+        }
+
+        console.log("Saved Clients", savedClients);
+        console.log("Previous Campaign", previousCampaign);
+
+        //Case 1
+        if (savedClients.length > 0) {
+          console.log("case one");
+          included = savedClients;
           var includedIds = included.map(client => {
             return client._id;
           });
@@ -132,25 +106,60 @@ export default class CampaignTable2 extends Component {
               return client;
             }
           });
-          notIncluded.map(client => {
-            var campaignEndTime = moment(currentCampaign[0].endDate)
-              .toDate()
-              .getTime();
-            var lastEditedTime = moment(client.lastEdited).toDate().getTime();
-            if (lastEditedTime > campaignEndTime) {
-              included.push(client);
-            }
-          });
+        } else if (previousCampaign !== null) {
+          //Case 2
+          if (
+            savedClients.length == 0 &&
+            previousCampaignSavedClients.length == 0
+          ) {
+            included = [];
+            notIncluded = this.state.masterList;
+            notIncluded.map(client => {
+              var campaignEndTime = moment(currentCampaign[0].endDate)
+                .toDate()
+                .getTime();
+              var lastEditedTime = moment(client.lastEdited).toDate().getTime();
+              if (lastEditedTime > campaignEndTime) {
+                included.push(client);
+              }
+            });
+          }
+
+          //Case 3
+          if (
+            savedClients.length == 0 &&
+            previousCampaignSavedClients.length > 0
+          ) {
+            included = previousCampaignSavedClients;
+            var includedIds = included.map(client => {
+              return client._id;
+            });
+            notIncluded = this.state.masterList.filter(client => {
+              if (!includedIds.includes(client._id)) {
+                return client;
+              }
+            });
+            notIncluded.map(client => {
+              var campaignEndTime = moment(currentCampaign[0].endDate)
+                .toDate()
+                .getTime();
+              var lastEditedTime = moment(client.lastEdited).toDate().getTime();
+              if (lastEditedTime > campaignEndTime) {
+                included.push(client);
+              }
+            });
+          }
+        } else {
+          included = [];
+          notIncluded = this.state.masterList;
         }
-      } else {
-        included = [];
-        notIncluded = this.state.masterList;
+        self.setState({
+          included: included,
+          notIncluded: notIncluded,
+          currentCampaign: currentCampaign[0],
+          agentCampaigns: agentCampaigns
+        });
       }
-      self.setState({
-        included: included,
-        notIncluded: notIncluded,
-        currentCampaign: currentCampaign[0]
-      });
     });
   }
 
@@ -165,7 +174,7 @@ export default class CampaignTable2 extends Component {
     );
 
     var new_notIncluded = this.state.notIncluded.filter(notClient => {
-      console.log("entered")
+      console.log("entered");
       return client._id != notClient._id;
     });
 
@@ -182,7 +191,7 @@ export default class CampaignTable2 extends Component {
     var new_notIncluded = this.state.notIncluded;
     new_notIncluded.push(client);
 
-        var newIncludedSearchData = this.state.includedSearchData.filter(
+    var newIncludedSearchData = this.state.includedSearchData.filter(
       notClient => {
         return client != notClient;
       }
@@ -300,6 +309,45 @@ export default class CampaignTable2 extends Component {
     });
   }
 
+  showCampaign(e, data) {
+    if (data.value !== "master") {
+      var self = this;
+      axios
+        .get("http://localhost:4000/api/campaigns/" + data.value)
+        .then(res => {
+          var code = self.state.agent.agentCode;
+          var includedIds = self.state.included.map(client => {
+            return client._id;
+          });
+          var pastIncluded = res.data.clients[code];
+
+          var notIncluded = [];
+          pastIncluded.map(client => {
+            if (!includedIds.includes(client._id)) {
+              notIncluded.push(client);
+            }
+          });
+          self.setState({
+            notIncluded: notIncluded
+          });
+        });
+    } else {
+      var includedIds = this.state.included.map(client => {
+        return client._id;
+      });
+      var notIncluded = [];
+      this.state.masterList.map(client => {
+        if (!includedIds.includes(client._id)) {
+          notIncluded.push(client);
+        }
+      });
+
+      this.setState({
+        notIncluded: notIncluded
+      });
+    }
+  }
+
   render() {
     var notIncludedColumns = [
       {
@@ -414,6 +462,20 @@ export default class CampaignTable2 extends Component {
         }
       }
     ];
+
+    var options = [];
+
+    this.state.agentCampaigns.map(campaign => {
+      options.push({
+        text: campaign.campaignName,
+        value: campaign._id
+      });
+    });
+    options.push({
+      text: "Master List",
+      value: "master"
+    });
+
     return (
       <div className="campaignPage">
         <br />
@@ -422,11 +484,16 @@ export default class CampaignTable2 extends Component {
           {this.state.currentCampaign.campaignName}{" "}
         </h2>
         <div className="dropdown">
-          <Dropdown placeholder="Select Friend" fluid selection />
+          <Dropdown
+            placeholder="Select Campaign"
+            fluid
+            selection
+            options={options}
+            onChange={(e, data) => this.showCampaign(e, data)}
+          />
         </div>
         <div className="tables">
           <div className="included-table">
-
             <h2 className="tableTitles">Included</h2>
 
             <div className="search-bar">
@@ -472,9 +539,7 @@ export default class CampaignTable2 extends Component {
           </div>
           <div className="middle" />
           <div className="not-table">
-
             <h2 className="tableTitles">Not Included</h2>
-
 
             <div className="search-bar">
               <div style={{ width: "70%" }}>

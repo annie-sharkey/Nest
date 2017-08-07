@@ -36,15 +36,10 @@ export default class AgentNavBar extends Component {
   }
 
   updateClients(clients) {
-    axios
-      .get("http://localhost:4000/api/clients/" + this.props.agent.agentCode)
-      .then(response => {
-        // console.log(response.data);
-        this.setState({
-          dataSource: response.data,
-          allClients: response.data
-        });
-      });
+    this.setState({
+      allClients: clients,
+      dataSource: clients
+    });
   }
 
   handleClick(e) {
@@ -65,7 +60,7 @@ export default class AgentNavBar extends Component {
     });
   }
   render() {
-    // console.log(this.state.dataSource);
+    console.log("nav bar data", this.state.dataSource);
     return (
       <Router>
         <div>
@@ -73,7 +68,11 @@ export default class AgentNavBar extends Component {
             <ul>
               <li>
                 <Link to="/">
-                  <Icon type="left" color="white" style={{ fontSize: 20, color: 'white' }}/>
+                  <Icon
+                    type="left"
+                    color="white"
+                    style={{ fontSize: 20, color: "white" }}
+                  />
                 </Link>
               </li>
               <li>
