@@ -10,13 +10,13 @@ export default class AgentEditForm extends React.Component {
       visible: this.props.editModal,
       //fields: this.props.fields
       agent: this.props.selectedAgent,
-      currentCode: "",
-      currentName: "",
-      currentEmail: "",
-      currentEmail2: "",
-      currentPhoneNumber: "",
-      currentPhoneNumber2: "",
-      currentAgentOffice: "",
+      currentCode: this.props.selectedAgent.agentCode,
+      currentName: this.props.selectedAgent.agentName,
+      currentEmail: this.props.selectedAgent.agentEmail,
+      currentEmail2: this.props.selectedAgent.agentEmail2,
+      currentPhoneNumber: this.props.selectedAgent.agentPhoneNumber,
+      currentPhoneNumber2: this.props.selectedAgent.agentPhoneNumber2,
+      currentAgentOffice: this.props.selectedAgent.agentOffice,
       currentPassword: ""
     };
   }

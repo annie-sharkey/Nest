@@ -25,7 +25,7 @@ export default class CampaignTable2 extends Component {
       notIncludedSearchText: "",
       notIncludedSearchData: [],
 
-      currentCampaign: {},
+      currentCampaign: null,
       allOtherClients: [],
       openModal: false,
       text: ""
@@ -47,7 +47,6 @@ export default class CampaignTable2 extends Component {
           return campaign;
         }
       });
-      console.log(agentCampaigns);
 
       if (agentCampaigns.length > 0) {
         var currentCampaign = agentCampaigns.filter(campaign => {
@@ -64,7 +63,6 @@ export default class CampaignTable2 extends Component {
             moment(b.endDate).toDate().getTime()
           );
         });
-        console.log("Sorted Agent Campaigns", agentCampaigns);
 
         var index = 0;
         for (var i = 0; i < agentCampaigns.length; i++) {
@@ -94,9 +92,6 @@ export default class CampaignTable2 extends Component {
             savedClients = currentCampaign[0].clients[agent];
           }
         }
-
-        console.log("Saved Clients", savedClients);
-        console.log("Previous Campaign", previousCampaign);
 
         //Case 1
         if (savedClients.length > 0) {
@@ -157,6 +152,7 @@ export default class CampaignTable2 extends Component {
           included = [];
           notIncluded = this.state.masterList;
         }
+
         self.setState({
           included: included,
           notIncluded: notIncluded,
@@ -210,7 +206,7 @@ export default class CampaignTable2 extends Component {
     }
 
     var newIncludedSearchData = this.state.includedSearchData.filter(
-     notClient => {
+      notClient => {
         return client != notClient;
       }
     );
@@ -377,7 +373,6 @@ export default class CampaignTable2 extends Component {
     this.setState({
       openModal: false
     });
-
   }
 
   handleTextChange(event, ID, field) {
@@ -385,17 +380,13 @@ export default class CampaignTable2 extends Component {
     var self = this;
     included.map(client => {
       if (client._id == ID) {
-        client[field] =
-          event.target.value;
+        client[field] = event.target.value;
       }
     });
-    this.saveClients(included)
-  
+    this.saveClients(included);
   }
 
   render() {
-    console.log("included:", this.state.included)
-    console.log("text:", this.state.text);
     var notIncludedColumns = [
       {
         title: "Client Name",
@@ -525,162 +516,185 @@ export default class CampaignTable2 extends Component {
       value: "master"
     });
 
-    return (
-      <div className="campaignPage">
-        <br />
-        <h2>
-          {" Current Campaign: "}
-          {this.state.currentCampaign.campaignName}{" "}
-        </h2>
-        <div className="dropdown">
-          <Dropdown
-            placeholder="Select Campaign"
-            compact
-            selection
-            options={options}
-            onChange={(e, data) => this.showCampaign(e, data)}
-          />
-        </div>
-        <div className="tables">
-          <div className="included-table">
-            <h2 className="tableTitles">Included</h2>
+    if (this.state.currentCampaign !== null) {
+      return (
+        <div className="campaignPage">
+          <br />
 
-            <div className="search-bar">
-              <div style={{ width: "70%" }}>
-                <Input
-                  ref={ele => (this.includedSearchInput = ele)}
-                  placeholder="Search included list by name, address, city, or state"
-                  value={this.state.includedSearchText}
-                  onChange={e => this.onIncludedInputChange(e)}
-                  onPressEnter={() => this.onIncludedSearch()}
-                />
-              </div>
-              <Button
-                type="primary"
-                size="mini"
-                onClick={() => this.onIncludedSearch()}
-                style={{ marginLeft: "1%" }}
-              >
-                Search
-              </Button>
-              <Button
-                type="primary"
-                size="mini"
-                onClick={e => this.handleIncludedClearSearch(e)}
-              >
-                Clear Search
-              </Button>
-            </div>
-            <br />
-
-            <Table
-              bordered
-              dataSource={
-                this.state.includedFiltered
-                  ? this.state.includedSearchData
-                  : this.state.included
-              }
-              columns={IncludedColumns}
-              pagination={false}
-              scroll={{ y: 350 }}
-              rowKey="uid"
+          <h2>
+            {" Current Campaign: "}
+            {this.state.currentCampaign.campaignName}{" "}
+          </h2>
+          <div className="dropdown">
+            <h5>Past Campaigns Lists</h5>
+            <Dropdown
+              placeholder="Select Campaign"
+              compact
+              selection
+              options={options}
+              onChange={(e, data) => this.showCampaign(e, data)}
             />
           </div>
-          <div className="middle" />
-          <div className="not-table">
-            <h2 className="tableTitles">Not Included</h2>
-
-            <div className="search-bar">
-              <div style={{ width: "70%" }}>
-                <Input
-                  ref={ele => (this.notIncludedSearchInput = ele)}
-                  placeholder="Search not included list by name, address, city, or state"
-                  value={this.state.notIncludedSearchText}
-                  onChange={e => this.onNotIncludedInputChange(e)}
-                  onPressEnter={() => this.onNotIncludedSearch()}
-                  size="mini"
-                />
-              </div>
-              <Button
-                type="primary"
-                size="mini"
-                onClick={() => this.onNotIncludedSearch()}
-                style={{ marginLeft: "1%" }}
-              >
-                Search
-              </Button>
-              <Button
-                type="primary"
-                size="mini"
-                onClick={e => this.handleNotIncludedClearSearch(e)}
-              >
-                Clear Search
-              </Button>
-            </div>
-            <br />
-
-            <Table
-              bordered
-              dataSource={
-                this.state.notIncludedFiltered
-                  ? this.state.notIncludedSearchData
-                  : this.state.notIncluded
-              }
-              columns={notIncludedColumns}
-              pagination={false}
-              scroll={{ y: 350 }}
-              rowKey="uid"
-            />
-            <div>
-              {this.state.currentCampaign.campaignCustomization != "" &&
-                <Button onClick={event => this.handleOpenModal()}>
-                  Customize Campaign
-                </Button>}
-            </div>
-            {this.state.openModal &&
-              <LocaleProvider locale={enUS}>
-                <Modal
-                  visible={true}
-                  onCancel={event => this.handleCancel(event)}
-                  okText="Done"
-                  onOk={event => this.handleCancel(event)}
+          <div className="custom-button">
+            {this.state.currentCampaign.campaignCustomization != "" &&
+              <div style={{ margin: "auto" }}>
+                <Button
+                  onClick={event => this.handleOpenModal()}
+                  color={"black"}
                 >
-                  {/*<h2>{this.state.currentCampaign.campaignCustomization}</h2>*/}
-                  {this.state.currentCampaign.campaignCustomization.map(
-                    field => {
-                      var customField = this.state.currentCampaign.campaignCustomization[0]
-                      return (
-                        <div>
-                          <h2>
-                            {field}
-                          </h2>
-                          {this.state.included.map(client => {
-                            return (
-                              <div>
-                                {client.clientName}
-                                {"  "}
+                  Customize Campaign
+                </Button>
+              </div>}
+          </div>
+          <div className="tables">
+            <div className="included-table">
+              <h2 className="tableTitles">Included</h2>
 
-                                <input
-                                  type="text"
-                                  defaultValue={client[field]}
-                                  onChange={event =>
-                                    this.handleTextChange(event, client._id, field)}
-                                />
-                                {/*<button onClick={event => this.handleOk}>Ok</button>*/}
+              <div className="search-bar">
+                <div style={{ width: "70%" }}>
+                  <Input
+                    ref={ele => (this.includedSearchInput = ele)}
+                    placeholder="Search included list by name, address, city, or state"
+                    value={this.state.includedSearchText}
+                    onChange={e => this.onIncludedInputChange(e)}
+                    onPressEnter={() => this.onIncludedSearch()}
+                  />
+                </div>
+                <Button
+                  type="primary"
+                  size="mini"
+                  onClick={() => this.onIncludedSearch()}
+                  style={{ marginLeft: "1%" }}
+                >
+                  Search
+                </Button>
+                <Button
+                  type="primary"
+                  size="mini"
+                  onClick={e => this.handleIncludedClearSearch(e)}
+                >
+                  Clear Search
+                </Button>
+              </div>
+              <br />
 
-                                <br />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      );
-                    }
-                  )}
-                </Modal>
-              </LocaleProvider>}
+              <Table
+                bordered
+                dataSource={
+                  this.state.includedFiltered
+                    ? this.state.includedSearchData
+                    : this.state.included
+                }
+                columns={IncludedColumns}
+                pagination={false}
+                scroll={{ y: 350 }}
+                rowKey="uid"
+              />
+            </div>
+            <div className="middle" />
+            <div className="not-table">
+              <h2 className="tableTitles">Not Included</h2>
+
+              <div className="search-bar">
+                <div style={{ width: "70%" }}>
+                  <Input
+                    ref={ele => (this.notIncludedSearchInput = ele)}
+                    placeholder="Search not included list by name, address, city, or state"
+                    value={this.state.notIncludedSearchText}
+                    onChange={e => this.onNotIncludedInputChange(e)}
+                    onPressEnter={() => this.onNotIncludedSearch()}
+                    size="mini"
+                  />
+                </div>
+                <Button
+                  type="primary"
+                  size="mini"
+                  onClick={() => this.onNotIncludedSearch()}
+                  style={{ marginLeft: "1%" }}
+                >
+                  Search
+                </Button>
+                <Button
+                  type="primary"
+                  size="mini"
+                  onClick={e => this.handleNotIncludedClearSearch(e)}
+                >
+                  Clear Search
+                </Button>
+              </div>
+              <br />
+
+              <Table
+                bordered
+                dataSource={
+                  this.state.notIncludedFiltered
+                    ? this.state.notIncludedSearchData
+                    : this.state.notIncluded
+                }
+                columns={notIncludedColumns}
+                pagination={false}
+                scroll={{ y: 350 }}
+                rowKey="uid"
+              />
+
+              {this.state.openModal &&
+                <LocaleProvider locale={enUS}>
+                  <Modal
+                    visible={true}
+                    onCancel={event => this.handleCancel(event)}
+                    okText="Done"
+                    onOk={event => this.handleCancel(event)}
+                  >
+                    {/*<h2>{this.state.currentCampaign.campaignCustomization}</h2>*/}
+                    {this.state.currentCampaign.campaignCustomization.map(
+                      field => {
+                        var customField = this.state.currentCampaign
+                          .campaignCustomization[0];
+                        return (
+                          <div>
+                            <h2>
+                              {field}
+                            </h2>
+                            {this.state.included.map(client => {
+                              return (
+                                <div>
+                                  {client.clientName}
+                                  {"  "}
+
+                                  <input
+                                    type="text"
+                                    defaultValue={client[field]}
+                                    onChange={event =>
+                                      this.handleTextChange(
+                                        event,
+                                        client._id,
+                                        field
+                                      )}
+                                  />
+                                  {/*<button onClick={event => this.handleOk}>Ok</button>*/}
+
+                                  <br />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      }
+                    )}
+                  </Modal>
+                </LocaleProvider>}
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      console.log("No campaign");
+      return (
+        <div className="campaignPage">
+          <br />
+          <h2>No Current Campaigns To Save </h2>
+        </div>
+      );
+    }
   }
 }

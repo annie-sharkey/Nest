@@ -117,7 +117,8 @@ export default class AdminAgentDirectory extends Component {
 
     axios
       .put(
-        "http://localhost:4000/api/agent/" + this.state.selectedAgent.agentCode,
+        "http://localhost:4000/api/agent/password/" +
+          this.state.selectedAgent.agentCode,
         {
           // agentCode: agentCode,
           agentName: agentName,
