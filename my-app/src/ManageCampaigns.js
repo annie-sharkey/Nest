@@ -26,7 +26,7 @@ import { Grid } from "semantic-ui-react";
 import moment from "moment";
 import EditBuildTable from "./EditBuildTable";
 // import EditUploadTable from "./EditUploadTable";
-import JSONtoExcel from './JSONtoExcel';
+import JSONtoExcel from "./JSONtoExcel";
 
 const FormItem = Form.Item;
 const { MonthPicker, RangePicker } = DatePicker;
@@ -56,7 +56,8 @@ export default class ManageCampaigns extends Component {
       checkedList: [],
       writeColumns: [],
       writeUploads: [],
-      openExportDataModal: false
+      openExportDataModal: false,
+      agentData: []
     };
   }
 
@@ -69,6 +70,11 @@ export default class ManageCampaigns extends Component {
     axios.get("http://localhost:4000/api/campaigns").then(res => {
       this.setState({
         data: res.data
+      });
+    });
+    axios.get("http://localhost:4000/api/agents/").then(res => {
+      this.setState({
+        agentData: res.data
       });
     });
   }
@@ -121,7 +127,7 @@ export default class ManageCampaigns extends Component {
   handleDone(event) {
     this.setState({
       openExportDataModal: false
-    })
+    });
   }
 
   updateColumnState(columns) {
@@ -155,17 +161,41 @@ export default class ManageCampaigns extends Component {
           this.state.selectedCampaign._id,
         {
           campaignName: this.state.campaignName,
-          campaignColumns: this.state.writeColumns,
-          clients: [],
-          campaignUploads: this.state.writeUploads,
+          campaignCustomization: this.state.writeColumns,
+          //clients: [],
+          // campaignUploads: this.state.writeUploads,
           startDate: this.state.startDate,
           endDate: this.state.endDate,
           officesIncludedinCampaign: this.state.checkedList
         }
       )
       .then(res => {
-        console.log(res.data);
-      });
+        var id = res.data._id;
+        for (var i = 0; i < this.state.agentData.length; i++) {
+          if (
+            res.data.officesIncludedinCampaign.includes(this.state.agentData[i].agentOffice)
+          ) {
+            var agentCode = this.state.agentData[i].agentCode;
+            var agent = this.state.agentData[i];
+            if (!agent.pastCampaigns.includes(id)) {
+              agent.pastCampaigns.push(id);
+            }
+            axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
+          } else {
+            var agentCode = this.state.agentData[i].agentCode;
+            var agent = this.state.agentData[i];
+            if (agent.pastCampaigns.includes(id)) {
+              console.log("Time to remove", id)
+              var index = agent.pastCampaigns.indexOf(id);
+              agent.pastCampaigns.splice(index, 1);
+            }
+            axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
+          }
+        }
+      })
+    this.setState({
+      openModal: false
+    });
   }
 
   render() {
@@ -244,7 +274,6 @@ export default class ManageCampaigns extends Component {
                           defaultValue={moment(
                             this.state.selectedCampaign.startDate
                           )}
-                          
                         />
                         <DatePicker
                           placeholder="End date"
@@ -261,15 +290,7 @@ export default class ManageCampaigns extends Component {
                 <div>
                   <h3>Select Offices to Include</h3>
                   <br />
-                  <div style={{ borderBottom: "1px solid #E9E9E9" }}>
-                    {/*<Checkbox
-                      indeterminate={this.state.indeterminate}
-                      onChange={this.onCheckAllChange}
-                      checked={this.state.checkAll}
-                    >
-                      Check all
-                    </Checkbox>*/}
-                  </div>
+                  <div style={{ borderBottom: "1px solid #E9E9E9" }} />
                   <br />
                   <CheckboxGroup
                     options={plainOptions}
@@ -299,17 +320,27 @@ export default class ManageCampaigns extends Component {
           </div>}
 
         {this.state.openExportDataModal &&
-          <Modal visible={true} onCancel={event => this.handleCancel(event)} okText="Done" onOk={event => this.handleDone(event)}>
+          <Modal
+            visible={true}
+            onCancel={event => this.handleCancel(event)}
+            okText="Done"
+            onOk={event => this.handleDone(event)}
+          >
             <div>
-              {this.state.selectedCampaign.officesIncludedinCampaign.map(office => {
-                return (
-                  <div>
-                    {office}
-                    <JSONtoExcel office={office} campaignName={this.state.selectedCampaign.campaignName} selectedCampaignObject={this.state.selectedCampaign}/>
-                    
-                  </div>
-                );
-              })}
+              {this.state.selectedCampaign.officesIncludedinCampaign.map(
+                office => {
+                  return (
+                    <div>
+                      {office}
+                      <JSONtoExcel
+                        office={office}
+                        campaignName={this.state.selectedCampaign.campaignName}
+                        selectedCampaignObject={this.state.selectedCampaign}
+                      />
+                    </div>
+                  );
+                }
+              )}
             </div>
           </Modal>}
       </div>

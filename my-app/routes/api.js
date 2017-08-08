@@ -220,18 +220,12 @@ router.put("/campaigns/:id/", function(req, res, next) {
     campaign.campaignName = req.body.campaignName || campaign.campaignName;
     campaign.startDate = req.body.startDate || campaign.startDate;
     campaign.endDate = req.body.endDate || campaign.endDate;
-    campaign.clients = req.body.clients || campaign.clients;
-
     if (req.body.officesIncludedinCampaign.length > 0) {
       campaign.officesIncludedinCampaign = req.body.officesIncludedinCampaign;
     }
 
-    if (req.body.campaignUploads.length > 0) {
-      campaign.campaignUploads = req.body.campaignUploads;
-    }
-
-    if (req.body.campaignColumns.length > 0) {
-      campaign.campaignColumns = req.body.campaignColumns;
+    if (req.body.campaignCustomization.length > 0) {
+      campaign.campaignCustomization = req.body.campaignCustomization;
     }
 
     campaign.save(function(err, campaign) {

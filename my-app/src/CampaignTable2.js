@@ -210,7 +210,7 @@ export default class CampaignTable2 extends Component {
     }
 
     var newIncludedSearchData = this.state.includedSearchData.filter(
-      notClient => {
+     notClient => {
         return client != notClient;
       }
     );
@@ -662,7 +662,7 @@ export default class CampaignTable2 extends Component {
 
                                 <input
                                   type="text"
-                                  defaultValue={client[customField]}
+                                  defaultValue={client[field]}
                                   onChange={event =>
                                     this.handleTextChange(event, client._id, field)}
                                 />
