@@ -128,14 +128,8 @@ app.listen(port, function() {
 //     new_client.agentPhone = client["AGENT PHONE NUMBER"];
 
 //     clients.push(new_client);
-
-//     // new_client.save(function(err, client) {
-//     //   if (err) {
-//     //     throw err;
-//     //   }
-//     // });
 //   });
-//   clients.forEach(function(client) {
+//   clients.map(client => {
 //     client.save(function(err, res) {
 //       if (err) {
 //         throw err;
