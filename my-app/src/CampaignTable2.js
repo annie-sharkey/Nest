@@ -27,7 +27,8 @@ export default class CampaignTable2 extends Component {
 
       currentCampaign: {},
       allOtherClients: [],
-      openModal: false
+      openModal: false,
+      text: ""
     };
   }
 
@@ -376,9 +377,25 @@ export default class CampaignTable2 extends Component {
     this.setState({
       openModal: false
     });
+
+  }
+
+  handleTextChange(event, ID, field) {
+    var included = this.state.included;
+    var self = this;
+    included.map(client => {
+      if (client._id == ID) {
+        client[field] =
+          event.target.value;
+      }
+    });
+    this.saveClients(included)
+  
   }
 
   render() {
+    console.log("included:", this.state.included)
+    console.log("text:", this.state.text);
     var notIncludedColumns = [
       {
         title: "Client Name",
@@ -631,6 +648,7 @@ export default class CampaignTable2 extends Component {
                   {/*<h2>{this.state.currentCampaign.campaignCustomization}</h2>*/}
                   {this.state.currentCampaign.campaignCustomization.map(
                     field => {
+                      var customField = this.state.currentCampaign.campaignCustomization[0]
                       return (
                         <div>
                           <h2>
@@ -642,7 +660,14 @@ export default class CampaignTable2 extends Component {
                                 {client.clientName}
                                 {"  "}
 
-                                <input />
+                                <input
+                                  type="text"
+                                  defaultValue={client[customField]}
+                                  onChange={event =>
+                                    this.handleTextChange(event, client._id, field)}
+                                />
+                                {/*<button onClick={event => this.handleOk}>Ok</button>*/}
+
                                 <br />
                               </div>
                             );
