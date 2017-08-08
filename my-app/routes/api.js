@@ -174,6 +174,15 @@ router.get("/campaigns", function(req, res, next) {
   });
 });
 
+router.get("/campaigns/:id", function(req, res, next) {
+  Campaign.findOne({ _id: req.params.id }, function(err, campaign) {
+    if (err) {
+      throw err;
+    }
+    res.json(campaign);
+  });
+});
+
 router.put("/clients/:id", function(req, res, next) {
   var clientName = req.body.firstName + " " + req.body.lastName;
   console.log(clientName);
