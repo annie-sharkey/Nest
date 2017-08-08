@@ -4,6 +4,15 @@ import axios from "axios";
 
 //***Note: to make sure that data is in the right column, if a field is empty, make sure it is set to an empty string instead of not being there at all
 
+const officeAddresses = [{office: "Asheville", returnLine1:"394 Merrimon Ave Suite A", returnLine2:"Asheville, NC 28801"},
+{office: "Charlottesville", returnLine1:"126 Garrett St Suite D", returnLine2:"Charlottesville, VA 22902"},
+{office: "Fredericksburg", returnLine1:"510 Princess Anne St, Suite 201", returnLine2:"Fredericksburg, VA 22401"},
+{office: "New River Valley", returnLine1:"400 N Main St", returnLine2:"Blacksburg VA 24060"},
+{office: "Richmond", returnLine1:"1657 West Broad Street Suite 3A", returnLine2:"Richmond, VA 23220"},
+{office: "Shenandoah Valley", returnLine1:"307 N. Augusta Street", returnLine2:"Staunton, VA 24401"},
+{office: "Wilmington", returnLine1:"1508 Military Cutoff Rd Suite 203", returnLine2:"Wilmington NC 28403"}
+]
+
 export default class JSONtoExcel extends Component {
   constructor(props) {
     super(props);
@@ -18,17 +27,7 @@ export default class JSONtoExcel extends Component {
     };
   }
 
-  // componentWillMount() {
-  //   axios.get("http://localhost:4000/api/clients").then(res => {
-  //     this.setState({
-  //       allClients: res.data
-  //     });
-  //     console.log(
-  //       "selected campaign object:",
-  //       this.state.selectedCampaignClients
-  //     );
-  //   });
-  // }
+
 
   
   handleClick(event) {
@@ -39,14 +38,22 @@ export default class JSONtoExcel extends Component {
       if (this.state.selectedCampaignClients[key].length > 0) {
         this.state.selectedCampaignClients[key].filter(client => {
           if (client.office == this.state.office) {
-            
+            {officeAddresses.map(office => {
+              if (office.office == this.state.office) {
+                client["returnLine1"] = office.returnLine1
+                client["returnLine2"] = office.returnLine2 
+              }
+
+            })}
             return data.push(client);
           }
         });
       }
     });
+    
 
     if (data == "") return;
+    console.log("data:", data)
 
     this.JSONToCSVConvertor(
       data,
