@@ -21,6 +21,7 @@ export default class CampaignTable2 extends Component {
       includedSearchData: [],
 
       notIncluded: this.props.dataSource,
+      selectedCampaign: null,
       notIncludedSearchText: "",
       notIncludedSearchData: [],
 
@@ -190,8 +191,22 @@ export default class CampaignTable2 extends Component {
   }
 
   remove(client) {
-    var new_notIncluded = this.state.notIncluded;
-    new_notIncluded.push(client);
+    var new_notIncluded;
+    console.log("Selected", this.state.selectedCampaign);
+    if (this.state.selectedCampaign !== null) {
+      var selectedCampaignIds = this.state.selectedCampaign.clients[
+        this.state.agent.agentCode
+      ].map(client => {
+        return client._id;
+      });
+      new_notIncluded = this.state.notIncluded;
+      if (selectedCampaignIds.includes(client._id)) {
+        new_notIncluded.push(client);
+      }
+    } else {
+      new_notIncluded = this.state.notIncluded;
+      new_notIncluded.push(client);
+    }
 
     var newIncludedSearchData = this.state.includedSearchData.filter(
       notClient => {
@@ -311,7 +326,6 @@ export default class CampaignTable2 extends Component {
     });
   }
 
-
   showCampaign(e, data) {
     if (data.value !== "master") {
       var self = this;
@@ -323,7 +337,7 @@ export default class CampaignTable2 extends Component {
             return client._id;
           });
           var pastIncluded = res.data.clients[code];
-
+          var selectedCampaign = res.data;
           var notIncluded = [];
           pastIncluded.map(client => {
             if (!includedIds.includes(client._id)) {
@@ -331,7 +345,8 @@ export default class CampaignTable2 extends Component {
             }
           });
           self.setState({
-            notIncluded: notIncluded
+            notIncluded: notIncluded,
+            selectedCampaign: selectedCampaign
           });
         });
     } else {
@@ -349,6 +364,7 @@ export default class CampaignTable2 extends Component {
         notIncluded: notIncluded
       });
     }
+  }
 
   handleOpenModal() {
     this.setState({
@@ -360,7 +376,6 @@ export default class CampaignTable2 extends Component {
     this.setState({
       openModal: false
     });
-
   }
 
   render() {
@@ -479,12 +494,14 @@ export default class CampaignTable2 extends Component {
     ];
 
     var options = [];
-
+    var self = this;
     this.state.agentCampaigns.map(campaign => {
-      options.push({
-        text: campaign.campaignName,
-        value: campaign._id
-      });
+      if (self.state.currentCampaign._id !== campaign._id) {
+        options.push({
+          text: campaign.campaignName,
+          value: campaign._id
+        });
+      }
     });
     options.push({
       text: "Master List",
@@ -501,7 +518,7 @@ export default class CampaignTable2 extends Component {
         <div className="dropdown">
           <Dropdown
             placeholder="Select Campaign"
-            fluid
+            compact
             selection
             options={options}
             onChange={(e, data) => this.showCampaign(e, data)}

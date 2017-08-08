@@ -177,12 +177,14 @@ app.listen(port, function() {
 //     }
 
 //     var phoneIndex = agent["AGENT PHONE NUMBER"].indexOf("/");
-//     if (phoneIndex == -1) {
+//     if (phoneIndex !== -1) {
 //       phone1 = agent["AGENT PHONE NUMBER"].slice(0, phoneIndex);
 //       phone2 = agent["AGENT PHONE NUMBER"].slice(
 //         phoneIndex + 1,
 //         agent["AGENT PHONE NUMBER"].length
 //       );
+//     } else {
+//       phone1 = agent["AGENT PHONE NUMBER"];
 //     }
 
 //     if (agent["AGENT CODE"] !== "") {
@@ -209,6 +211,7 @@ app.listen(port, function() {
 //       agentWithoutCodes.push(new_agent);
 //     }
 //   });
+
 //   agentsWithCodes.forEach(function(agent) {
 //     agent.save(function(err) {
 //       if (err) {
