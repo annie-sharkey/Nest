@@ -21,6 +21,7 @@ export default class CampaignTable2 extends Component {
       includedSearchData: [],
 
       notIncluded: this.props.dataSource,
+      selectedCampaign: null,
       notIncludedSearchText: "",
       notIncludedSearchData: [],
 
@@ -191,8 +192,22 @@ export default class CampaignTable2 extends Component {
   }
 
   remove(client) {
-    var new_notIncluded = this.state.notIncluded;
-    new_notIncluded.push(client);
+    var new_notIncluded;
+    console.log("Selected", this.state.selectedCampaign);
+    if (this.state.selectedCampaign !== null) {
+      var selectedCampaignIds = this.state.selectedCampaign.clients[
+        this.state.agent.agentCode
+      ].map(client => {
+        return client._id;
+      });
+      new_notIncluded = this.state.notIncluded;
+      if (selectedCampaignIds.includes(client._id)) {
+        new_notIncluded.push(client);
+      }
+    } else {
+      new_notIncluded = this.state.notIncluded;
+      new_notIncluded.push(client);
+    }
 
     var newIncludedSearchData = this.state.includedSearchData.filter(
       notClient => {
@@ -323,7 +338,7 @@ export default class CampaignTable2 extends Component {
             return client._id;
           });
           var pastIncluded = res.data.clients[code];
-
+          var selectedCampaign = res.data;
           var notIncluded = [];
           pastIncluded.map(client => {
             if (!includedIds.includes(client._id)) {
@@ -331,7 +346,8 @@ export default class CampaignTable2 extends Component {
             }
           });
           self.setState({
-            notIncluded: notIncluded
+            notIncluded: notIncluded,
+            selectedCampaign: selectedCampaign
           });
         });
     } else {
@@ -361,6 +377,7 @@ export default class CampaignTable2 extends Component {
     this.setState({
       openModal: false
     });
+
   }
 
   handleTextChange(event, ID, field) {
@@ -374,7 +391,6 @@ export default class CampaignTable2 extends Component {
     });
     this.saveClients(included)
   
-    
   }
 
   render() {
