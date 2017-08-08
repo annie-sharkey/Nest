@@ -143,6 +143,34 @@ router.put("/agent/:id", function(req, res, next) {
   });
 });
 
+router.put("/agent/password/:id", function(req, res, next) {
+  Agent.findOne({ agentCode: req.params.id }, function(err, agent) {
+    if (err) {
+      throw err;
+    }
+
+    agent.agentName = req.body.agentName || agent.agentName;
+    agent.agentEmail = req.body.agentEmail || agent.agentEmail;
+    agent.agentEmail2 = req.body.agentEmail2 || agent.agentEmail2;
+    agent.agentPhoneNumber =
+      req.body.agentPhoneNumber || agent.agentPhoneNumber;
+    agent.agentPhoneNumber2 =
+      req.body.agentPhoneNumber2 || agent.agentPhoneNumber2;
+    agent.agentTitle = req.body.agentTitle || agent.agentTitle;
+    agent.agentOffice = req.body.agentOffice || agent.agentOffice;
+    if (req.body.password !== "") {
+      agent.password = req.body.password;
+    }
+
+    agent.save(function(err, agent) {
+      if (err) {
+        throw err;
+      }
+      res.json(agent);
+    });
+  });
+});
+
 router.post("/agent/new", function(req, res, next) {
   var agent = new Agent({
     agentCode: req.body.agentCode,

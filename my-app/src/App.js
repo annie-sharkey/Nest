@@ -19,7 +19,7 @@ import AdminHome from "./AdminHome";
 import AdminClientDirectory from "./AdminClientDirectory";
 import AdminAgentDirectory from "./AdminAgentDirectory";
 import ManageCampaigns from "./ManageCampaigns";
-import CampaignTable2 from './CampaignTable2';
+import CampaignTable2 from "./CampaignTable2";
 
 // import JSONtoExcel from "./JSONtoExcel";
 
@@ -151,6 +151,7 @@ class App extends Component {
             />
             <br />
             <Input
+              type="password"
               onChange={e => this.handlePasswordChange(e)}
               placeholder="Enter Your Password"
             />
