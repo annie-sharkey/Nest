@@ -45,7 +45,7 @@ export default class CreateCampaignParent extends Component {
     this.state = {
       startDate: "",
       endDate: "",
-      writeColumns: ["Name", "City", "State"],
+      writeColumns: [],
       writeUploads: [],
       campaignTitle: "",
       checkedList: defaultCheckedList,
@@ -125,8 +125,8 @@ export default class CreateCampaignParent extends Component {
       url: "http://localhost:4000/api/campaign/",
       data: {
         campaignName: this.state.campaignTitle,
-        campaignColumns: this.state.writeColumns,
-        campaignUploads: this.state.writeUploads,
+        campaignCustomization: this.state.writeColumns,
+        // campaignUploads: this.state.writeUploads,
         startDate: this.state.startDate,
         endDate: this.state.endDate,
         officesIncludedinCampaign: this.state.checkedList
@@ -164,6 +164,7 @@ export default class CreateCampaignParent extends Component {
   }
 
   render() {
+    console.log("write columns:", this.state.writeColumns)
     message.config({
       top: 100
     });

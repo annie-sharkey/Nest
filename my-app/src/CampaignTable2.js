@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Table, Input, Icon, Popconfirm } from "antd";
+import { Table, Input, Icon, Popconfirm, Modal, LocaleProvider } from "antd";
 import { Button, Dropdown } from "semantic-ui-react";
 import { Confirm } from "semantic-ui-react";
 import moment from "moment";
 import { Menu, message } from "antd";
 import "antd/dist/antd.css";
 import "./CampaignTable2.css";
+import enUS from "antd/lib/locale-provider/en_US";
 
 export default class CampaignTable2 extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ export default class CampaignTable2 extends Component {
       notIncludedSearchData: [],
 
       currentCampaign: {},
-      allOtherClients: []
+      allOtherClients: [],
+      openModal: false
     };
   }
 
@@ -309,6 +311,7 @@ export default class CampaignTable2 extends Component {
     });
   }
 
+
   showCampaign(e, data) {
     if (data.value !== "master") {
       var self = this;
@@ -346,6 +349,18 @@ export default class CampaignTable2 extends Component {
         notIncluded: notIncluded
       });
     }
+
+  handleOpenModal() {
+    this.setState({
+      openModal: true
+    });
+  }
+
+  handleCancel() {
+    this.setState({
+      openModal: false
+    });
+
   }
 
   render() {
@@ -582,6 +597,45 @@ export default class CampaignTable2 extends Component {
               scroll={{ y: 350 }}
               rowKey="uid"
             />
+            <div>
+              {this.state.currentCampaign.campaignCustomization != "" &&
+                <Button onClick={event => this.handleOpenModal()}>
+                  Customize Campaign
+                </Button>}
+            </div>
+            {this.state.openModal &&
+              <LocaleProvider locale={enUS}>
+                <Modal
+                  visible={true}
+                  onCancel={event => this.handleCancel(event)}
+                  okText="Done"
+                  onOk={event => this.handleCancel(event)}
+                >
+                  {/*<h2>{this.state.currentCampaign.campaignCustomization}</h2>*/}
+                  {this.state.currentCampaign.campaignCustomization.map(
+                    field => {
+                      return (
+                        <div>
+                          <h2>
+                            {field}
+                          </h2>
+                          {this.state.included.map(client => {
+                            return (
+                              <div>
+                                {client.clientName}
+                                {"  "}
+
+                                <input />
+                                <br />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    }
+                  )}
+                </Modal>
+              </LocaleProvider>}
           </div>
         </div>
       </div>

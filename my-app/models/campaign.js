@@ -7,9 +7,9 @@ var Schema = mongoose.Schema;
 //the shape of your database entries.
 var CampaignSchema = new Schema({
   campaignName: String,
-  campaignColumns: [String],
+  campaignCustomization: [String],
   clients: {},
-  campaignUploads: [String],
+  // campaignUploads: [String],
   startDate: String,
   endDate: String,
   officesIncludedinCampaign: [String]

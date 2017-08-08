@@ -79,9 +79,9 @@ router.post("/campaign/", function(req, res, next) {
     .then(function() {
       var campaign = new Campaign({
         campaignName: req.body.campaignName,
-        campaignColumns: req.body.campaignColumns,
+        campaignCustomization: req.body.campaignCustomization,
         clients: clients,
-        campaignUploads: req.body.campaignUploads,
+        // campaignUploads: req.body.campaignUploads,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         officesIncludedinCampaign: req.body.officesIncludedinCampaign

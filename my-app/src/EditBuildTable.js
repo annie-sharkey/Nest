@@ -18,7 +18,7 @@ import {
 import "antd/dist/antd.css";
 // import TestTable from "./TestTable";
 import CampaignTable from "./CampaignTable";
-import CreateCampaignUpload from "./CreateCampaignUpload";
+// import CreateCampaignUpload from "./CreateCampaignUpload";
 import "./CreateCampaignBuildTable.css";
 const FormItem = Form.Item;
 
@@ -26,7 +26,7 @@ export default class CreateCampaignBuildTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: this.props.selectedCampaign.campaignColumns,
+      columns: this.props.selectedCampaign.campaignCustomization,
       edit: false,
       editedTitle: ""
     //   selectedClient: this.props.selectedClient
@@ -111,12 +111,12 @@ export default class CreateCampaignBuildTable extends Component {
     return (
       <div>
         <Form>
-          <h3>Columns</h3>
+          <h3>Campaign Customization</h3>
 
           {!this.state.done &&
-            <FormItem label="Create a column:" style={{ width: 150 }}>
+            <FormItem label="Create a custom field:" style={{ width: 150 }}>
               <Input
-                placeholder="Column Title"
+                placeholder="Title"
                 value={this.state.columnName}
                 onChange={event => this.handleInput(event)}
                 onPressEnter={event =>
