@@ -4,14 +4,43 @@ import axios from "axios";
 
 //***Note: to make sure that data is in the right column, if a field is empty, make sure it is set to an empty string instead of not being there at all
 
-const officeAddresses = [{office: "Asheville", returnLine1:"394 Merrimon Ave Suite A", returnLine2:"Asheville, NC 28801"},
-{office: "Charlottesville", returnLine1:"126 Garrett St Suite D", returnLine2:"Charlottesville, VA 22902"},
-{office: "Fredericksburg", returnLine1:"510 Princess Anne St, Suite 201", returnLine2:"Fredericksburg, VA 22401"},
-{office: "New River Valley", returnLine1:"400 N Main St", returnLine2:"Blacksburg VA 24060"},
-{office: "Richmond", returnLine1:"1657 West Broad Street Suite 3A", returnLine2:"Richmond, VA 23220"},
-{office: "Shenandoah Valley", returnLine1:"307 N. Augusta Street", returnLine2:"Staunton, VA 24401"},
-{office: "Wilmington", returnLine1:"1508 Military Cutoff Rd Suite 203", returnLine2:"Wilmington NC 28403"}
-]
+const officeAddresses = [
+  {
+    office: "Asheville",
+    returnLine1: "394 Merrimon Ave Suite A",
+    returnLine2: "Asheville, NC 28801"
+  },
+  {
+    office: "Charlottesville",
+    returnLine1: "126 Garrett St Suite D",
+    returnLine2: "Charlottesville, VA 22902"
+  },
+  {
+    office: "Fredericksburg",
+    returnLine1: "510 Princess Anne St, Suite 201",
+    returnLine2: "Fredericksburg, VA 22401"
+  },
+  {
+    office: "New River Valley",
+    returnLine1: "400 N Main St",
+    returnLine2: "Blacksburg VA 24060"
+  },
+  {
+    office: "Richmond",
+    returnLine1: "1657 West Broad Street Suite 3A",
+    returnLine2: "Richmond, VA 23220"
+  },
+  {
+    office: "Shenandoah Valley",
+    returnLine1: "307 N. Augusta Street",
+    returnLine2: "Staunton, VA 24401"
+  },
+  {
+    office: "Wilmington",
+    returnLine1: "1508 Military Cutoff Rd Suite 203",
+    returnLine2: "Wilmington NC 28403"
+  }
+];
 
 export default class JSONtoExcel extends Component {
   constructor(props) {
@@ -27,10 +56,11 @@ export default class JSONtoExcel extends Component {
     };
   }
 
-
-
-  
   handleClick(event) {
+    console.log(
+      "selected campaign clients:",
+      this.state.selectedCampaignClients
+    );
     var data = [];
     var selectiveData = Object.keys(
       this.state.selectedCampaignClients
@@ -38,22 +68,53 @@ export default class JSONtoExcel extends Component {
       if (this.state.selectedCampaignClients[key].length > 0) {
         this.state.selectedCampaignClients[key].filter(client => {
           if (client.office == this.state.office) {
-            {officeAddresses.map(office => {
-              if (office.office == this.state.office) {
-                client["returnLine1"] = office.returnLine1
-                client["returnLine2"] = office.returnLine2 
-              }
+            {
+              officeAddresses.map(office => {
+                if (office.office == this.state.office) {
+                  var new_client= {
+                    "Client Name": client.clientName,
+                    "First Name": client.firstName,
+                    "Last Name": client.lastName,
+                    "Client Email": client.clientEmail,
+                    "Client Address": client.clientAddress,
+                    "Client City": client.clientCity,
+                    "Client State": client.clientState,
+                    "Client Birthday": client.clientBirthday,
+                    "Home Anniversary": client.homeAnniversary,
+                    "Agent Office": client.office,
+                    "Agent Name": client.agentName,
+                    "Agent Code": client.agentCode,
+                    "Agent Email": client.agentEmail,
+                    "Agent Title": client.agentTitle,
+                    "Agent Phone": client.agentPhone,
+                    "Return Address Line 1": office.returnLine1,
+                    "Return Address Line 2": office.returnLine2
+                  };
 
-            })}
-            return data.push(client);
+                  var campaign = this.props.selectedCampaignObject;
+                  var customFields = campaign.campaignCustomization;
+                  console.log("custom fields:", customFields)
+                  customFields.map(field => {
+                    if (client[field] != undefined) {
+                      new_client[field] = client[field];
+
+                    } else {
+                      new_client[field] = "None"
+                    }
+                    
+                  });
+
+                  return data.push(new_client);
+                }
+              });
+            }
           }
         });
       }
     });
-    
 
     if (data == "") return;
-    console.log("data:", data)
+    console.log("data:", data);
 
     this.JSONToCSVConvertor(
       data,
