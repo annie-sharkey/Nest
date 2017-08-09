@@ -208,7 +208,7 @@ export default class MasterTable extends React.Component {
         .filter(record => !!record)
     });
   }
-  //end search functions
+  
 
   handleClearSearch(event) {
     this.setState({
@@ -216,6 +216,7 @@ export default class MasterTable extends React.Component {
       searchText: ""
     });
   }
+  //end search functions
 
   render() {
     var modal;
@@ -386,4 +387,3 @@ export default class MasterTable extends React.Component {
   }
 }
 
-//fix the scroll

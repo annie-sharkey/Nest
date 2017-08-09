@@ -24,6 +24,7 @@ export default class AdminAgentDirectory extends Component {
     };
   }
 
+//start search functions
   onInputChange(e) {
     this.setState({ searchText: e.target.value });
   }
@@ -61,6 +62,7 @@ export default class AdminAgentDirectory extends Component {
         .filter(record => !!record)
     });
   }
+  //end search functions
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/agents").then(res => {
@@ -350,11 +352,12 @@ export default class AdminAgentDirectory extends Component {
           {editModal}
           {modal}
           <Link to="/">
-            <Icon type="arrow-left" style={{ fontSize: 30 }} />
+            <Icon type="arrow-left" style={{ fontSize: 30, color: 'white' }} />
           </Link>
+          
+          <h1 className="agentDirectory">Agent Directory</h1>
           <Button onClick={() => this.openModal()}>Add Agent</Button>
-          <h1>Agent Directory</h1>
-          <br />
+         
         </div>
 
         <Tabs
@@ -372,12 +375,13 @@ export default class AdminAgentDirectory extends Component {
           <TabPane tab="Wilmington" key="Wilmington" />
         </Tabs>
         <Table
+        //one table renders data depending on the office tab that is selected
           columns={columns}
           dataSource={
             this.state.filtered ? this.state.searchData : this.state.officeData
           }
-          pagination={{ pageSize: 50 }}
-          // scroll={{ y: 240 }}
+          pagination={false}
+          scroll={{y: 1000}}
         />
       </div>
     );

@@ -77,51 +77,16 @@ export default class AgentNavBar extends Component {
               </li>
               <li>
                 <Link to="/managelists">
-                  <h3>Master List</h3>
+                  <h3 className="item">Master List</h3>
                 </Link>
               </li>
               <li>
                 <Link to="/managelists/campaigns">
-                  <h3>Build a Campaign</h3>
+                  <h3 className="item">Build a Campaign</h3>
                 </Link>
               </li>
             </ul>
           </div>
-
-          {/*<Router ref="nav">
-        <div>
-          <Menu
-            onClick={e => this.handleClick(e)}
-            selectedKeys={[this.state.current]}
-            mode="horizontal"
-            theme="dark"
-          >
-            <Menu.Item key="home">
-              <Link to="/">
-                <Icon type="left" color="#FFFFFF" />
-              </Link>
-            </Menu.Item>
-
-            <Menu.Item key="contacts">
-              <Link to="/managelists">
-                <Icon
-                  type="contacts"
-                  onClick={() => this.handleMasterHighlight()}
-                />
-                Master List
-              </Link>
-            </Menu.Item>
-
-            <Menu.Item key="database">
-              <Link to="/managelists/campaigns">
-                <Icon
-                  type="database"
-                  onClick={() => this.handleCampaignHighlight()}
-                />
-                Build a Campaign
-              </Link>
-            </Menu.Item>
-          </Menu>*/}
 
           <Route
             exact

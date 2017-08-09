@@ -17,15 +17,12 @@ import {
 } from "antd";
 import "antd/dist/antd.css";
 import CampaignTable from "./CampaignTable";
-// import CreateCampaignUpload from "./CreateCampaignUpload";
-// import CreateCampaignBuildTable from "./CreateCampaignBuildTable";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import "./CreateCampaignParent.css";
 import axios from "axios";
 import { Grid } from "semantic-ui-react";
 import moment from "moment";
 import EditBuildTable from "./EditBuildTable";
-// import EditUploadTable from "./EditUploadTable";
 import JSONtoExcel from "./JSONtoExcel";
 
 const FormItem = Form.Item;
@@ -42,9 +39,7 @@ const plainOptions = [
   "Shenandoah Valley",
   "Wilmington"
 ];
-// const defaultCheckedList = [
-//   this.state.selectedCampaign.officesIncludedinCampaign
-// ];
+
 export default class ManageCampaigns extends Component {
   constructor(props) {
     super(props);
@@ -65,8 +60,6 @@ export default class ManageCampaigns extends Component {
     var date = moment(this.state.selectedCampaign.startDate).format(
       "MM/DD/YYYY"
     );
-    console.log(date);
-    // console.log("selected campaign", this.state.selectedCampaign.startDate)
     axios.get("http://localhost:4000/api/campaigns").then(res => {
       this.setState({
         data: res.data
@@ -135,7 +128,6 @@ export default class ManageCampaigns extends Component {
       ...this.state,
       writeColumns: columns
     });
-    // console.log("write columns:", this.state.writeColumns);
   }
 
   updateUploadState(uploads) {
@@ -162,8 +154,6 @@ export default class ManageCampaigns extends Component {
         {
           campaignName: this.state.campaignName,
           campaignCustomization: this.state.writeColumns,
-          //clients: [],
-          // campaignUploads: this.state.writeUploads,
           startDate: this.state.startDate,
           endDate: this.state.endDate,
           officesIncludedinCampaign: this.state.checkedList
@@ -185,7 +175,6 @@ export default class ManageCampaigns extends Component {
             var agentCode = this.state.agentData[i].agentCode;
             var agent = this.state.agentData[i];
             if (agent.pastCampaigns.includes(id)) {
-              console.log("Time to remove", id)
               var index = agent.pastCampaigns.indexOf(id);
               agent.pastCampaigns.splice(index, 1);
             }
@@ -199,8 +188,6 @@ export default class ManageCampaigns extends Component {
   }
 
   render() {
-    // console.log("selected campaign text:", this.state.selectedCampaign)
-
     const columns = [
       {
         title: "Campaign Title",
@@ -233,14 +220,17 @@ export default class ManageCampaigns extends Component {
       <div>
         <div className="header">
           <Link to="/">
-            <Icon type="arrow-left" style={{ fontSize: 30 }} />
+            <Icon type="arrow-left" style={{ fontSize: 30, color: 'white' }}/>
           </Link>
-          <h1>Manage Campaigns</h1>
+          <h1 className="agentDirectory">Manage Campaigns</h1>
           <br />
         </div>
-        <Table columns={columns} dataSource={this.state.data} />
+        <Table columns={columns} dataSource={this.state.data} pagination={false}/>
 
+
+        
         {this.state.openModal &&
+        //modal for editing the campaign details
           <div>
             <Modal
               visible={true}
@@ -304,12 +294,16 @@ export default class ManageCampaigns extends Component {
                 <br />
                 <Form className="createcampaigntables">
                   <EditBuildTable
+                  //editing custom campaign fields component
                     updateColumnState={columns =>
                       this.updateColumnState(columns)}
                     selectedCampaign={this.state.selectedCampaign}
                   />
 
-                  {/*<EditUploadTable
+                  
+                  {/*
+                  was originally intended to allow admin to create upload fields that would go into a media center, however, that functionality is not complete
+                  <EditUploadTable
                     updateUploadState={uploads =>
                       this.updateUploadState(uploads)}
                     selectedCampaign={this.state.selectedCampaign}
@@ -321,6 +315,7 @@ export default class ManageCampaigns extends Component {
 
         {this.state.openExportDataModal &&
           <Modal
+          //modal for exporting data 
             visible={true}
             onCancel={event => this.handleCancel(event)}
             okText="Done"

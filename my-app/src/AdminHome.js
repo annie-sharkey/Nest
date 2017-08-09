@@ -39,7 +39,7 @@ export default class AdminHome extends Component {
                   <button className="btn">Agent Directory</button>
                 </div>
               </Link>
-              <div className="inputFile">
+              {/*<div className="inputFile">
                 <form>
                   Select an to upload:
                   <input
@@ -49,7 +49,7 @@ export default class AdminHome extends Component {
                   />
                   <input type="submit" value="Upload Image" />
                 </form>
-              </div>
+              </div>*/}
             </div>
           </div>
           <div className="logout">

@@ -141,6 +141,7 @@ class App extends Component {
 
     if (!this.state.logged) {
       return (
+        <div className="background">
         <div className="login">
           <h1 className="title">NEST PORTAL</h1>
           <br />
@@ -166,6 +167,7 @@ class App extends Component {
               Login
             </Button>
           </div>
+        </div>
         </div>
       );
     }

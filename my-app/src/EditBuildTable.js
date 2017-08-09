@@ -16,9 +16,7 @@ import {
   Popconfirm
 } from "antd";
 import "antd/dist/antd.css";
-// import TestTable from "./TestTable";
 import CampaignTable from "./CampaignTable";
-// import CreateCampaignUpload from "./CreateCampaignUpload";
 import "./CreateCampaignBuildTable.css";
 const FormItem = Form.Item;
 
@@ -29,7 +27,6 @@ export default class CreateCampaignBuildTable extends Component {
       columns: this.props.selectedCampaign.campaignCustomization,
       edit: false,
       editedTitle: ""
-    //   selectedClient: this.props.selectedClient
     };
   }
 
@@ -51,7 +48,6 @@ export default class CreateCampaignBuildTable extends Component {
   }
 
   handleEditColumn(event, title) {
-    // this.props.updateColumnState(this.state.columns);
     this.setState({
       title: title,
       dataIndex: title,
@@ -92,22 +88,7 @@ export default class CreateCampaignBuildTable extends Component {
     this.props.updateColumnState(columns);
   }
 
-  // handleAllColumnsComplete(event) {
-  //   this.setState({
-  //     ...this.state,
-  //     done: true
-  //   });
-  // }
-
-  // handleAllColumnsEdit(event) {
-  //   this.setState({
-  //     ...this.state,
-  //     done: false
-  //   });
-  // }
-
   render() {
-    console.log("columns child:", this.state.columns);
     return (
       <div>
         <Form>

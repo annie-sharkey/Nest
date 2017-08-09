@@ -21,6 +21,7 @@ export default class AdminClientDirectory extends Component {
     };
   }
 
+//start search functions
   onInputChange(e) {
     this.setState({ searchText: e.target.value });
   }
@@ -58,6 +59,7 @@ export default class AdminClientDirectory extends Component {
         .filter(record => !!record)
     });
   }
+  //end search functions
 
   componentWillMount() {
     axios.get("http://localhost:4000/api/clients").then(res => {
@@ -162,8 +164,7 @@ export default class AdminClientDirectory extends Component {
 
     let { sortedInfo } = this.state;
     sortedInfo = sortedInfo || {};
-    console.log("search data:", this.state.searchData);
-    console.log("office data:", this.state.officeData);
+
     const columns = [
       {
         title: "Client Name",
@@ -254,6 +255,7 @@ export default class AdminClientDirectory extends Component {
           <span>
             <Icon
               type="edit"
+              
               onClick={() => {
                 this.openEditModal(text);
               }}
@@ -267,9 +269,9 @@ export default class AdminClientDirectory extends Component {
         <div className="header">
           {editModal}
           <Link to="/">
-            <Icon type="arrow-left" style={{ fontSize: 30 }} />
+            <Icon type="arrow-left" style={{ fontSize: 30, color: 'white' }} />
           </Link>
-          <h1>Client Directory</h1>
+          <h1 className="agentDirectory">Client Directory</h1>
           <br />
         </div>
         <Tabs
@@ -289,12 +291,13 @@ export default class AdminClientDirectory extends Component {
           
         </Tabs>
         <Table
+        //one table renders data depending on the office tab that is selected
           columns={columns}
           dataSource={
             this.state.filtered ? this.state.searchData : this.state.officeData
           }
-          pagination={{ pageSize: 50 }}
-          //scroll={{ y: 700 }}
+          pagination={false}
+          scroll={{y: 600}}
         />
       </div>
     );

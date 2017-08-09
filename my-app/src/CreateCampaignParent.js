@@ -76,16 +76,13 @@ export default class CreateCampaignParent extends Component {
       ...this.state,
       startDate: date._d.toISOString()
     });
-    // console.log("start date date._d:", date._d);
   }
 
   handleEndDate(date) {
-    // console.log("handle end date:", date)
     this.setState({
       ...this.state,
       endDate: date._d.toISOString()
     });
-    // console.log("end date:", this.state.endDate);
   }
 
   updateColumnState(columns) {
@@ -93,7 +90,6 @@ export default class CreateCampaignParent extends Component {
       ...this.state,
       writeColumns: columns
     });
-    // console.log("write columns:", this.state.writeColumns);
   }
 
   updateUploadState(uploads) {
@@ -104,22 +100,10 @@ export default class CreateCampaignParent extends Component {
   }
 
   WritetoDatabase() {
-    // var self = this;
-    // var clients = {};
-    // axios.get("http://localhost:4000/api/agents").then(res => {
-    //   var agents = res.data;
-    //   agents.map(agent => {
-    //     if (this.state.checkedList.includes(agent.agentOffice)) {
-    //       clients[agent.agentCode.toString()] = "";
-    //     }
-    //   });
-    // });
-
     var id = "";
     this.setState({
       done: true
     });
-
     axios({
       method: "post",
       url: "http://localhost:4000/api/campaign/",
@@ -146,6 +130,7 @@ export default class CreateCampaignParent extends Component {
     });
   }
 
+//start functions for check list
   onChange(checkedList) {
     this.setState({
       checkedList,
@@ -162,12 +147,9 @@ export default class CreateCampaignParent extends Component {
       checkAll: e.target.checked
     });
   }
+  //end functions for check list
 
   render() {
-    console.log("write columns:", this.state.writeColumns)
-    message.config({
-      top: 100
-    });
     return (
       <div>
         <div>
@@ -179,12 +161,14 @@ export default class CreateCampaignParent extends Component {
                 onClick={message.destroy()}
               />
             </Link>
-            <h1>Create a Campaign</h1>
+            <h1 className="agentDirectory">Create a Campaign</h1>
 
             <br />
           </div>
 
+          
           {!this.state.done &&
+          //the person is not allowed to create a campaign if they haven't entered a start and end date
             <div className="campaignform">
               <Grid divided="vertically">
                 <Grid.Row columns={2}>
@@ -206,7 +190,6 @@ export default class CreateCampaignParent extends Component {
                         placeholder="Start date"
                         format="MM/DD/YYYY"
                         onChange={event => this.handleStartDate(event)}
-                        //required={true}
                       />
                       <DatePicker
                         placeholder="End date"
@@ -221,13 +204,6 @@ export default class CreateCampaignParent extends Component {
                 <h3 >Select Offices to Include</h3>
                 <br />
                 <div style={{ borderBottom: "1px solid #E9E9E9" }}>
-                  {/*<Checkbox
-                    indeterminate={this.state.indeterminate}
-                    onChange={e => this.onCheckAllChange()}
-                    checked={this.state.checkAll}
-                  >
-                    Check all
-                  </Checkbox>*/}
                 </div>
                 <br />
                 <CheckboxGroup
@@ -239,11 +215,15 @@ export default class CreateCampaignParent extends Component {
               <br />
               <br />
               <Form className="createcampaigntables">
+                
                 <CreateCampaignBuildTable
+                //component that manages campaign customization functionality
                   updateColumnState={columns => this.updateColumnState(columns)}
                 />
 
-                {/*<CreateCampaignUpload
+                {/*
+                //didn't finish with uploading 
+                <CreateCampaignUpload
                   updateUploadState={uploads => this.updateUploadState(uploads)}
                 />*/}
               </Form>
@@ -254,7 +234,6 @@ export default class CreateCampaignParent extends Component {
                   <Popconfirm
                     title="Please check that you have entered a start and end date for your campaign."
                     okText="Ok"
-                    //cancelText="a"
                   >
                     <Button type="danger">Finish Creating Campaign</Button>
                   </Popconfirm>}

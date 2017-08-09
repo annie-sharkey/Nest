@@ -8,6 +8,8 @@ import { Menu, message } from "antd";
 import "antd/dist/antd.css";
 import "./CampaignTable2.css";
 import enUS from "antd/lib/locale-provider/en_US";
+const SubMenu = Menu.SubMenu;
+const MenuItemGroup = Menu.ItemGroup;
 
 export default class CampaignTable2 extends Component {
   constructor(props) {
@@ -28,7 +30,8 @@ export default class CampaignTable2 extends Component {
       currentCampaign: null,
       allOtherClients: [],
       openModal: false,
-      text: ""
+      text: "",
+      current: ""
     };
   }
 
@@ -74,8 +77,6 @@ export default class CampaignTable2 extends Component {
         var previousCampaign = agentCampaigns[index - 1];
 
         var code = this.state.agent.agentCode;
-
-        console.log("Previous", previousCampaign);
         var previousCampaignSavedClients = [];
         if (previousCampaign != null) {
           for (var agent in previousCampaign.clients) {
@@ -174,7 +175,6 @@ export default class CampaignTable2 extends Component {
     );
 
     var new_notIncluded = this.state.notIncluded.filter(notClient => {
-      console.log("entered");
       return client._id != notClient._id;
     });
 
@@ -184,12 +184,10 @@ export default class CampaignTable2 extends Component {
       notIncludedSearchData: newNotIncludedSearchData
     });
     this.saveClients(new_included);
-    console.log("client:", client);
   }
 
   remove(client) {
     var new_notIncluded;
-    console.log("Selected", this.state.selectedCampaign);
     if (this.state.selectedCampaign !== null) {
       var selectedCampaignIds = this.state.selectedCampaign.clients[
         this.state.agent.agentCode
@@ -227,7 +225,6 @@ export default class CampaignTable2 extends Component {
     var data = {
       clients: included
     };
-    console.log(this.state.currentCampaign._id);
     axios
       .put(
         "http://localhost:4000/api/campaign/" +
@@ -236,9 +233,7 @@ export default class CampaignTable2 extends Component {
           this.state.agent.agentCode,
         data
       )
-      .then(res => {
-        console.log(res.data);
-      });
+      .then(res => {});
   }
 
   compareByAlph(a, b) {
@@ -263,7 +258,6 @@ export default class CampaignTable2 extends Component {
       includedFiltered: !!includedSearchText,
       includedSearchData: this.state.included
         .map(record => {
-          // console.log("record", record);
           const match =
             record.clientName.match(reg) ||
             record.clientCity.match(reg) ||
@@ -363,6 +357,7 @@ export default class CampaignTable2 extends Component {
     }
   }
 
+  //open customize campaign modal
   handleOpenModal() {
     this.setState({
       openModal: true
@@ -374,6 +369,7 @@ export default class CampaignTable2 extends Component {
       openModal: false
     });
   }
+  //end customize campaign modal
 
   handleTextChange(event, ID, field) {
     var included = this.state.included;
@@ -386,6 +382,12 @@ export default class CampaignTable2 extends Component {
     this.saveClients(included);
   }
 
+  handleClick = e => {
+    console.log("click ", e);
+    this.setState({
+      current: e.key
+    });
+  };
   render() {
     var notIncludedColumns = [
       {
@@ -504,11 +506,18 @@ export default class CampaignTable2 extends Component {
     var options = [];
     var self = this;
     this.state.agentCampaigns.map(campaign => {
+      //the current campaign and future campaigns do not appear in the dropdown menu
       if (self.state.currentCampaign._id !== campaign._id) {
-        options.push({
-          text: campaign.campaignName,
-          value: campaign._id
-        });
+        var currentEnd = moment(self.state.currentCampaign.endDate)
+          .toDate()
+          .getTime();
+        var campaignStart = moment(campaign.endDate).toDate().getTime();
+        if (campaignStart < currentEnd) {
+          options.push({
+            text: campaign.campaignName,
+            value: campaign._id
+          });
+        }
       }
     });
     options.push({
@@ -528,6 +537,7 @@ export default class CampaignTable2 extends Component {
           <div className="dropdown">
             <h5>Past Campaigns Lists</h5>
             <Dropdown
+              //the current campaign and future campaigns do not appear
               placeholder="Select Campaign"
               compact
               selection
@@ -539,6 +549,7 @@ export default class CampaignTable2 extends Component {
             {this.state.currentCampaign.campaignCustomization != "" &&
               <div style={{ margin: "auto" }}>
                 <Button
+                  //Customize campaign button only appears if admin set custom fields for the agent to enter
                   onClick={event => this.handleOpenModal()}
                   color={"black"}
                 >
@@ -553,6 +564,7 @@ export default class CampaignTable2 extends Component {
               <div className="search-bar">
                 <div style={{ width: "70%" }}>
                   <Input
+                    //search for the included list
                     ref={ele => (this.includedSearchInput = ele)}
                     placeholder="Search included list by name, address, city, or state"
                     value={this.state.includedSearchText}
@@ -577,19 +589,22 @@ export default class CampaignTable2 extends Component {
                 </Button>
               </div>
               <br />
-
-              <Table
-                bordered
-                dataSource={
-                  this.state.includedFiltered
-                    ? this.state.includedSearchData
-                    : this.state.included
-                }
-                columns={IncludedColumns}
-                pagination={false}
-                scroll={{ y: 350 }}
-                rowKey="uid"
-              />
+              <LocaleProvider locale={enUS}>
+                <Table
+                  //included data
+                  bordered
+                  dataSource={
+                    //if the state is filtered, show the data that matches the search, otherwise show all data
+                    this.state.includedFiltered
+                      ? this.state.includedSearchData
+                      : this.state.included
+                  }
+                  columns={IncludedColumns}
+                  pagination={false}
+                  scroll={{ y: 350 }}
+                  rowKey="uid"
+                />
+              </LocaleProvider>
             </div>
             <div className="middle" />
             <div className="not-table">
@@ -598,6 +613,7 @@ export default class CampaignTable2 extends Component {
               <div className="search-bar">
                 <div style={{ width: "70%" }}>
                   <Input
+                    //search for not included data
                     ref={ele => (this.notIncludedSearchInput = ele)}
                     placeholder="Search not included list by name, address, city, or state"
                     value={this.state.notIncludedSearchText}
@@ -623,19 +639,22 @@ export default class CampaignTable2 extends Component {
                 </Button>
               </div>
               <br />
-
-              <Table
-                bordered
-                dataSource={
-                  this.state.notIncludedFiltered
-                    ? this.state.notIncludedSearchData
-                    : this.state.notIncluded
-                }
-                columns={notIncludedColumns}
-                pagination={false}
-                scroll={{ y: 350 }}
-                rowKey="uid"
-              />
+              <LocaleProvider locale={enUS}>
+                <Table
+                  //not included table
+                  bordered
+                  dataSource={
+                    //if the state is filtered, show the data that matches the search , otherwise show all data
+                    this.state.notIncludedFiltered
+                      ? this.state.notIncludedSearchData
+                      : this.state.notIncluded
+                  }
+                  columns={notIncludedColumns}
+                  pagination={false}
+                  scroll={{ y: 350 }}
+                  rowKey="uid"
+                />
+              </LocaleProvider>
 
               {this.state.openModal &&
                 <LocaleProvider locale={enUS}>
@@ -645,15 +664,32 @@ export default class CampaignTable2 extends Component {
                     okText="Done"
                     onOk={event => this.handleCancel(event)}
                   >
-                    {/*<h2>{this.state.currentCampaign.campaignCustomization}</h2>*/}
-                    {this.state.currentCampaign.campaignCustomization.map(
+                    <Menu
+                      onClick={this.handleClick}
+                      selectedKeys={[this.state.current]}
+                      mode="horizontal"
+                    >
+                      {this.state.currentCampaign.campaignCustomization.map(
+                        field => {
+                          var customField = this.state.currentCampaign
+                            .campaignCustomization[0];
+                          return (
+                            <Menu.Item key={field}>
+                              {field}
+                            </Menu.Item>
+                          );
+                        }
+                      )}
+                    </Menu>
+                    
+                    {/*{this.state.currentCampaign.campaignCustomization.map(
                       field => {
                         var customField = this.state.currentCampaign
                           .campaignCustomization[0];
                         return (
                           <div>
                             <h2>
-                              {field}
+                              <button>{field}</button>
                             </h2>
                             {this.state.included.map(client => {
                               return (
@@ -671,8 +707,6 @@ export default class CampaignTable2 extends Component {
                                         field
                                       )}
                                   />
-                                  {/*<button onClick={event => this.handleOk}>Ok</button>*/}
-
                                   <br />
                                 </div>
                               );
@@ -680,7 +714,7 @@ export default class CampaignTable2 extends Component {
                           </div>
                         );
                       }
-                    )}
+                    )}*/}
                   </Modal>
                 </LocaleProvider>}
             </div>
@@ -688,7 +722,6 @@ export default class CampaignTable2 extends Component {
         </div>
       );
     } else {
-      console.log("No campaign");
       return (
         <div className="campaignPage">
           <br />
