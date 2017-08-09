@@ -389,6 +389,7 @@ export default class CampaignTable2 extends Component {
     });
   }
   render() {
+    console.log("included state:", this.state.included)
     var notIncludedColumns = [
       {
         title: "Client Name",
@@ -682,7 +683,44 @@ export default class CampaignTable2 extends Component {
                       )}
                     </Menu>
 
-                    {/*{this.state.currentCampaign.campaignCustomization.map(
+                    {this.state.included.map(client => {
+                      return (
+                        <div>
+                          {client.clientName}
+                          <input
+                                    type="text"
+                                    defaultValue={client[this.state.current]}
+                                    onChange={event =>
+                                      this.handleTextChange(
+                                        event,
+                                        client._id,
+                                        this.state.current
+                                      )}
+                                  />
+                          </div>
+                          
+                      )
+                    })}
+                    
+                  </Modal>
+                </LocaleProvider>}
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="campaignPage">
+          <br />
+          <h2>No Current Campaigns To Save </h2>
+        </div>
+      );
+    }
+  }
+}
+
+ {/*{this.state.currentCampaign.campaignCustomization.map(
+
                       field => {
                         var customField = this.state.currentCampaign
                           .campaignCustomization[0];
@@ -715,19 +753,3 @@ export default class CampaignTable2 extends Component {
                         );
                       }
                     )}*/}
-                  </Modal>
-                </LocaleProvider>}
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="campaignPage">
-          <br />
-          <h2>No Current Campaigns To Save </h2>
-        </div>
-      );
-    }
-  }
-}
