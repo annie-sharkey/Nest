@@ -158,7 +158,8 @@ export default class CampaignTable2 extends Component {
           included: included,
           notIncluded: notIncluded,
           currentCampaign: currentCampaign[0],
-          agentCampaigns: agentCampaigns
+          agentCampaigns: agentCampaigns,
+          current: currentCampaign[0].campaignCustomization[0]
         });
       }
     });
@@ -389,7 +390,7 @@ export default class CampaignTable2 extends Component {
     });
   };
   render() {
-    console.log("included state:", this.state.included)
+    console.log("included state:", this.state.included);
     var notIncludedColumns = [
       {
         title: "Client Name",
@@ -683,24 +684,30 @@ export default class CampaignTable2 extends Component {
                       )}
                     </Menu>
                     {this.state.included.map(client => {
+                      {
+                        /*console.log("client and state:", client[this.state.current])*/
+                      }
+                      console.log("this.state.current:", this.state.current);
+                      console.log("client:", client);
+                      var current = this.state.current;
                       return (
                         <div>
                           {client.clientName}
-                          <input
-                                    type="text"
-                                    defaultValue={client[this.state.current]}
-                                    onChange={event =>
-                                      this.handleTextChange(
-                                        event,
-                                        client._id,
-                                        this.state.current
-                                      )}
-                                  />
-                          </div>
-                          
-                      )
+                          <Input
+                            type="text"
+                            placeholder={client[current]}
+                            onChange={event =>
+                              this.handleTextChange(
+                                event,
+                                client._id,
+                                this.state.current
+                              )}
+                              
+                          />
+                          {client[current]}
+                        </div>
+                      );
                     })}
-                    
                   </Modal>
                 </LocaleProvider>}
             </div>
@@ -718,7 +725,8 @@ export default class CampaignTable2 extends Component {
   }
 }
 
- {/*{this.state.currentCampaign.campaignCustomization.map(
+{
+  /*{this.state.currentCampaign.campaignCustomization.map(
                       field => {
                         var customField = this.state.currentCampaign
                           .campaignCustomization[0];
@@ -750,4 +758,5 @@ export default class CampaignTable2 extends Component {
                           </div>
                         );
                       }
-                    )}*/}
+                    )}*/
+}
