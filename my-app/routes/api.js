@@ -5,6 +5,8 @@ const Client = require("../models/client.js");
 const Agent = require("../models/agent.js");
 
 const Campaign = require("../models/campaign.js");
+const multer = require("multer");
+var convertExcel = require("excel-as-json").processFile;
 
 router.get("/clients", function(req, res, next) {
   Client.find({}).then(function(clients) {
@@ -283,8 +285,61 @@ router.put("/campaign/:id/:code", function(req, res, next) {
   });
 });
 
-router.post("/upload", function(req, res, next) {
-  console.log(req.body);
+var storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "./data");
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+var upload = multer({ storage: storage });
+
+router.post("/upload", upload.single("file"), (req, res, next) => {
+  convertExcel("./data/" + req.file.originalname, null, null, (err, data) => {
+    var clients = [];
+    if (err) {
+      throw err;
+    }
+    data.forEach(function(client) {
+      var new_client = new Client({
+        clientName: "",
+        clientAddress: "",
+        clientEmail: "",
+        clientCity: "",
+        clientState: "",
+        office: "",
+        agentCode: "",
+        agentName: "",
+        agentEmail: "",
+        agentTitle: "",
+        agentPhone: "",
+        lastEdited: new Date().toISOString()
+      });
+
+      new_client.clientName = client["DISPLAY NAME"];
+      new_client.clientAddress = client["CLIENT ADDRESS"];
+      new_client.clientCity = client["CLIENT CITY"];
+      new_client.office = client["LOCATION"];
+      new_client.clientEmail = client["CLIENT EMAIL"];
+      new_client.clientState = client["CLIENT STATE"];
+      new_client.agentCode = client["AGENT CODE"];
+      new_client.agentName = client["AGENT FIRST AND LAST NAME"];
+      new_client.agentEmail = client["AGENT NEST REALTY EMAIL"];
+      new_client.agentTitle = client["REAL ESTATE TITLE"];
+      new_client.agentPhone = client["AGENT PHONE NUMBER"];
+
+      clients.push(new_client);
+    });
+    clients.map(client => {
+      client.save(function(err, res) {
+        if (err) {
+          throw err;
+        }
+      });
+    });
+  });
   res.sendStatus(200);
 });
 

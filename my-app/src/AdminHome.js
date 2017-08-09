@@ -8,7 +8,13 @@ import FileInput from "react-file-input";
 
 export default class AdminHome extends Component {
   handleChange(e) {
-    axios.post("http://localhost:4000/api/upload", e.target.value);
+    // this.setState({
+    //   selectedFiles: e.target.files
+    // });
+    let data = new FormData();
+    data.append("file", e.target.files[0]);
+    data.append("name", e.target.files[0].name);
+    axios.post("http://localhost:4000/api/upload", data);
   }
   render() {
     return (
@@ -39,17 +45,9 @@ export default class AdminHome extends Component {
                   <button className="btn">Agent Directory</button>
                 </div>
               </Link>
-              {/*<div className="inputFile">
-                <form>
-                  Select an to upload:
-                  <input
-                    type="file"
-                    name="image"
-                    onChange={e => this.handleChange(e)}
-                  />
-                  <input type="submit" value="Upload Image" />
-                </form>
-              </div>*/}
+              <div className="inputFile">
+                <input type="file" onChange={e => this.handleChange(e)} />
+              </div>
             </div>
           </div>
           <div className="logout">

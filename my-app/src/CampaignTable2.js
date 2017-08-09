@@ -382,12 +382,12 @@ export default class CampaignTable2 extends Component {
     this.saveClients(included);
   }
 
-  handleClick = e => {
+  handleClick(e) {
     console.log("click ", e);
     this.setState({
       current: e.key
     });
-  };
+  }
   render() {
     var notIncludedColumns = [
       {
@@ -665,7 +665,7 @@ export default class CampaignTable2 extends Component {
                     onOk={event => this.handleCancel(event)}
                   >
                     <Menu
-                      onClick={this.handleClick}
+                      onClick={e => this.handleClick(e)}
                       selectedKeys={[this.state.current]}
                       mode="horizontal"
                     >
@@ -681,7 +681,7 @@ export default class CampaignTable2 extends Component {
                         }
                       )}
                     </Menu>
-                    
+
                     {/*{this.state.currentCampaign.campaignCustomization.map(
                       field => {
                         var customField = this.state.currentCampaign
