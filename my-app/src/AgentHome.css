@@ -59,21 +59,33 @@ img {
   flex-direction: row;
 }
 
+.profile-container {
+  width: 33.33%;
+}
 .profile {
-  margin-left: 1%;
-  margin-top: 2.5%;
+  margin: auto;
+  margin-top: 2%;
+  margin-left: 2%;
 }
 
+.center-container {
+  width: 33.33%;
+}
 .center {
-  margin-left: 28%;
-  margin-top: 3%;
+  margin: auto;
+  margin-top: 10%;
   display: flex;
   flex-direction: column;
 }
 
-.adminLogo {
-  margin-top: 3%;
-  margin-left: 34%;
+.logout-container {
+  width: 33.33%;
+}
+.log-out-button {
+  margin: auto;
+  float: right;
+  margin-top: 4%;
+  margin-right: 2%;
 }
 
 .centerAdmin {

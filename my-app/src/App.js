@@ -20,6 +20,7 @@ import AdminClientDirectory from "./AdminClientDirectory";
 import AdminAgentDirectory from "./AdminAgentDirectory";
 import ManageCampaigns from "./ManageCampaigns";
 import CampaignTable2 from "./CampaignTable2";
+import BodyBackgroundColor from "react-body-backgroundcolor";
 
 // import JSONtoExcel from "./JSONtoExcel";
 
@@ -139,35 +140,41 @@ class App extends Component {
       );
     }
 
+    var height = window.innerHeight;
     if (!this.state.logged) {
       return (
-        <div className="background">
-        <div className="login">
-          <h1 className="title">NEST PORTAL</h1>
-          <br />
-          <div className="login-field">
-            <Input
-              onChange={e => this.handleFieldChange(e)}
-              placeholder="Enter FON Code"
-            />
-            <br />
-            <Input
-              type="password"
-              onChange={e => this.handlePasswordChange(e)}
-              placeholder="Enter Your Password"
-            />
-          </div>
+        <div className="background" style={{ height: height }}>
+          <div className="login">
+            <h1 className="title" style={{ marginTop: "5%" }}>
+              NEST PORTAL
+            </h1>
+            <div className="login-field">
+              <div>
+                <Input
+                  onChange={e => this.handleFieldChange(e)}
+                  placeholder="Enter FON Code"
+                />
+              </div>
 
-          <div className="login-button-container">
-            <Button
-              className="login-button"
-              color="black"
-              onClick={() => this.validateLogin()}
-            >
-              Login
-            </Button>
+              <div style={{ marginTop: "1%" }}>
+                <Input
+                  type="password"
+                  onChange={e => this.handlePasswordChange(e)}
+                  placeholder="Enter Your Password"
+                />
+              </div>
+            </div>
+
+            <div className="login-button-container">
+              <Button
+                className="login-button"
+                color="black"
+                onClick={() => this.validateLogin()}
+              >
+                Login
+              </Button>
+            </div>
           </div>
-        </div>
         </div>
       );
     }

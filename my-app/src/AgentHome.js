@@ -18,32 +18,38 @@ export default class AgentHome extends Component {
     return (
       <Router>
         <div className="home-container">
-          <div className="profile">
-            <Link to="/profile">
-              <a className="edit-icon">
-                <Icon name="edit" size="huge" />
-              </a>
-            </Link>
-            <text className="name">
-              <strong>
-                {this.props.agent.agentName}{" "}
-              </strong>
-            </text>
-          </div>
-          <div className="center">
-            <img src={Nest} width={75} />
-            <div className="buttons">
-              <Link to="/managelists">
-                <div className="spaceAroundButton">
-                  <button className="btn">Manage Lists</button>
-                </div>
+          <div className="profile-container">
+            <div className="profile">
+              <Link to="/profile">
+                <a className="edit-icon">
+                  <Icon name="edit" size="huge" />
+                </a>
               </Link>
+              <text className="name">
+                <strong>
+                  {this.props.agent.agentName}{" "}
+                </strong>
+              </text>
             </div>
           </div>
-          <div className="logout">
-            <Button color="grey" onClick={() => this.props.logOut()}>
-              <text className="logout-text">Log Out</text>
-            </Button>
+          <div className="center-container">
+            <div className="center">
+              <img src={Nest} width={75} />
+              <div className="buttons">
+                <Link to="/managelists">
+                  <div className="spaceAroundButton">
+                    <button className="btn">Manage Lists</button>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="logout-container">
+            <div className="log-out-button">
+              <Button color="grey" onClick={() => this.props.logOut()}>
+                <text className="logout-text">Log Out</text>
+              </Button>
+            </div>
           </div>
         </div>
       </Router>

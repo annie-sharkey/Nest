@@ -540,6 +540,7 @@ export default class CampaignTable2 extends Component {
         <Modal
           visible={true}
           onCancel={event => this.handleCancel(event)}
+          cancelText="Close"
           okText="Done"
           onOk={event => this.handleCancel(event)}
           width={1000}
