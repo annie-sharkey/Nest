@@ -7,6 +7,13 @@ import axios from "axios";
 import FileInput from "react-file-input";
 
 export default class AdminHome extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      file: null,
+      name: null
+    };
+  }
   handleChange(e) {
     // this.setState({
     //   selectedFiles: e.target.files
@@ -14,7 +21,18 @@ export default class AdminHome extends Component {
     let data = new FormData();
     data.append("file", e.target.files[0]);
     data.append("name", e.target.files[0].name);
-    axios.post("http://localhost:4000/api/upload", data);
+    //axios.post("http://localhost:4000/api/upload", data);
+    console.log(data);
+    this.setState({
+      file: data,
+      name: e.target.files[0].name
+    });
+  }
+
+  handleSubmit() {
+    console.log(this.state.file);
+    axios.post("http://localhost:4000/api/upload", this.state.file);
+    alert("Data Submitted from " + this.state.name);
   }
   render() {
     return (
@@ -47,9 +65,14 @@ export default class AdminHome extends Component {
               </Link>
               <div className="inputFile">
                 <input type="file" onChange={e => this.handleChange(e)} />
+                <br />
+                <Button type="tiny" onClick={() => this.handleSubmit()}>
+                  Submit Agent Data
+                </Button>
               </div>
             </div>
           </div>
+
           <div className="logout">
             <Button color="black" onClick={() => this.props.logOut()}>
               Log Out

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Table, Input, Icon, Popconfirm, Modal, LocaleProvider } from "antd";
-import { Button, Dropdown } from "semantic-ui-react";
+import { Table, Icon, Popconfirm, Modal, LocaleProvider } from "antd";
+import { Button, Dropdown, Input } from "semantic-ui-react";
 import { Confirm } from "semantic-ui-react";
 import moment from "moment";
 import { Menu, message } from "antd";
@@ -167,6 +167,14 @@ export default class CampaignTable2 extends Component {
   include(client) {
     var new_included = this.state.included;
     new_included.push(client);
+    var new_includedIds = new_included.map(client => {
+      return client._id;
+    });
+    var newer_included = new_included.map(client => {
+      if (new_includedIds.includes(client._id)) {
+        return client;
+      }
+    });
 
     var newNotIncludedSearchData = this.state.notIncludedSearchData.filter(
       notClient => {
@@ -179,11 +187,11 @@ export default class CampaignTable2 extends Component {
     });
 
     this.setState({
-      included: new_included,
+      included: newer_included,
       notIncluded: new_notIncluded,
       notIncludedSearchData: newNotIncludedSearchData
     });
-    this.saveClients(new_included);
+    this.saveClients(newer_included);
   }
 
   remove(client) {
@@ -371,12 +379,13 @@ export default class CampaignTable2 extends Component {
   }
   //end customize campaign modal
 
-  handleTextChange(event, ID, field) {
+  handleTextChange(event, data, ID, field) {
     var included = this.state.included;
     var self = this;
     included.map(client => {
       if (client._id == ID) {
-        client[field] = event.target.value;
+        client[field] = data.value;
+        console.log(client[field]);
       }
     });
     this.saveClients(included);
@@ -389,7 +398,7 @@ export default class CampaignTable2 extends Component {
     });
   }
   render() {
-    console.log("included state:", this.state.included)
+    console.log("included state:", this.state.included);
     var notIncludedColumns = [
       {
         title: "Client Name",
@@ -525,6 +534,60 @@ export default class CampaignTable2 extends Component {
       text: "Master List",
       value: "master"
     });
+    var modal;
+    if (this.state.openModal) {
+      modal = (
+        <Modal
+          visible={true}
+          onCancel={event => this.handleCancel(event)}
+          okText="Done"
+          onOk={event => this.handleCancel(event)}
+          width={1000}
+        >
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            {this.state.currentCampaign.campaignCustomization.map(field => {
+              return (
+                <div
+                  style={{
+                    marginLeft: "4%"
+                  }}
+                >
+                  <h3>
+                    {field}
+                  </h3>
+                  <div style={{ overflowY: "auto" }}>
+                    {this.state.included.map(client => {
+                      return (
+                        <div>
+                          <br />
+                          <div
+                            style={{ display: "flex", flexDirection: "row" }}
+                          >
+                            {client.clientName} {"  "}
+                            <Input
+                              type="text"
+                              defaultValue={client[field]}
+                              style={{ margin: "auto" }}
+                              onChange={(e, data) =>
+                                this.handleTextChange(
+                                  e,
+                                  data,
+                                  client._id,
+                                  field
+                                )}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Modal>
+      );
+    }
 
     if (this.state.currentCampaign !== null) {
       return (
@@ -656,8 +719,8 @@ export default class CampaignTable2 extends Component {
                   rowKey="uid"
                 />
               </LocaleProvider>
-
-              {this.state.openModal &&
+              {modal}
+              {/* {this.state.openModal &&
                 <LocaleProvider locale={enUS}>
                   <Modal
                     visible={true}
@@ -667,13 +730,11 @@ export default class CampaignTable2 extends Component {
                   >
                     <Menu
                       onClick={e => this.handleClick(e)}
-                      selectedKeys={[this.state.current]}
+                      selectedKeys={this.state.current}
                       mode="horizontal"
                     >
                       {this.state.currentCampaign.campaignCustomization.map(
                         field => {
-                          var customField = this.state.currentCampaign
-                            .campaignCustomization[0];
                           return (
                             <Menu.Item key={field}>
                               {field}
@@ -682,28 +743,26 @@ export default class CampaignTable2 extends Component {
                         }
                       )}
                     </Menu>
-
                     {this.state.included.map(client => {
+                      var current = this.state.current;
                       return (
                         <div>
                           {client.clientName}
                           <input
-                                    type="text"
-                                    defaultValue={client[this.state.current]}
-                                    onChange={event =>
-                                      this.handleTextChange(
-                                        event,
-                                        client._id,
-                                        this.state.current
-                                      )}
-                                  />
-                          </div>
-                          
-                      )
+                            type="text"
+                            defaultValue={client[this.state.current]}
+                            onChange={event =>
+                              this.handleTextChange(
+                                event,
+                                client._id,
+                                this.state.current
+                              )}
+                          />
+                        </div>
+                      );
                     })}
-                    
                   </Modal>
-                </LocaleProvider>}
+                </LocaleProvider>} */}
             </div>
           </div>
         </div>
@@ -719,7 +778,8 @@ export default class CampaignTable2 extends Component {
   }
 }
 
- {/*{this.state.currentCampaign.campaignCustomization.map(
+{
+  /*{this.state.currentCampaign.campaignCustomization.map(
 
                       field => {
                         var customField = this.state.currentCampaign
@@ -752,4 +812,5 @@ export default class CampaignTable2 extends Component {
                           </div>
                         );
                       }
-                    )}*/}
+                    )}*/
+}
