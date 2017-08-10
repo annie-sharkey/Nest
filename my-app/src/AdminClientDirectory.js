@@ -21,7 +21,7 @@ export default class AdminClientDirectory extends Component {
     };
   }
 
-//start search functions
+  //start search functions
   onInputChange(e) {
     this.setState({ searchText: e.target.value });
   }
@@ -255,7 +255,6 @@ export default class AdminClientDirectory extends Component {
           <span>
             <Icon
               type="edit"
-              
               onClick={() => {
                 this.openEditModal(text);
               }}
@@ -269,7 +268,7 @@ export default class AdminClientDirectory extends Component {
         <div className="header">
           {editModal}
           <Link to="/">
-            <Icon type="arrow-left" style={{ fontSize: 30, color: 'white' }} />
+            <Icon type="arrow-left" style={{ fontSize: 30, color: "white" }} />
           </Link>
           <h1 className="agentDirectory">Client Directory</h1>
           <br />
@@ -287,17 +286,15 @@ export default class AdminClientDirectory extends Component {
           <TabPane tab="Shenandoah Valley" key="Shenandoah Valley" />
           <TabPane tab="The Triangle" key="The Triangle" />
           <TabPane tab="Wilmington" key="Wilmington" />
-          
-          
         </Tabs>
         <Table
-        //one table renders data depending on the office tab that is selected
+          //one table renders data depending on the office tab that is selected
           columns={columns}
           dataSource={
             this.state.filtered ? this.state.searchData : this.state.officeData
           }
           pagination={false}
-          scroll={{y: 600}}
+          scroll={{ y: 600 }}
         />
       </div>
     );

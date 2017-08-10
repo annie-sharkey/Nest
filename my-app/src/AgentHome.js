@@ -17,7 +17,7 @@ export default class AgentHome extends Component {
   render() {
     return (
       <Router>
-        <div className="home-container">
+        <div className="home-agent">
           <div className="profile-container">
             <div className="profile">
               <Link to="/profile">
@@ -33,9 +33,9 @@ export default class AgentHome extends Component {
             </div>
           </div>
           <div className="center-container">
-            <div className="center">
+            <div className="center-column">
               <img src={Nest} width={75} />
-              <div className="buttons">
+              <div className="manage">
                 <Link to="/managelists">
                   <div className="spaceAroundButton">
                     <button className="btn">Manage Lists</button>

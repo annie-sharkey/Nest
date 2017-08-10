@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./AgentHome.css";
+import "./AdminHome.css";
 import Nest from "./Nest.png";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import { Button, Icon } from "semantic-ui-react";
@@ -38,45 +38,56 @@ export default class AdminHome extends Component {
     return (
       <Router>
         <div className="home-container">
-          <div className="centerAdmin">
-            <div className="adminLogo">
+          <div className="top">
+            <div style={{ width: "33.33%" }} />
+            <div className="logo">
               <img src={Nest} width={75} />
             </div>
-            <div className="buttons">
-              <Link to="/createcampaign">
-                <div className="spaceAroundButton">
-                  <button className="btn">Create a Campaign</button>
-                </div>
-              </Link>
-              <Link to="/managecampaigns">
-                <div className="secondbutton">
-                  <button className="btn">Manage Campaigns</button>
-                </div>
-              </Link>
-              <Link to="/clientdirectory">
-                <div className="secondbutton">
-                  <button className="btn">Client Directory</button>
-                </div>
-              </Link>
-              <Link to="/agentdirectory">
-                <div className="secondbutton">
-                  <button className="btn">Agent Directory</button>
-                </div>
-              </Link>
-              <div className="inputFile">
-                <input type="file" onChange={e => this.handleChange(e)} />
-                <br />
-                <Button type="tiny" onClick={() => this.handleSubmit()}>
-                  Submit Agent Data
+            <div className="log-out">
+              <div
+                style={{ float: "right", paddingRight: "2%", paddingTop: "2%" }}
+              >
+                <Button color="black" onClick={() => this.props.logOut()}>
+                  Log Out
                 </Button>
               </div>
             </div>
           </div>
-
-          <div className="logout">
-            <Button color="black" onClick={() => this.props.logOut()}>
-              Log Out
-            </Button>
+          <div className="middle">
+            <div className="left">
+              <Link to="/createcampaign">
+                <button className="lft-btn">Create a Campaign</button>
+              </Link>
+              <br />
+              <Link to="/managecampaigns">
+                <button className="lft-btn">Manage Campaigns</button>
+              </Link>
+            </div>
+            <div style={{ width: "10%" }} />
+            <div className="right">
+              <Link to="/clientdirectory">
+                <button className="btn">Client Directory</button>
+              </Link>
+              <br />
+              <Link to="/agentdirectory">
+                <button className="btn">Agent Directory</button>
+              </Link>
+            </div>
+          </div>
+          <div className="bottom">
+            <div>
+              <h4>Add Agent's Clients</h4>
+              <br />
+              <input
+                type="file"
+                onChange={e => this.handleChange(e)}
+                style={{ margin: "auto" }}
+              />
+              <br />
+              <Button type="tiny" onClick={() => this.handleSubmit()}>
+                Submit
+              </Button>
+            </div>
           </div>
         </div>
       </Router>
