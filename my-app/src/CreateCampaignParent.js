@@ -130,7 +130,7 @@ export default class CreateCampaignParent extends Component {
     });
   }
 
-//start functions for check list
+  //start functions for check list
   onChange(checkedList) {
     this.setState({
       checkedList,
@@ -157,7 +157,7 @@ export default class CreateCampaignParent extends Component {
             <Link to="/">
               <Icon
                 type="arrow-left"
-                style={{ fontSize: 30, color: 'white' }}
+                style={{ fontSize: 30, color: "white" }}
                 onClick={message.destroy()}
               />
             </Link>
@@ -166,9 +166,8 @@ export default class CreateCampaignParent extends Component {
             <br />
           </div>
 
-          
           {!this.state.done &&
-          //the person is not allowed to create a campaign if they haven't entered a start and end date
+            //the person is not allowed to create a campaign if they haven't entered a start and end date
             <div className="campaignform">
               <Grid divided="vertically">
                 <Grid.Row columns={2}>
@@ -201,10 +200,9 @@ export default class CreateCampaignParent extends Component {
                 </Grid.Row>
               </Grid>
               <div>
-                <h3 >Select Offices to Include</h3>
+                <h3>Select Offices to Include</h3>
                 <br />
-                <div style={{ borderBottom: "1px solid #E9E9E9" }}>
-                </div>
+                <div style={{ borderBottom: "1px solid #E9E9E9" }} />
                 <br />
                 <CheckboxGroup
                   options={plainOptions}
@@ -215,9 +213,8 @@ export default class CreateCampaignParent extends Component {
               <br />
               <br />
               <Form className="createcampaigntables">
-                
                 <CreateCampaignBuildTable
-                //component that manages campaign customization functionality
+                  //component that manages campaign customization functionality
                   updateColumnState={columns => this.updateColumnState(columns)}
                 />
 

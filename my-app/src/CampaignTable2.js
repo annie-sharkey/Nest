@@ -627,7 +627,7 @@ export default class CampaignTable2 extends Component {
               <h2 className="tableTitles">Included</h2>
 
               <div className="search-bar">
-                <div style={{ width: "70%" }}>
+                <div style={{ width: "90%" }}>
                   <Input
                     //search for the included list
                     ref={ele => (this.includedSearchInput = ele)}
@@ -635,11 +635,12 @@ export default class CampaignTable2 extends Component {
                     value={this.state.includedSearchText}
                     onChange={e => this.onIncludedInputChange(e)}
                     onPressEnter={() => this.onIncludedSearch()}
+                    size="tiny"
                   />
                 </div>
                 <Button
                   type="primary"
-                  size="mini"
+                  size="tiny"
                   onClick={() => this.onIncludedSearch()}
                   style={{ marginLeft: "1%" }}
                 >
@@ -647,7 +648,7 @@ export default class CampaignTable2 extends Component {
                 </Button>
                 <Button
                   type="primary"
-                  size="mini"
+                  size="tiny"
                   onClick={e => this.handleIncludedClearSearch(e)}
                 >
                   Clear Search
@@ -671,7 +672,7 @@ export default class CampaignTable2 extends Component {
                 />
               </LocaleProvider>
             </div>
-            <div className="middle" />
+            <div style={{ width: "6%" }} />
             <div className="not-table">
               <h2 className="tableTitles">Not Included</h2>
 
@@ -684,12 +685,12 @@ export default class CampaignTable2 extends Component {
                     value={this.state.notIncludedSearchText}
                     onChange={e => this.onNotIncludedInputChange(e)}
                     onPressEnter={() => this.onNotIncludedSearch()}
-                    size="mini"
+                    size="tiny"
                   />
                 </div>
                 <Button
                   type="primary"
-                  size="mini"
+                  size="tiny"
                   onClick={() => this.onNotIncludedSearch()}
                   style={{ marginLeft: "1%" }}
                 >
@@ -697,7 +698,7 @@ export default class CampaignTable2 extends Component {
                 </Button>
                 <Button
                   type="primary"
-                  size="mini"
+                  size="tiny"
                   onClick={e => this.handleNotIncludedClearSearch(e)}
                 >
                   Clear Search

@@ -333,11 +333,13 @@ router.post("/upload", upload.single("file"), (req, res, next) => {
       clients.push(new_client);
     });
     clients.map(client => {
-      client.save(function(err, res) {
-        if (err) {
-          throw err;
-        }
-      });
+      if (client.agentCode != "") {
+        client.save(function(err, res) {
+          if (err) {
+            throw err;
+          }
+        });
+      }
     });
   });
   res.sendStatus(200);

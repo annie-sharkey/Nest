@@ -66,7 +66,7 @@ export default class AdminClientDirectory extends Component {
       this.setState({
         data: res.data,
         officeData: res.data.filter(client => {
-          return "Asheville" === client.office;
+          return "asheville" === client.office.toLowerCase();
         })
       });
     });
@@ -76,7 +76,7 @@ export default class AdminClientDirectory extends Component {
     var data = this.state.data;
     this.setState({
       officeData: data.filter(client => {
-        return key === client.office;
+        return key === client.office.toLowerCase();
       }),
       searchData: [],
       filtered: false,
@@ -277,15 +277,15 @@ export default class AdminClientDirectory extends Component {
           defaultActiveKey="Asheville"
           onChange={key => this.handleTabClick(key)}
         >
-          <TabPane tab="Asheville" key="Asheville" />
-          <TabPane tab="Charlottesville" key="Charlottesville" />
-          <TabPane tab="Fredericksburg" key="Fredericksburg" />
-          <TabPane tab="Lake Norman" key="Lake Norman" />
-          <TabPane tab="New River Valley" key="New River Valley" />
-          <TabPane tab="Richmond" key="Richmond" />
-          <TabPane tab="Shenandoah Valley" key="Shenandoah Valley" />
-          <TabPane tab="The Triangle" key="The Triangle" />
-          <TabPane tab="Wilmington" key="Wilmington" />
+          <TabPane tab="Asheville" key="asheville" />
+          <TabPane tab="Charlottesville" key="charlottesville" />
+          <TabPane tab="Fredericksburg" key="fredericksburg" />
+          <TabPane tab="Lake Norman" key="lake norman" />
+          <TabPane tab="New River Valley" key="new river valley" />
+          <TabPane tab="Richmond" key="richmond" />
+          <TabPane tab="Shenandoah Valley" key="shenandoah valley" />
+          <TabPane tab="The Triangle" key="the triangle" />
+          <TabPane tab="Wilmington" key="wilmington" />
         </Tabs>
         <Table
           //one table renders data depending on the office tab that is selected

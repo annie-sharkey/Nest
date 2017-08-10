@@ -163,7 +163,9 @@ export default class ManageCampaigns extends Component {
         var id = res.data._id;
         for (var i = 0; i < this.state.agentData.length; i++) {
           if (
-            res.data.officesIncludedinCampaign.includes(this.state.agentData[i].agentOffice)
+            res.data.officesIncludedinCampaign.includes(
+              this.state.agentData[i].agentOffice
+            )
           ) {
             var agentCode = this.state.agentData[i].agentCode;
             var agent = this.state.agentData[i];
@@ -181,7 +183,18 @@ export default class ManageCampaigns extends Component {
             axios.put("http://localhost:4000/api/agent/" + agentCode, agent);
           }
         }
-      })
+        var data = this.state.data;
+        var newData = [];
+        data.map(campaign => {
+          if (res.data._id !== campaign._id) {
+            newData.push(campaign);
+          }
+        });
+        newData.push(res.data);
+        this.setState({
+          data: newData
+        });
+      });
     this.setState({
       openModal: false
     });
@@ -220,17 +233,19 @@ export default class ManageCampaigns extends Component {
       <div>
         <div className="header">
           <Link to="/">
-            <Icon type="arrow-left" style={{ fontSize: 30, color: 'white' }}/>
+            <Icon type="arrow-left" style={{ fontSize: 30, color: "white" }} />
           </Link>
           <h1 className="agentDirectory">Manage Campaigns</h1>
           <br />
         </div>
-        <Table columns={columns} dataSource={this.state.data} pagination={false}/>
+        <Table
+          columns={columns}
+          dataSource={this.state.data}
+          pagination={false}
+        />
 
-
-        
         {this.state.openModal &&
-        //modal for editing the campaign details
+          //modal for editing the campaign details
           <div>
             <Modal
               visible={true}
@@ -294,13 +309,12 @@ export default class ManageCampaigns extends Component {
                 <br />
                 <Form className="createcampaigntables">
                   <EditBuildTable
-                  //editing custom campaign fields component
+                    //editing custom campaign fields component
                     updateColumnState={columns =>
                       this.updateColumnState(columns)}
                     selectedCampaign={this.state.selectedCampaign}
                   />
 
-                  
                   {/*
                   was originally intended to allow admin to create upload fields that would go into a media center, however, that functionality is not complete
                   <EditUploadTable
@@ -315,7 +329,7 @@ export default class ManageCampaigns extends Component {
 
         {this.state.openExportDataModal &&
           <Modal
-          //modal for exporting data 
+            //modal for exporting data
             visible={true}
             onCancel={event => this.handleCancel(event)}
             okText="Done"
